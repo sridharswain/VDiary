@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="toolbarTransperant">#77abcdef</color>
+
+    <color name="black_overlay">#66000000</color>
+    <color name="windows_color">#007acc</color>
+    <color name="descent_orange">#ff7260</color>
+    <color name="taskbar_orange">#e96756</color>
+    <color name="Slight_white_green">#c2c7c2</color>
+    <color name="cyan_type">#FF009D97</color>
+    <color name="Slight_white_orange">#dad2ce</color>
+    <color name="cyan_azure">#4f7cac</color>
+    <color name="heildberg_red">#a20021</color>
+    <color name="bazzled_blue">#2e5077</color>
+    <color name="opac_transparent">#3e000000</color>
+
+    <!--Pallete Colours-->
+    <color name="boston_red">#d00000</color>
+    <color name="selective_yellow">#ffba08</color>
+    <color name="tufts_blue">#3f88c5</color>
+    <color name="oxford_blue">#032b43</color>
+    <color name="green_cyan">#136f63</color>
+    <color name="rich_black">#07393c</color>
+    <color name="infra_red">#ef476f</color>
+</resources>
