@@ -439,13 +439,14 @@ public class scrapper extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             while(!gotAttendance && !gotSchedule){
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                //SCRAPING COMPLETE
+
             }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            //SCRAPING COMPLETE
             return null;
         }
 
