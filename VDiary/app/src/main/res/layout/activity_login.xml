@@ -69,7 +69,24 @@
         android:text="Save Details"
         android:id="@+id/saveCreds"
         android:checked="false"
-        android:layout_centerVertical="true"
+        android:layout_below="@id/captcha"
         android:layout_alignStart="@+id/captcha" />
+    <!--Loading content-->
+    <ImageView
+        android:layout_width="500dp"
+        android:layout_height="500dp"
+        android:layout_marginTop="150dp"
+        android:id="@+id/Loadlogo"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/logo"
+        android:visibility="invisible"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/status"
+        android:layout_below="@id/Loadlogo"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

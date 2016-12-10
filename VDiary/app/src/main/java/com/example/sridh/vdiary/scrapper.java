@@ -19,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -36,6 +37,7 @@ public class scrapper extends AppCompatActivity {
     WebView att;
     ImageView captcha,login;
     CheckBox cb;
+    TextView status;
     boolean gotAttendance=false;
     boolean gotSchedule=false;
     Gson jsonBuilder = new Gson();
@@ -148,6 +150,7 @@ public class scrapper extends AppCompatActivity {
 
     private void setUp(){
         setContentView(R.layout.activity_login);
+        status=(TextView)findViewById(R.id.status);
         captcha=(ImageView)findViewById(R.id.captcha);
         regBox=(EditText)findViewById(R.id.regBox);
         passBox=(EditText)findViewById(R.id.passbox);
@@ -376,7 +379,7 @@ public class scrapper extends AppCompatActivity {
     //https://academicscc.vit.ac.in/student/attn_report.asp?sem=FS" + "&fmdt=" + vClass.semStart + "&todt=" + vClass.fat //REPLACE
     //UNCOMMENT THE LINES AND CHANGE TABLE TAG INDEX FROM 3 TO 4
     private void getAttendance(){
-        /*att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[2].cells[2].innerText"), new ValueCallback<String>() {
+        att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[2].cells[2].innerText"), new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
                 vClass.semStart=trim(value);
@@ -391,22 +394,22 @@ public class scrapper extends AppCompatActivity {
                                 att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[4].cells[3].innerText"), new ValueCallback<String>() {
                                     @Override
                                     public void onReceiveValue(String value) {
-                                        vClass.fat=trim(value);*/
+                                        vClass.fat=trim(value);
                                         if(att.getUrl().equals("https://academicscc.vit.ac.in/student/attn_report.asp?sem=FS")){
-                                            att.loadUrl("https://academicscc.vit.ac.in/student/attn_report.asp?sem=FS" + "&fmdt=" + "11-JUL-2016" + "&todt=" + "15-NOV-2016");
+                                            att.loadUrl("https://academicscc.vit.ac.in/student/attn_report.asp?sem=FS" + "&fmdt=" + vClass.semStart + "&todt=" + vClass.fat);
                                         }
                                         else {
-                                            att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[3].rows.length"), new ValueCallback<String>() {
+                                            att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows.length"), new ValueCallback<String>() {
                                                 @Override
                                                 public void onReceiveValue(String value) {
                                                     final int rows=Integer.parseInt(value);
                                                     for(int i=1;i<rows;i++){
                                                         final int j=i;
-                                                        att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[3].rows["+ j +"].cells[8].innerText"), new ValueCallback<String>() {
+                                                        att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows["+ j +"].cells[8].innerText"), new ValueCallback<String>() {
                                                             @Override
                                                             public void onReceiveValue(String value) {
                                                                 attList.add(trim(value));
-                                                                att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[3].rows[" + j +"].cells[7].innerText"), new ValueCallback<String>() {
+                                                                att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows[" + j +"].cells[7].innerText"), new ValueCallback<String>() {
                                                                     @Override
                                                                     public void onReceiveValue(String value) {
                                                                         ctdList.add(trim(value));
@@ -422,14 +425,14 @@ public class scrapper extends AppCompatActivity {
                                                 }
                                             });
                                         }
-                                    /*}
+                                    }
                                 });
                             }
                         });
                     }
                 });
             }
-        });*/
+        });
     }
 
     class compileInf extends AsyncTask<Void,Void,Void>{
@@ -560,4 +563,10 @@ public class scrapper extends AppCompatActivity {
             }
         }
     } //PLACE THE LAB IN THERE CORRECT POSITION BY INSERTION SORT
+
+    /*void load(boolean x){
+        if(x==true){
+
+        }
+    }  //SET THE LOADING CONTENT ON THE SCREEN AND SET THE STATUS TO THE STATS VIEW*/
 }
