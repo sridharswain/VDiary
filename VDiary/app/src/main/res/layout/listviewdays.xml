@@ -26,7 +26,8 @@
         android:textSize="19dp"
         android:layout_marginLeft="5dp"
         android:background="#ffffff"
-        android:textColor="#939292" />
+        android:textColor="#939292"
+        android:maxWidth="200dp" />
 
     <TextView
         android:layout_width="wrap_content"

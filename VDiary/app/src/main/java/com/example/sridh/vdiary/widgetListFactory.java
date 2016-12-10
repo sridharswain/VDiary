@@ -3,7 +3,6 @@ package com.example.sridh.vdiary;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -33,7 +32,7 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
             }
         }
         else{
-
+                todaySchedule=null;
         }
     }
     @Override

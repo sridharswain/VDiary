@@ -65,8 +65,6 @@ static Context x;
         setContentView(R.layout.activity_workspace);
         x=this;
 
-        shared=getSharedPreferences("cabindetails",Context.MODE_PRIVATE);
-
         //Get vClass.notes list from shared preferences
         String get_list=shared.getString("todolist","not present");
         if(get_list.equals("not present")==false) {
@@ -162,6 +160,8 @@ static Context x;
                     //Initializing cablist from shared preferences
                     String temp=shared.getString("list","");
                     Type type= new TypeToken<List<Cabin_Details>>(){}.getType();
+
+
                     if(!temp.equals("")) {
                         Gson json = new Gson();
                         cablist = json.fromJson(temp, type);
@@ -177,6 +177,9 @@ static Context x;
                         @Override
                         public void onClick(View v) {
                             final AlertDialog.Builder builder=new AlertDialog.Builder(x);
+
+
+
 
                             final EditText name=new EditText(x);
                            LinearLayout rlay=new LinearLayout(x);
