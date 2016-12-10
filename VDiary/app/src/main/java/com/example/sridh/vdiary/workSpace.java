@@ -114,8 +114,9 @@ static Context x;
         //noinspection SimplifiableIfStatement
         if (id == R.id.toSchedule) {
             Intent i=new Intent(workSpace.this,schedule.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(i);
-            finish();
+
         }
         else if(id==R.id.refresh){
             scrapper.tryRefresh=true;

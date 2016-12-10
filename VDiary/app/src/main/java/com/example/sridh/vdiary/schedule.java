@@ -20,9 +20,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.Calendar;
 
 public class schedule extends AppCompatActivity {
@@ -96,8 +93,8 @@ public class schedule extends AppCompatActivity {
         if(id==R.id.toWorkSpace)
         {
             Intent i=new Intent(schedule.this,workSpace.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(i);
-            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

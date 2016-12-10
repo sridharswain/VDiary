@@ -43,7 +43,7 @@ public class CustomAdapterdays extends BaseAdapter {
 
     public class Holder
     {
-        TextView subname,attend,teachrname,grnbar;
+        TextView subname,attend,teachrname,grnbar,timedisplayer;
 
     }
 
@@ -58,6 +58,21 @@ public class CustomAdapterdays extends BaseAdapter {
         holder.subname.setText(lis.get(position).title+"  "+lis.get(position).code+"  "+lis.get(position).type);
         holder.teachrname.setText(lis.get(position).teacher);
         holder.attend.setText(lis.get(position).attString);
+        holder.timedisplayer=(TextView)rowview.findViewById(R.id.timedisplayer);
+
+        String temporary=lis.get(position).time;
+        String temp1=temporary.substring(0,5);
+        char ampm=temporary.charAt(6);
+        String ampmset;
+        if(ampm=='A')
+            ampmset="AM";
+        else
+            ampmset="PM";
+
+        String temp2=temporary.substring(9);
+
+        holder.timedisplayer.setText(temp1+" "+ampmset+" "+"-"+" "+temp2+" ");
+
         if(!lis.get(position).code.equals("")){
             String temp=holder.attend.getText().toString().substring(0,holder.attend.getText().toString().length()-1);
             if(Integer.parseInt(temp)<75)
