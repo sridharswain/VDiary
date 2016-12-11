@@ -171,7 +171,7 @@ static Context x;
                     rootView=inflater.inflate(R.layout.cabindetailsadd,container,false);
                     FloatingActionButton fab=(FloatingActionButton)rootView.findViewById(R.id.add);
                     ListView lv=(ListView)rootView.findViewById(R.id.cabinview);
-                    final menu2Adapter mad=new menu2Adapter(x,cablist);
+                    final cabinDetailAdapter mad=new cabinDetailAdapter(x,cablist);
                     lv.setAdapter(mad);
                     fab.setOnClickListener(new View.OnClickListener() { //Onclick Listener for floating action Button
                         @Override
@@ -263,7 +263,7 @@ static Context x;
                     });
                     break;
                 case 0:
-                    rootView=inflater.inflate(R.layout.fragment_menu2,container,false);
+                    rootView=inflater.inflate(R.layout.fragment_cabin_details,container,false);
                     ListView lview=(ListView)rootView.findViewById(R.id.menu2listview);
                     CustomAdapter cadd=new CustomAdapter(x,vClass.subList);
                     lview.setAdapter(cadd);
@@ -416,14 +416,14 @@ static Context x;
 
 }
 
-class menu2Adapter extends BaseAdapter// LIST ADAPTER FOR CABIN VIEW
+class cabinDetailAdapter extends BaseAdapter// LIST ADAPTER FOR CABIN VIEW
 {
     LayoutInflater inflater=null;
     List<Cabin_Details> cab;
     Context context;
     public View view;
 
-    menu2Adapter(Context c,List<Cabin_Details> lis)
+    cabinDetailAdapter(Context c, List<Cabin_Details> lis)
     {
         cab=lis;
         context=c;

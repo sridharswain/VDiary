@@ -19,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,9 +36,10 @@ public class scrapper extends AppCompatActivity {
     EditText captchaBox;
     WebView web;
     WebView att;
-    ImageView captcha,login;
+    ImageView captcha,login,loadLogo;
     CheckBox cb;
     TextView status;
+    RelativeLayout loginView,loadView;
     boolean gotAttendance=false;
     boolean gotSchedule=false;
     Gson jsonBuilder = new Gson();
@@ -91,6 +93,7 @@ public class scrapper extends AppCompatActivity {
                 });
             }
             else{
+                status.setText("Fetching Courses...");
                 web.setWebViewClient(new scheduleClient());
                 web.loadUrl("https://academicscc.vit.ac.in/student/course_regular.asp?sem=FS");
                 att.setWebViewClient(new attendanceClient());
@@ -146,11 +149,14 @@ public class scrapper extends AppCompatActivity {
         byte[] decodedString = Base64.decode(imgString,0);
         Bitmap capImg= BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         captcha.setImageBitmap(capImg);
+        load(false);
     } //CONVERTS THE BASE-64 STRING TO BUTMAP IMAGE AND SETS TO CAPTCHA IMAGEVIEW
 
     private void setUp(){
         setContentView(R.layout.activity_login);
         status=(TextView)findViewById(R.id.status);
+        loginView=(RelativeLayout)findViewById(R.id.loginView);
+        loadView=(RelativeLayout)findViewById(R.id.loadView);
         captcha=(ImageView)findViewById(R.id.captcha);
         regBox=(EditText)findViewById(R.id.regBox);
         passBox=(EditText)findViewById(R.id.passbox);
@@ -161,11 +167,15 @@ public class scrapper extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 placeCreds();
+                load(true);
+                status.setText("Logging In...");
                 if(cb.isChecked()) saveCreds();
                 else delCreds();
             }
         });
+        load(true);
         readCreds();
+        status.setText("Building Captcha...");
     } //SETS RELATIVE LAYOUT OF THE MAIN PAGE
 
     void initWebViews(){
@@ -415,7 +425,7 @@ public class scrapper extends AppCompatActivity {
                                                                         ctdList.add(trim(value));
                                                                         if(j==rows-1){
                                                                             gotAttendance=true;
-                                                                            Toast.makeText(getApplicationContext(),"Done attendance",Toast.LENGTH_LONG).show();
+                                                                            status.setText("Merging Attendance...");
                                                                         }
                                                                     }
                                                                 });
@@ -453,6 +463,7 @@ public class scrapper extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            status.setText("Summarizing Views...");
             for(int i=0;i<vClass.subList.size();i++){
                 vClass.subList.get(i).ctd=Integer.parseInt(ctdList.get(i));
                 vClass.subList.get(i).attString=attList.get(i)+"%";
@@ -565,9 +576,14 @@ public class scrapper extends AppCompatActivity {
         }
     } //PLACE THE LAB IN THERE CORRECT POSITION BY INSERTION SORT
 
-    /*void load(boolean x){
+    void load(boolean x){
         if(x==true){
-
+            loadView.setVisibility(View.VISIBLE);
+            loginView.setVisibility(View.INVISIBLE);
         }
-    }  //SET THE LOADING CONTENT ON THE SCREEN AND SET THE STATUS TO THE STATS VIEW*/
+        else{
+            loadView.setVisibility(View.INVISIBLE);
+            loginView.setVisibility(View.VISIBLE);
+        }
+    }   //SWITCH BETWEEN LOADING SCREEN AND LOGIN SCREEN
 }

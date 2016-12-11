@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.sridh.vdiary.scrapper">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/loginView">
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,25 +69,32 @@
         android:layout_height="wrap_content"
         android:text="Save Details"
         android:id="@+id/saveCreds"
-        android:checked="false"
+        android:checked="true"
         android:layout_below="@id/captcha"
         android:layout_alignStart="@+id/captcha" />
+
+</RelativeLayout>
     <!--Loading content-->
-    <ImageView
-        android:layout_width="500dp"
-        android:layout_height="500dp"
-        android:layout_marginTop="150dp"
-        android:id="@+id/Loadlogo"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/logo"
-        android:visibility="invisible"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/status"
-        android:layout_below="@id/Loadlogo"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible"/>
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/loadView"
+        android:visibility="invisible">
+        <ImageView
+            android:layout_width="500dp"
+            android:layout_height="500dp"
+            android:layout_marginTop="150dp"
+            android:id="@+id/Loadlogo"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/logo"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/status"
+            android:layout_below="@id/Loadlogo"
+            android:layout_centerHorizontal="true" />
+        </RelativeLayout>
 
 </RelativeLayout>
