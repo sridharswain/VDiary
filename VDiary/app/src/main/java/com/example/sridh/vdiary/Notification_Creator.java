@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 
 /**
@@ -31,12 +32,16 @@ public class Notification_Creator {
         notibuilder.setContentTitle(title);
         notibuilder.setContentText(name_and_teachersname+'\n'+timings);
         notibuilder.setSmallIcon(R.drawable.logo);
-        Intent newIntent=new Intent(context,workSpace.class);
+        Intent newIntent=new Intent(context,schedule.class);
         pintent= PendingIntent.getActivity(context, (int) System.currentTimeMillis(),newIntent,0);
-        NotificationManager mNotificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notibuilder.setContentIntent(pintent);
+        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(0,notibuilder.build());
 
+        Vibrator vib=(Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+        if(vib.hasVibrator()) {
+            vib.vibrate(400);
+        }
 
     }
 
