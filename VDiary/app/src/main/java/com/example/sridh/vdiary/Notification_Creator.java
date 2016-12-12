@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 
+import java.util.Calendar;
+
 /**
  * Created by Sparsha Saha on 12/7/2016.
  */
@@ -14,14 +16,14 @@ import android.support.v4.app.NotificationCompat;
 public class Notification_Creator {
     String title;
     String name_and_teachersname;
-    String timings;
+    Calendar timings;
     Context context;
     public static PendingIntent pintent;
 
-    public Notification_Creator(String a,String b,String c,Context x)
+    public Notification_Creator(String titl, String cont, Calendar c, Context x)
     {
-        title=a;
-        name_and_teachersname=b;
+        title=titl;
+        name_and_teachersname=cont;
         timings=c;
         context=x;
     }
@@ -30,7 +32,7 @@ public class Notification_Creator {
     {
         NotificationCompat.Builder notibuilder=new NotificationCompat.Builder(context);
         notibuilder.setContentTitle(title);
-        notibuilder.setContentText(name_and_teachersname+'\n'+timings);
+        notibuilder.setContentText(name_and_teachersname+'\n');
         notibuilder.setSmallIcon(R.drawable.logo);
         Intent newIntent=new Intent(context,schedule.class);
         pintent= PendingIntent.getActivity(context, (int) System.currentTimeMillis(),newIntent,0);

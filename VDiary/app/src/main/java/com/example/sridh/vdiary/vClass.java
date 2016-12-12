@@ -22,7 +22,7 @@ public class vClass {
     public static String cat2;
     public static String fat;
     public static Map<String,Boolean> lis=new HashMap<>();
-    public static List<Note> notes=new ArrayList<>();
+    public static List<Notification_Holder> notes=new ArrayList<>();
     public static void setStatBar(Window window,Context context){
         if(Build.VERSION.SDK_INT>=21){
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

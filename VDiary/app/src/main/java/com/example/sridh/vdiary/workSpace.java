@@ -1,6 +1,6 @@
 package com.example.sridh.vdiary;
 
-import android.app.NotificationManager;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +11,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +36,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class workSpace extends AppCompatActivity {
@@ -57,18 +57,19 @@ public class workSpace extends AppCompatActivity {
     private ViewPager mViewPager;
     public static SharedPreferences shared;
     public static SharedPreferences.Editor editor;
-static Context x;
+    static Context x;
     public static  List<Cabin_Details> cablist;
-    NotificationCompat.Builder notification;
+    List<Notification_Holder> noti_todo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workspace);
         x=this;
+        noti_todo=new ArrayList<>();
 
-        Notification_Creator nc=new Notification_Creator("x","y","z",x);
-        nc.create_notification();
+       // Notification_Creator nc=new Notification_Creator("x","y","z",x);  //Test notification
+        //nc.create_notification();
 
 
         shared=getSharedPreferences("todoshared",MODE_PRIVATE);
@@ -79,9 +80,7 @@ static Context x;
         //Get vClass.notes list from shared preferences
         String get_list=shared.getString("todolist","not present");
         if(get_list.equals("not present")==false) {
-            Gson jeson = new Gson();
-            Type ty = new TypeToken<List<Note>>() {}.getType();
-            vClass.notes=jeson.fromJson(get_list,ty);
+            vClass.notes=Notification_Holder.convert_from_jason(get_list);
         }
         //vClass.notes is initialized
 
@@ -298,17 +297,11 @@ static Context x;
                         @Override
                         public void onClick(View v) {
 
-                            EditText title;
+                            final EditText title;
                             EditText other;
                             TimePicker time;
                             DatePicker date;
                             Button ok;
-                            NotificationManager notificationmanager= (NotificationManager) x.getSystemService(Context.NOTIFICATION_SERVICE);
-                            NotificationCompat.Builder notification=new NotificationCompat.Builder(x);
-                            notification.setContentTitle("Test Content");
-                            notification.setContentText("Test content text");
-                            notification.setContentIntent(PendingIntent.getActivity(x,0,new Intent(),0));
-                            notificationmanager.notify(0,notification.build());
 
 
                             final AlertDialog alert;
@@ -331,12 +324,11 @@ static Context x;
                             ok.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Note n=new Note();
-                                    n.date= finalDate.getDayOfMonth()+"/"+ finalDate.getMonth()+"/"+ finalDate.getYear();
-                                    n.time= finalTime.getCurrentHour()+":"+ finalTime.getCurrentMinute();
-                                    n.title= finalTitle.getText().toString();
-                                    n.note= finalOther.getText().toString();
+                                    Calendar c=Calendar.getInstance();
+                                    c.set(finalDate.getYear(),finalDate.getMonth(),finalDate.getDayOfMonth(),finalTime.getCurrentHour(),finalTime.getCurrentMinute());
+                                    Notification_Holder n=new Notification_Holder(c,finalTitle.getText().toString(),finalOther.getText().toString());
                                     vClass.notes.add(n);
+                                    schedule_todo_notification(n);
                                     Gson json=new Gson();
                                     String temporary=json.toJson(vClass.notes);
                                     editor.putString("todolist",temporary);
@@ -346,9 +338,6 @@ static Context x;
 
                                 }
                             });
-
-
-
                         }
                     });
 
@@ -372,8 +361,7 @@ static Context x;
                                      vClass.notes.remove(position);
                                      adap.update(vClass.notes);
                                      ale.cancel();
-                                     Gson jason=new Gson();
-                                     editor.putString("todolist",jason.toJson(vClass.notes));
+                                     editor.putString("todolist",Notification_Holder.convert_to_jason(vClass.notes));
                                      editor.apply();
                                  }
                              });
@@ -385,6 +373,17 @@ static Context x;
             }
 
             return rootView;
+        }
+
+        public void schedule_todo_notification(Notification_Holder n)
+        {
+            AlarmManager alarmManager=(AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
+            Intent intent=new Intent(getActivity(),NotifyService.class);
+            Gson js=new Gson();
+            String f=js.toJson(n);
+            intent.putExtra("one",f);
+            PendingIntent pendingIntent=PendingIntent.getBroadcast(getContext(),0,intent,0);
+            alarmManager.set(AlarmManager.RTC_WAKEUP,n.cal.getTimeInMillis(),pendingIntent);
         }
     }
 
@@ -486,11 +485,11 @@ class cabinDetailAdapter extends BaseAdapter// LIST ADAPTER FOR CABIN VIEW
  class todo_adapter extends BaseAdapter
  {
      LayoutInflater inflater=null;
-     List<Note> list;
+     List<Notification_Holder> list;
      Context context;
      public View view1;
 
-     public todo_adapter(Context con,List<Note> n)
+     public todo_adapter(Context con,List<Notification_Holder> n)
      {
          context=con;
          list=n;
@@ -527,13 +526,19 @@ class cabinDetailAdapter extends BaseAdapter// LIST ADAPTER FOR CABIN VIEW
          holder.time=(TextView)view1.findViewById(R.id.timeview);
          holder.date=(TextView)view1.findViewById(R.id.dateview);
          holder.title.setText(list.get(position).title);
-         holder.note.setText(list.get(position).note);
-         holder.date.setText(list.get(position).date);
-         holder.time.setText(list.get(position).time);
+         holder.note.setText(list.get(position).content);
+         holder.date.setText(list.get(position).cal.get(Calendar.DATE)+"/"+list.get(position).cal.get(Calendar.MONTH)+"/"+list.get(position).cal.get(Calendar.YEAR)+" ");
+         int x=list.get(position).cal.get(Calendar.AM_PM);
+         String ampm;
+         if(x==1)
+             ampm="PM";
+         else
+         ampm="AM";
+         holder.time.setText(list.get(position).cal.get(Calendar.HOUR)+":"+list.get(position).cal.get(Calendar.MINUTE)+ " "+ampm+" ");
          return view1;
      }
 
-     public void update(List<Note> not)
+     public void update(List<Notification_Holder> not)
      {
          list=not;
          notifyDataSetChanged();
