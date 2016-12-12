@@ -50,7 +50,7 @@ public class CustomAdapterdays extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        rowview=inflater.inflate(R.layout.listviewdays,null);
+        rowview=inflater.inflate(R.layout.rowview_schedule,null);
         Holder holder=new Holder();
         holder.subname=(TextView)rowview.findViewById(R.id.subjectnamedays);
         holder.teachrname=(TextView)rowview.findViewById(R.id.teachrnm);

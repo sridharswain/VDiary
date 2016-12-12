@@ -442,8 +442,8 @@ public class scrapper extends AppCompatActivity {
                                                                     public void onReceiveValue(String value) {
                                                                         ctdList.add(trim(value));
                                                                         if(j==rows-1){
-                                                                            gotAttendance=true;
                                                                             status.setText("Merging Attendance...");
+                                                                            gotAttendance=true;
                                                                         }
                                                                     }
                                                                 });
@@ -466,9 +466,7 @@ public class scrapper extends AppCompatActivity {
     class compileInf extends AsyncTask<Void,Void,Void>{
         @Override
         protected Void doInBackground(Void... params) {
-            while(!gotAttendance && !gotSchedule){
-
-            }
+            while(!gotAttendance && !gotSchedule){}
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

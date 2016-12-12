@@ -188,7 +188,7 @@ static Context x;
                     }
                     //cablist initialized
 
-                    rootView=inflater.inflate(R.layout.cabindetailsadd,container,false);
+                    rootView=inflater.inflate(R.layout.fragment_notes,container,false);
                     FloatingActionButton fab=(FloatingActionButton)rootView.findViewById(R.id.add);
                     ListView lv=(ListView)rootView.findViewById(R.id.cabinview);
                     final cabinDetailAdapter mad=new cabinDetailAdapter(x,cablist);
@@ -283,7 +283,7 @@ static Context x;
                     });
                     break;
                 case 0:
-                    rootView=inflater.inflate(R.layout.fragment_cabin_details,container,false);
+                    rootView=inflater.inflate(R.layout.fragment_courses,container,false);
                     ListView lview=(ListView)rootView.findViewById(R.id.menu2listview);
                     CustomAdapter cadd=new CustomAdapter(x,vClass.subList);
                     lview.setAdapter(cadd);
@@ -295,7 +295,7 @@ static Context x;
                     });
                     break;
                 case 2:
-                    rootView=inflater.inflate(R.layout.cabindetailsadd,container,false);
+                    rootView=inflater.inflate(R.layout.fragment_notes,container,false);
                     ListView lview1=(ListView)rootView.findViewById(R.id.cabinview);
                     final todo_adapter adap=new todo_adapter(x,vClass.notes);
                     lview1.setAdapter(adap);
@@ -321,7 +321,7 @@ static Context x;
 
 
                             final AlertDialog alert;
-                            View root=getActivity().getLayoutInflater().inflate(R.layout.to_do_view,null);
+                            View root=getActivity().getLayoutInflater().inflate(R.layout.floatingview_todo,null);
                             title=(EditText) root.findViewById(R.id.title);
                             other=(EditText)root.findViewById(R.id.note);
                             time=(TimePicker)root.findViewById(R.id.timePicker);
@@ -472,7 +472,7 @@ class cabinDetailAdapter extends BaseAdapter// LIST ADAPTER FOR CABIN VIEW
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        view=inflater.inflate(R.layout.cabin,null);
+        view=inflater.inflate(R.layout.rowview_cabin,null);
         Holder holder=new Holder();
         //Initializing
         holder.name=(TextView)view.findViewById(R.id.newname);
@@ -529,7 +529,7 @@ class cabinDetailAdapter extends BaseAdapter// LIST ADAPTER FOR CABIN VIEW
 
      @Override
      public View getView(int position, View convertView, ViewGroup parent) {
-         view1=inflater.inflate(R.layout.todoxmlview,null);
+         view1=inflater.inflate(R.layout.rowview_todo,null);
          Holder holder=new Holder();
          holder.title=(TextView)view1.findViewById(R.id.titleview);
          holder.note=(TextView)view1.findViewById(R.id.noteview);

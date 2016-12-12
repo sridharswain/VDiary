@@ -128,7 +128,7 @@ public class schedule extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main2, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_day_model, container, false);
             ListView list=(ListView)rootView.findViewById(R.id.dayslist);
             int todayIndex=getArguments().getInt(ARG_SECTION_NUMBER)-1;
             CustomAdapterdays todaySchedule= new CustomAdapterdays(getActivity(),vClass.timeTable.get(todayIndex));
