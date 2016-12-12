@@ -67,17 +67,8 @@ static Context x;
         setContentView(R.layout.activity_workspace);
         x=this;
 
-        notification=new NotificationCompat.Builder(this);
-        notification.setAutoCancel(true);
-        notification.setSmallIcon(R.drawable.logo);
-        notification.setContentTitle("TEST");
-        notification.setContentText("This is a test");
-        notification.setWhen(System.currentTimeMillis());
-        Intent intent=new Intent(this,workSpace.class);
-        PendingIntent pintent=PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
-        notification.setContentIntent(pintent);
-        NotificationManager nm=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        nm.notify(2345,notification.build());
+        Notification_Creator nc=new Notification_Creator("x","y","z",x);
+        nc.create_notification();
 
 
         shared=getSharedPreferences("todoshared",MODE_PRIVATE);

@@ -1,7 +1,5 @@
 package com.example.sridh.vdiary;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -9,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
@@ -49,25 +46,9 @@ public class scrapper extends AppCompatActivity {
     static boolean tryRefresh=false;
     List<String> attList = new ArrayList<>();
     List<String> ctdList = new ArrayList<>();
-    NotificationCompat.Builder notification;
-    public static final int uid=23456;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        notification=new NotificationCompat.Builder(this);
-        notification.setAutoCancel(true);
-        notification.setSmallIcon(R.drawable.logo);
-
-        notification.setTicker("Ticker");
-        notification.setContentTitle("TEST");
-        notification.setContentText("This is a test");
-        notification.setWhen(System.currentTimeMillis());
-        Intent intent=new Intent(this,scrapper.class);
-        PendingIntent pintent=PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
-        notification.setContentIntent(pintent);
-        NotificationManager nm=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        nm.notify(uid,notification.build());
 
         if(!tryRefresh && readFromPrefs()){
             startActivity(new Intent(this, workSpace.class));
