@@ -20,23 +20,23 @@ public class Notification_Creator {
     Context context;
     public static PendingIntent pintent;
 
-    public Notification_Creator(String titl, String cont, Calendar c, Context x)
-    {
+    public Notification_Creator(String titl, String cont, Calendar c, Context x) {
         title=titl;
         name_and_teachersname=cont;
         timings=c;
         context=x;
     }
 
-    public void create_notification()
-    {
+    public void create_notification() {
         NotificationCompat.Builder notibuilder=new NotificationCompat.Builder(context);
         notibuilder.setContentTitle(title);
-        notibuilder.setContentText(name_and_teachersname+'\n');
+        notibuilder.setContentText(name_and_teachersname);
         notibuilder.setSmallIcon(R.drawable.logo);
-        Intent newIntent=new Intent(context,schedule.class);
-        pintent= PendingIntent.getActivity(context, (int) System.currentTimeMillis(),newIntent,0);
+        notibuilder.setTicker("You have a deadline to meet");
+        Intent newIntent=new Intent(context,scrapper.class);
+        pintent= PendingIntent.getActivity(context, (int) System.currentTimeMillis(),newIntent,PendingIntent.FLAG_UPDATE_CURRENT);
         notibuilder.setContentIntent(pintent);
+        notibuilder.setAutoCancel(true);
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(0,notibuilder.build());
 
@@ -44,9 +44,5 @@ public class Notification_Creator {
         if(vib.hasVibrator()) {
             vib.vibrate(400);
         }
-
     }
-
-
-
 }
