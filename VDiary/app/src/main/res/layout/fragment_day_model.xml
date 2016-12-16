@@ -9,14 +9,14 @@
     tools:context="com.example.sridh.vdiary.schedule$PlaceholderFragment"
     android:padding="0dp">
 
-
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/dayslist"
         android:layout_centerHorizontal="true"
         android:clickable="true"
-        android:choiceMode="singleChoice" />
+        android:choiceMode="singleChoice"
+        android:background="@android:color/transparent" />
 
 
 </RelativeLayout>

@@ -329,7 +329,8 @@ public class scrapper extends AppCompatActivity {
                                                                     @Override
                                                                     public void onReceiveValue(String value) {
                                                                         String time = trim(value);
-                                                                        sub.time = time.substring(0, 7) + "-" + time.substring(13, time.length());
+                                                                        sub.startTime=time.substring(0, 8);
+                                                                        sub.endTime=time.substring(14, time.length());
                                                                         today.add(sub);
                                                                     }
                                                                 });
@@ -339,14 +340,15 @@ public class scrapper extends AppCompatActivity {
                                                                     @Override
                                                                     public void onReceiveValue(String value) {
                                                                         String rawstime = trim(value);
-                                                                        String sTime = rawstime.substring(0, 7);
+                                                                        String sTime = rawstime.substring(0, 8);
                                                                         final AtomicReference<String> time = new AtomicReference<String>(sTime);
                                                                         web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[1].cells[" + (cell + 1 + Integer.parseInt(String.valueOf(extraTime.get()))) + "].innerText.toString()"), new ValueCallback<String>() {
                                                                             @Override
                                                                             public void onReceiveValue(String value) {
                                                                                 String rawetime = trim(value);
-                                                                                String etime = rawetime.substring(13, rawetime.length());
-                                                                                sub.time = time.get() + "-" + etime;
+                                                                                String etime = rawetime.substring(14, rawetime.length());
+                                                                                sub.startTime=time.get();
+                                                                                sub.endTime=etime;
                                                                                 today.add(sub);
                                                                             }
                                                                         });
@@ -362,7 +364,8 @@ public class scrapper extends AppCompatActivity {
                                                                 @Override
                                                                 public void onReceiveValue(String value) {
                                                                     String time=trim(value);
-                                                                    sub.time = time.substring(0, 7) + "-" + time.substring(13, time.length());
+                                                                    sub.startTime=time.substring(0, 8);
+                                                                    sub.endTime=time.substring(14, time.length());
                                                                     today.add(sub);
                                                                 }
                                                             });
@@ -542,8 +545,9 @@ public class scrapper extends AppCompatActivity {
     }  //DELETE THE SAVED CREDENTIALS IF USER WANTS TO
 
     String formattedTime(subject sub){
-        String rawTime= sub.time;
-        String meridian =rawTime.substring(5,7);
+        String rawTime= sub.startTime;
+        String meridian =rawTime.substring(6,8);
+        Log.d("meridian", meridian);
         int hour = Integer.parseInt(rawTime.substring(0,2));
         if(meridian.equals("PM") && hour<12){
             hour = hour+12;

@@ -6,60 +6,57 @@
     android:padding="0dp"
     android:background="#ffffff">
 
+
     <TextView
+        android:text="ELA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/schedule_type"
+        android:minHeight="40dp"
+        android:width="25dp"
+        android:textAlignment="center"
+        android:gravity="center_vertical"
+        android:background="@color/windows_color"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:textSize="12sp"
+        android:layout_marginEnd="7dp"/>
+
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/schedule_title"
+        android:background="#ffffff"
+        android:maxWidth="300dp"
+        android:text="SOFTWARE ENGINEERING AND DISCREETE AND MATHEMATICS FS"
+        android:layout_toRightOf="@id/schedule_type"
+        android:textSize="17sp" />
+    <ImageView
+        android:layout_height="match_parent"
         android:layout_width="10dp"
-        android:layout_height="70dp"
-        android:background="#068f0f"
-        android:id="@+id/colorbar"
+        android:background="@android:color/darker_gray"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:text="11:40"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        tools:ignore="UnknownIdInLayout"
-        android:layout_alignBottom="@+id/teachrnm"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentRight="true"
+        android:id="@+id/schedule_startTime"
+        android:background="@android:color/transparent"/>
 
     <TextView
+        android:text="12:31"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/teachrnm"
-        android:layout_below="@+id/subjectnamedays"
-        android:layout_toEndOf="@+id/colorbar"
-        android:textSize="19dp"
-        android:layout_marginLeft="5dp"
-        android:background="#ffffff"
-        android:textColor="#939292"
-        android:maxWidth="200dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/schedule_endTime"
+        />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/subjectnamedays"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/colorbar"
-        android:textSize="17dp"
-        android:textStyle="bold|italic"
-        android:layout_marginLeft="5dp"
-        android:background="#ffffff"
-        android:maxWidth="300dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/attendancepercentage"
-        android:textSize="19dp"
-        android:background="#ffffff"
-        android:textColor="#939292"
-        android:layout_above="@+id/teachrnm"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/timedisplayer"
-        android:layout_alignBottom="@+id/teachrnm"
-        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

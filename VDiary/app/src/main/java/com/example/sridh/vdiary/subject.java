@@ -10,7 +10,8 @@ public class subject {
     public String attString;
     public String room;
     public int ctd;
-    public String time;
+    public String startTime;
+    public String endTime;
     public String type;
     public boolean star_rated=false;
 }

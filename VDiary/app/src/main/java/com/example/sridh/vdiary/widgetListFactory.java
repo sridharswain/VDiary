@@ -57,7 +57,7 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
 
     @Override
     public RemoteViews getViewAt(int position) {
-        RemoteViews row = new RemoteViews(ctxt.getPackageName(),R.layout.widget_list);
+        RemoteViews row = new RemoteViews(ctxt.getPackageName(),R.layout.rowview_widget);
         row.setTextViewText(android.R.id.text1,todaySchedule.get(position).title);
         row.setTextViewText(android.R.id.text2,todaySchedule.get(position).type);
         return row;

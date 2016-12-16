@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 public class listAdapter_schedule extends BaseAdapter {
-    List<subject> lis;
+    List<subject> scheduleList;
     Context context;
 
     public static View rowview;
@@ -23,18 +23,18 @@ public class listAdapter_schedule extends BaseAdapter {
     //parameterized constructor
     public listAdapter_schedule(Context c, List<subject> j)
     {
-        lis=j;
+        scheduleList=j;
         context=c;
         inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
     @Override
     public int getCount() {
-        return lis.size();
+        return scheduleList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return lis.get(position);
+        return scheduleList.get(position);
     }
 
     @Override
@@ -51,35 +51,21 @@ public class listAdapter_schedule extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         rowview=inflater.inflate(R.layout.rowview_schedule,null);
-        Holder holder=new Holder();
-        holder.subname=(TextView)rowview.findViewById(R.id.subjectnamedays);
-        holder.teachrname=(TextView)rowview.findViewById(R.id.teachrnm);
-        holder.attend=(TextView)rowview.findViewById(R.id.attendancepercentage);
-        holder.grnbar=(TextView)rowview.findViewById(R.id.colorbar);
-        holder.subname.setText(lis.get(position).title+"  "+lis.get(position).code+"  "+lis.get(position).type);
-        holder.teachrname.setText(lis.get(position).teacher);
-        holder.attend.setText(lis.get(position).attString);
-        holder.timedisplayer=(TextView)rowview.findViewById(R.id.timedisplayer);
+        subject course=scheduleList.get(position);
+        TextView title= ((TextView)rowview.findViewById(R.id.schedule_title));
+        TextView type =(TextView)rowview.findViewById(R.id.schedule_type);
+        TextView startTime=(TextView)rowview.findViewById(R.id.schedule_startTime);
+        TextView endTime=(TextView)rowview.findViewById(R.id.schedule_endTime);
+        title.setText(course.title);
+        startTime.setText(course.startTime);
+        endTime.setText(course.endTime);
+        if(!course.type.equals("")){
+            type.setText(course.type);
 
-        String temporary=lis.get(position).time;
-        String temp1=temporary.substring(0,5);
-        char ampm=temporary.charAt(6);
-        String ampmset;
-        if(ampm=='A')
-            ampmset="AM";
-        else
-            ampmset="PM";
-
-        String temp2=temporary.substring(9);
-
-        holder.timedisplayer.setText(temp1+" "+ampmset+" "+"-"+" "+temp2+" ");
-
-        if(!lis.get(position).code.equals("")){
-            String temp=holder.attend.getText().toString().substring(0,holder.attend.getText().toString().length()-1);
-            if(Integer.parseInt(temp)<75)
-            {
-                holder.grnbar.setBackgroundColor(Color.RED);
-            }
+        }
+        else{
+            type.setVisibility(View.INVISIBLE);
+            title.setTextColor(context.getResources().getColor(R.color.Slight_white_orange));
         }
         return rowview;
     }
