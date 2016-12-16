@@ -14,14 +14,14 @@ import java.util.List;
  * Created by Sparsha Saha on 9/12/2016.
  */
 
-public class CustomAdapterdays extends BaseAdapter {
+public class listAdapter_schedule extends BaseAdapter {
     List<subject> lis;
     Context context;
 
     public static View rowview;
     public static LayoutInflater inflater=null;
     //parameterized constructor
-    public CustomAdapterdays(Context c,List<subject> j)
+    public listAdapter_schedule(Context c, List<subject> j)
     {
         lis=j;
         context=c;
