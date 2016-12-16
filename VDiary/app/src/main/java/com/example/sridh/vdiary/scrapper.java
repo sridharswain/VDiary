@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
@@ -36,10 +37,11 @@ public class scrapper extends AppCompatActivity {
     EditText captchaBox;
     WebView web;
     WebView att;
-    ImageView captcha,login,loadLogo;
+    ImageView captcha,login;
     CheckBox cb;
     TextView status;
     RelativeLayout loginView,loadView;
+    FloatingActionButton reload;
     boolean gotAttendance=false;
     boolean gotSchedule=false;
     Gson jsonBuilder = new Gson();
@@ -57,6 +59,7 @@ public class scrapper extends AppCompatActivity {
         else{
             initWebViews();
             setUp();
+            vClass.setStatBar(getWindow(),getApplicationContext());
             new compileInf().execute();
         }
     }
@@ -66,13 +69,19 @@ public class scrapper extends AppCompatActivity {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view,url);
             String webTitle =web.getTitle();
-            if(tryRefresh && webTitle.equals("")){
-                Toast.makeText(getApplicationContext(),"No Internet Connection",Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(scrapper.this,workSpace.class));
-                finish();
+            if(tryRefresh){
+                if(webTitle.equals("") || webTitle.equals("Webpage not available")){
+                    Toast.makeText(getApplicationContext(),"Connection Failed",Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(scrapper.this,workSpace.class));
+                    finish();
+                    return;
+                }
             }
-            if(webTitle.equals("Webpage not available")){
-                Toast.makeText(getApplicationContext(),"No Internet Connection",Toast.LENGTH_LONG).show();
+            else if(webTitle.equals("") || webTitle.equals("Webpage not available")){
+                status.setText("Connection Falied!");
+                load(true);
+                reload.setVisibility(View.VISIBLE);
+                return;
             }
             else if(web.getUrl().equals("https://academicscc.vit.ac.in/student/stud_login.asp")) {
                 web.evaluateJavascript(getcmd("return document.getElementsByName(\"message\")[0].value"), new ValueCallback<String>() {
@@ -162,6 +171,15 @@ public class scrapper extends AppCompatActivity {
         captchaBox=(EditText)findViewById(R.id.captchaBox);
         cb=(CheckBox)findViewById(R.id.saveCreds);
         login=(ImageButton)findViewById(R.id.login);
+        reload=(FloatingActionButton)findViewById(R.id.refresh_FloatButton);
+        reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                web.loadUrl("https://academicscc.vit.ac.in/student/stud_login.asp");
+                status.setText("Building Captcha...");
+                reload.setVisibility(View.INVISIBLE);
+            }
+        });
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -203,7 +221,7 @@ public class scrapper extends AppCompatActivity {
     private String trim(String str){
         str= str.substring(1);
         return str.substring(0,str.indexOf("\""));
-    } //TRIMS THE GIVEN RESULT FROM JAVSCRIPT TO REMOVE QUOTES
+    } //TRIMS THE GIVEN RESULT FROM JAVASCRIPT TO REMOVE QUOTES
 
     private void getFormTable1(){
         web.evaluateJavascript(getcmd("var rows=document.getElementsByTagName('table')[1].rows;var c;for(c=0;c<rows.length;c++){if(rows[c].cells.length==15){rows[c].deleteCell(0)}}"), new ValueCallback<String>() {
