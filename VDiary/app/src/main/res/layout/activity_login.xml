@@ -74,8 +74,8 @@
         android:layout_below="@id/captcha"
         android:layout_alignStart="@+id/captcha" />
 
-</RelativeLayout>
     <!--Loading content-->
+</RelativeLayout>
     <RelativeLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
@@ -108,5 +108,4 @@
             android:src="@drawable/refresh"
             android:visibility="invisible"/>
     </RelativeLayout>
-
 </RelativeLayout>

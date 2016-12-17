@@ -7,7 +7,7 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/today"
+        android:id="@+id/widget_today"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true" />
 </RelativeLayout>

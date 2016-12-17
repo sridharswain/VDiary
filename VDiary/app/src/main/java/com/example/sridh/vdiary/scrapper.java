@@ -51,7 +51,6 @@ public class scrapper extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if(!tryRefresh && readFromPrefs()){
             startActivity(new Intent(this, workSpace.class));
             finish();
@@ -71,7 +70,7 @@ public class scrapper extends AppCompatActivity {
             String webTitle =web.getTitle();
             if(tryRefresh){
                 if(webTitle.equals("") || webTitle.equals("Webpage not available")){
-                    Toast.makeText(getApplicationContext(),"Connection Failed",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Connection Failed!",Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(scrapper.this,workSpace.class));
                     finish();
                     return;

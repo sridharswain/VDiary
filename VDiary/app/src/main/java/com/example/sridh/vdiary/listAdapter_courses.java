@@ -1,6 +1,7 @@
 package com.example.sridh.vdiary;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +13,14 @@ import java.util.List;
 /**
  * Created by Sparsha Saha on 9/11/2016.
  */
-public class CustomAdapter extends BaseAdapter {
+public class listAdapter_courses extends BaseAdapter {
     List<subject> list;
     Context context;
     public static View rowview;
     public static LayoutInflater inflater=null;
 
     //Parameterized Constructor
-    CustomAdapter(Context t,List<subject> l)
+    listAdapter_courses(Context t, List<subject> l)
     {
         context=t;
         list=l;
@@ -51,24 +52,28 @@ public class CustomAdapter extends BaseAdapter {
         TextView subname;
         TextView teachername;
         TextView attendance;
-        TextView greenbar;
+        TextView type;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+        subject sub=list.get(position);
         rowview=inflater.inflate(R.layout.rowview_course,null);
-
         final Holder holder=new Holder();//object of holder class
-
-        holder.subname=(TextView)rowview.findViewById(R.id.nameofsub);
-        holder.attendance=(TextView)rowview.findViewById(R.id.attendance);
-        holder.teachername=(TextView)rowview.findViewById(R.id.teachersname);
-        holder.greenbar=(TextView)rowview.findViewById(R.id.greenbar);
+        holder.subname=(TextView)rowview.findViewById(R.id.course_title);
+        holder.attendance=(TextView)rowview.findViewById(R.id.course_attendance);
+        holder.teachername=(TextView)rowview.findViewById(R.id.course_teacher);
+        holder.type=(TextView)rowview.findViewById(R.id.course_type);
 
         //set items
-        holder.subname.setText(list.get(position).title + "  " +list.get(position).code+"  "+list.get(position).type);
-        holder.teachername.setText(list.get(position).teacher);
-        holder.attendance.setText(list.get(position).attString);
+        holder.subname.setText(sub.title);
+        holder.teachername.setText(sub.teacher);
+        holder.attendance.setText(sub.attString);
+        holder.type.setText(sub.type);
+        int attendance=Integer.parseInt(sub.attString.substring(0,sub.attString.indexOf('%')));
+        if(attendance<75){
+            holder.attendance.setTextColor(Color.RED);
+        }
         return rowview;
     }
 }

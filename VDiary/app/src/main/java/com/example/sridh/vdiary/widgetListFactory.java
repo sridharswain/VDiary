@@ -3,8 +3,10 @@ package com.example.sridh.vdiary;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -14,22 +16,22 @@ import java.util.Calendar;
 import java.util.List;
 
 public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
-    private Context ctxt=null;
-    private int today;
+    Context ctxt=null;
+    int today;
     List<subject> todaySchedule;
     List<List<subject>> timeTable;
     public widgetListFactory(Context c, Intent intent){
         ctxt=c;
         //appWidgetId=intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        today= Calendar.getInstance().get(Calendar.DAY_OF_WEEK)-2;
-        if(today<=4){
+        today=Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        //if(today>1 && today<7){
             SharedPreferences prefs=ctxt.getSharedPreferences("academicPrefs",Context.MODE_PRIVATE);
             String scheduleJson=prefs.getString("schedule",null);
             if(scheduleJson!=null){
                 Gson g= new Gson();
                 timeTable=g.fromJson(scheduleJson,new TypeToken<ArrayList<ArrayList<subject>>>() {}.getType());
-                todaySchedule=timeTable.get(today);
-            }
+                todaySchedule=timeTable.get(4);
+            //}
         }
         else{
                 todaySchedule=null;

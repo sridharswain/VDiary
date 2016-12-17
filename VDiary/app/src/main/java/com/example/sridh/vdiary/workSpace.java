@@ -275,7 +275,7 @@ public class workSpace extends AppCompatActivity {
                 case 0:
                     rootView=inflater.inflate(R.layout.fragment_courses,container,false);
                     ListView lview=(ListView)rootView.findViewById(R.id.menu2listview);
-                    CustomAdapter cadd=new CustomAdapter(x,vClass.subList);
+                    listAdapter_courses cadd=new listAdapter_courses(x,vClass.subList);
                     lview.setAdapter(cadd);
                     lview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
