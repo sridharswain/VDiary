@@ -10,4 +10,11 @@
         android:id="@+id/widget_today"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loading..."
+        android:id="@+id/testBox"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
 </RelativeLayout>

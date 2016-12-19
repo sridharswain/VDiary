@@ -6,7 +6,7 @@
         android:text="ELA"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@android:id/text2"
+        android:id="@+id/widget_type"
         android:minHeight="40dp"
         android:width="25dp"
         android:textAlignment="center"
@@ -22,11 +22,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@android:id/text1"
+        android:id="@+id/widget_title"
         android:maxWidth="300dp"
         android:text="SOFTWARE ENGINEERING AND DISCREETE AND MATHEMATICS FS"
-        android:layout_toRightOf="@android:id/text2"
+        android:layout_toRightOf="@id/widget_type"
         android:textSize="17sp"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:textStyle="normal|bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/widget_startTime"
+        android:text="12:30PM"
+        android:textSize="15dp"
+        android:layout_below="@+id/widget_title"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="35dp"
+        android:textColor="@android:color/white"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/widget_endTime"
+        android:text="12:30PM"
+        android:textSize="15dp"
+        android:layout_below="@+id/widget_title"
+        android:layout_alignParentEnd="true"
+        android:textColor="@android:color/white"/>
 
 </RelativeLayout>

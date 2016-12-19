@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,10 +29,17 @@ public class widget extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             //updateAppWidget(context, appWidgetManager, appWidgetId);
             RemoteViews views= new RemoteViews(context.getPackageName(),R.layout.widget);
-            Intent intent= new Intent(context,widgetService.class);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-            views.setRemoteAdapter(R.id.widget_today,intent);
+            int today=Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+            if(today>1 && today<7){
+                Intent intent= new Intent(context,widgetService.class);
+                intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+                intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+                views.setRemoteAdapter(R.id.widget_today,intent);
+                views.setViewVisibility(R.id.testBox,View.INVISIBLE);
+            }
+            else{
+                views.setTextViewText(R.id.testBox,"No Classes Today :)");
+            }
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
     }
@@ -44,6 +53,5 @@ public class widget extends AppWidgetProvider {
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
     }
-
 }
 

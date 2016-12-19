@@ -19,7 +19,7 @@ public class listAdapter_courses extends BaseAdapter {
     public static View rowview;
     public static LayoutInflater inflater=null;
 
-    //Parameterized Constructor
+    //Constructor
     listAdapter_courses(Context t, List<subject> l)
     {
         context=t;

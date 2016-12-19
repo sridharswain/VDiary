@@ -24,18 +24,13 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
         ctxt=c;
         //appWidgetId=intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         today=Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        //if(today>1 && today<7){
             SharedPreferences prefs=ctxt.getSharedPreferences("academicPrefs",Context.MODE_PRIVATE);
             String scheduleJson=prefs.getString("schedule",null);
             if(scheduleJson!=null){
                 Gson g= new Gson();
                 timeTable=g.fromJson(scheduleJson,new TypeToken<ArrayList<ArrayList<subject>>>() {}.getType());
-                todaySchedule=timeTable.get(4);
-            //}
-        }
-        else{
-                todaySchedule=null;
-        }
+                todaySchedule=timeTable.get(today-2);
+            }
     }
     @Override
     public void onCreate() {
@@ -60,14 +55,23 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
     @Override
     public RemoteViews getViewAt(int position) {
         RemoteViews row = new RemoteViews(ctxt.getPackageName(),R.layout.rowview_widget);
-        row.setTextViewText(android.R.id.text1,todaySchedule.get(position).title);
-        row.setTextViewText(android.R.id.text2,todaySchedule.get(position).type);
+        subject session=todaySchedule.get(position);
+        row.setTextViewText(R.id.widget_title,session.title);
+        row.setTextViewText(R.id.widget_type,session.type);
+        row.setTextViewText(R.id.widget_startTime,session.startTime);
+        row.setTextViewText(R.id.widget_endTime,session.endTime);
+        if(session.type.equals("")){
+            row.setTextColor(R.id.widget_title,ctxt.getResources().getColor(R.color.Slight_white_orange));
+            row.setTextViewTextSize(R.id.widget_title,1,15);
+            row.setTextColor(R.id.widget_startTime,ctxt.getResources().getColor(R.color.Slight_white_orange));
+            row.setTextColor(R.id.widget_endTime,ctxt.getResources().getColor(R.color.Slight_white_orange));
+        }
         return row;
     }
 
     @Override
     public RemoteViews getLoadingView() {
-        return null;
+        return (new RemoteViews(ctxt.getPackageName(),R.layout.activity_login));
     }
 
     @Override
