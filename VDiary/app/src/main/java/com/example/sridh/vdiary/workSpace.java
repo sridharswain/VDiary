@@ -28,8 +28,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -57,7 +59,7 @@ public class workSpace extends AppCompatActivity {
     private ViewPager mViewPager;
     public static SharedPreferences shared;
     public static SharedPreferences.Editor editor;
-    static Context x;
+    static Context context;
     public static  List<Cabin_Details> cablist;
     List<Notification_Holder> noti_todo;
 
@@ -65,10 +67,10 @@ public class workSpace extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workspace);
-        x=this;
+        context =this;
         noti_todo=new ArrayList<>();
 
-       // Notification_Creator nc=new Notification_Creator("x","y","z",x);  //Test notification
+       // Notification_Creator nc=new Notification_Creator("x","y","z",context);  //Test notification
         //nc.create_notification();
 
 
@@ -181,73 +183,24 @@ public class workSpace extends AppCompatActivity {
                     rootView=inflater.inflate(R.layout.fragment_notes,container,false);
                     FloatingActionButton fab=(FloatingActionButton)rootView.findViewById(R.id.add);
                     ListView lv=(ListView)rootView.findViewById(R.id.cabinview);
-                    final cabinDetailAdapter mad=new cabinDetailAdapter(x,cablist);
+                    final cabinDetailAdapter mad=new cabinDetailAdapter(context,cablist);
+                    showSubject.todoList=mad;
                     lv.setAdapter(mad);
                     fab.setOnClickListener(new View.OnClickListener() { //Onclick Listener for floating action Button
                         @Override
                         public void onClick(View v) {
-                            final AlertDialog.Builder builder=new AlertDialog.Builder(x);
-
-
-
-
-                            final EditText name=new EditText(x);
-                           LinearLayout rlay=new LinearLayout(x);
-                            rlay.setOrientation(LinearLayout.VERTICAL);
-                            name.setInputType(InputType.TYPE_CLASS_TEXT);
-                            final EditText cabin=new EditText(x);
-                            cabin.setInputType(InputType.TYPE_CLASS_TEXT);
-                            final EditText branch=new EditText(x);
-                            branch.setInputType(InputType.TYPE_CLASS_TEXT);
-                            final TextView t1=new TextView(x);
-                            t1.setText("Teacher's Name");
-                            rlay.addView(t1);
-                            rlay.addView(name);
-                            final TextView t2=new TextView(x);
-                            t2.setText("Cabin Details");
-                            rlay.addView(t2);
-                            rlay.addView(cabin);
-                            final TextView t3=new TextView(x);
-                            t3.setText("Other Details");
-                            rlay.addView(t3);
-                            rlay.addView(branch);
-                            builder.setView(rlay);
-
-                            Button b=new Button(x);
-                            b.setText("Enter");
-                            rlay.addView(b);
-                            final AlertDialog alert=builder.create();
-                            alert.show();
-                            b.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Cabin_Details c=new Cabin_Details();
-                                    c.name=name.getText().toString();
-                                    c.cabin=cabin.getText().toString();
-                                    c.others=branch.getText().toString();
-                                    cablist.add(c);
-                                    mad.updatecontent(cablist);
-                                    alert.cancel();
-                                    Gson json=new Gson();
-                                    String k=json.toJson(cablist);
-                                    editor.putString("list",k);
-                                    editor.apply();
-
-
-                                }
-                            });
-
-
+                            showCabinAlertDialog(mad);
                         }
                     });
+
                     lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                            final AlertDialog.Builder build=new AlertDialog.Builder(x);
+                            final AlertDialog.Builder build=new AlertDialog.Builder(context);
                             final AlertDialog aler;
-                            final LinearLayout lin=new LinearLayout(x);
+                            final LinearLayout lin=new LinearLayout(context);
                             lin.setOrientation(LinearLayout.HORIZONTAL);
-                            final Button delete=new Button(x);
+                            final Button delete=new Button(context);
                             delete.setText("Delete");
                             lin.addView(delete);
                             build.setView(lin);
@@ -274,20 +227,22 @@ public class workSpace extends AppCompatActivity {
                     break;
                 case 0:
                     rootView=inflater.inflate(R.layout.fragment_courses,container,false);
-                    ListView lview=(ListView)rootView.findViewById(R.id.menu2listview);
-                    listAdapter_courses cadd=new listAdapter_courses(x,vClass.subList);
+                    ListView lview=(ListView)rootView.findViewById(R.id.course_listview);
+                    listAdapter_courses cadd=new listAdapter_courses(context,vClass.subList);
                     lview.setAdapter(cadd);
                     lview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            Intent showSubjectIntent =new Intent(context,showSubject.class);
+                            showSubjectIntent.putExtra("position",position);
+                            context.startActivity(showSubjectIntent);
                         }
                     });
                     break;
                 case 2:
                     rootView=inflater.inflate(R.layout.fragment_notes,container,false);
                     ListView lview1=(ListView)rootView.findViewById(R.id.cabinview);
-                    final todo_adapter adap=new todo_adapter(x,vClass.notes);
+                    final todo_adapter adap=new todo_adapter(context,vClass.notes);
                     lview1.setAdapter(adap);
                     FloatingActionButton fb=(FloatingActionButton)rootView.findViewById(R.id.add);
 
@@ -311,7 +266,7 @@ public class workSpace extends AppCompatActivity {
                             time=(TimePicker)root.findViewById(R.id.timePicker);
                             date=(DatePicker)root.findViewById(R.id.datePicker);
                             ok=(Button)root.findViewById(R.id.enterbutton);
-                            AlertDialog.Builder bui=new AlertDialog.Builder(x);
+                            AlertDialog.Builder bui=new AlertDialog.Builder(context);
                             bui.setView(root);
                             alert=bui.create();
                             alert.show();
@@ -345,12 +300,12 @@ public class workSpace extends AppCompatActivity {
                      lview1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                          @Override
                          public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                             final LinearLayout layouts=new LinearLayout(x);
-                             final Button del=new Button(x);
+                             final LinearLayout layouts=new LinearLayout(context);
+                             final Button del=new Button(context);
                              del.setText("Delete");
                              layouts.addView(del);
                              final AlertDialog ale;
-                             AlertDialog.Builder buil=new AlertDialog.Builder(x);
+                             AlertDialog.Builder buil=new AlertDialog.Builder(context);
                              buil.setView(layouts);
                              ale=buil.create();
                              ale.show();
@@ -368,15 +323,12 @@ public class workSpace extends AppCompatActivity {
 
                          }
                      });
-
-
             }
 
             return rootView;
         }
 
-        public void schedule_todo_notification(Notification_Holder n)
-        {
+        public void schedule_todo_notification(Notification_Holder n) {
             AlarmManager alarmManager=(AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
             Intent intent=new Intent(getActivity(),NotifyService.class);
             Gson js=new Gson();
@@ -385,6 +337,38 @@ public class workSpace extends AppCompatActivity {
             PendingIntent pendingIntent=PendingIntent.getBroadcast(getContext(),0,intent,0);
             alarmManager.set(AlarmManager.RTC_WAKEUP,n.cal.getTimeInMillis(),pendingIntent);
         }
+
+        void showCabinAlertDialog(final cabinDetailAdapter cabinListAdapter){
+            final AlertDialog.Builder alertBuilder= new AlertDialog.Builder(context);
+            final View alertCabinView=getActivity().getLayoutInflater().inflate(R.layout.alert_add_cabin,null);
+            alertBuilder.setView(alertCabinView);
+            final AlertDialog alert = alertBuilder.create();
+            alertCabinView.findViewById(R.id.alert_cabin_addButton).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String name= ((TextView)alertCabinView.findViewById(R.id.alert_cabin_teacherName)).getText().toString();
+                    String cabin=((TextView)alertCabinView.findViewById(R.id.alert_cabin_cabinAddress)).getText().toString();
+                    String comment=((TextView)alertCabinView.findViewById(R.id.alert_cabin_comment)).getText().toString();
+                    if(name.trim().equals("")|| cabin.trim().equals("")){
+                        Toast.makeText(context,"Invalid Data !",Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        Cabin_Details c=new Cabin_Details();
+                        c.name= name;
+                        c.cabin=cabin;
+                        c.others=comment;
+                        cablist.add(c);
+                        cabinListAdapter.updatecontent(cablist);
+                        alert.cancel();
+                        Gson json=new Gson();
+                        String k=json.toJson(cablist);
+                        editor.putString("list",k);
+                        editor.apply();
+                    }
+                }
+            });
+            alert.show();
+        }  //CREATE AND HANDLES THE ALERT DIALOG BOX TO ADD CABIN
     }
 
     /**
@@ -414,11 +398,11 @@ public class workSpace extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "All Subjects";
+                    return "Courses";
                 case 1:
-                    return "Cabin Details";
+                    return "Teachers";
                 case 2:
-                    return "To-Do";
+                    return "Tasks";
             }
             return null;
         }

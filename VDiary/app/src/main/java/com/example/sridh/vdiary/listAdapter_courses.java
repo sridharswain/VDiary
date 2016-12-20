@@ -1,6 +1,7 @@
 package com.example.sridh.vdiary;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;

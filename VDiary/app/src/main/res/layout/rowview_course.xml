@@ -7,27 +7,27 @@
     <TextView
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
         android:id="@+id/course_title"
         android:textSize="17dp"
-        android:textStyle="bold|italic"
+        android:textStyle="bold"
         android:textColor="#000000"
         android:background="#ffffff"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/course_type"
-        android:padding="0dp" />
+        android:padding="0dp"
+        android:text="RESEARCH METHODS IN MANAGEMENT"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
         android:id="@+id/course_teacher"
         android:textSize="15dp"
         android:textColor="#939292"
         android:background="#ffffff"
         android:padding="0dp"
         android:layout_alignTop="@+id/course_attendance"
-        android:layout_alignStart="@+id/course_title" />
+        android:layout_alignStart="@+id/course_title"
+        android:text="ANGELINE GAUTAMI FERNANDO"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,7 +38,8 @@
         android:textAlignment="textEnd"
         android:layout_below="@+id/course_title"
         android:layout_alignParentEnd="true"
-        android:background="#ffffff" />
+        android:background="#ffffff"
+        android:text="100%"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -53,6 +54,7 @@
         android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"
         android:textSize="12sp"
-        android:layout_marginEnd="7dp"/>
+        android:layout_marginEnd="7dp"
+        android:text="ETH"/>
 
 </RelativeLayout>

@@ -4,8 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name='android.permission.WAKE_LOCK'/>
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -20,17 +20,16 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".schedule"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".workSpace"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver android:name=".widget">
             <intent-filter>
@@ -42,14 +41,15 @@
                 android:resource="@xml/widget_info" />
         </receiver>
 
-
         <service
             android:name=".widgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
-        <receiver
-            android:name='com.example.sridh.vdiary.NotifyService'>
-        </receiver>
+        <receiver android:name=".NotifyService" />
+
+        <activity
+            android:name=".showSubject"
+            android:theme="@style/AppTheme.popupTheme"></activity>
     </application>
 
 </manifest>

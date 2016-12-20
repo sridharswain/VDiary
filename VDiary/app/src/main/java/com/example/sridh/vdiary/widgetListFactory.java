@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import android.widget.Toast;
@@ -57,14 +58,15 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
         RemoteViews row = new RemoteViews(ctxt.getPackageName(),R.layout.rowview_widget);
         subject session=todaySchedule.get(position);
         row.setTextViewText(R.id.widget_title,session.title);
-        row.setTextViewText(R.id.widget_type,session.type);
-        row.setTextViewText(R.id.widget_startTime,session.startTime);
-        row.setTextViewText(R.id.widget_endTime,session.endTime);
         if(session.type.equals("")){
             row.setTextColor(R.id.widget_title,ctxt.getResources().getColor(R.color.Slight_white_orange));
-            row.setTextViewTextSize(R.id.widget_title,1,15);
-            row.setTextColor(R.id.widget_startTime,ctxt.getResources().getColor(R.color.Slight_white_orange));
-            row.setTextColor(R.id.widget_endTime,ctxt.getResources().getColor(R.color.Slight_white_orange));
+            row.setTextViewTextSize(R.id.widget_title,1,13);
+            row.setViewVisibility(R.id.widget_type, View.INVISIBLE);
+            row.setViewVisibility(R.id.widget_Time,View.INVISIBLE);
+        }
+        else{
+            row.setTextViewText(R.id.widget_Time,session.startTime+" - "+session.endTime);
+            row.setTextViewText(R.id.widget_type,session.type);
         }
         return row;
     }

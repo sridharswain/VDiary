@@ -405,8 +405,6 @@ public class scrapper extends AppCompatActivity {
         });
     } // GET DATA FROM TIME TABLE
 
-    //https://academicscc.vit.ac.in/student/attn_report.asp?sem=FS" + "&fmdt=" + vClass.semStart + "&todt=" + vClass.fat //REPLACE
-    //UNCOMMENT THE LINES AND CHANGE TABLE TAG INDEX FROM 3 TO 4
     private void getAttendance(){
         att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[2].cells[2].innerText"), new ValueCallback<String>() {
             @Override
@@ -462,7 +460,7 @@ public class scrapper extends AppCompatActivity {
                 });
             }
         });
-    }
+    }  //GET DATAFROM THE ATTENDANCE PAGE
 
     class compileInf extends AsyncTask<Void,Void,Void>{
         @Override

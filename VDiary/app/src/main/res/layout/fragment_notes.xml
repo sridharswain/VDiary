@@ -21,6 +21,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         app:backgroundTint="#f27742"
-        android:src="@android:drawable/ic_menu_edit"
-        android:id="@+id/add" />
+        android:src="@drawable/plus_5"
+        android:id="@+id/add"
+        android:scaleType="fitCenter" />
 </RelativeLayout>

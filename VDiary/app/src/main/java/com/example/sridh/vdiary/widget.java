@@ -35,10 +35,10 @@ public class widget extends AppWidgetProvider {
                 intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
                 intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
                 views.setRemoteAdapter(R.id.widget_today,intent);
-                views.setViewVisibility(R.id.testBox,View.INVISIBLE);
+                views.setViewVisibility(R.id.widget_status,View.INVISIBLE);
             }
             else{
-                views.setTextViewText(R.id.testBox,"No Classes Today :)");
+                views.setTextViewText(R.id.widget_status,"No Classes Today :)");
             }
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }

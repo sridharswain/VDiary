@@ -31,6 +31,7 @@
         android:id="@+id/schedule_title"
         android:background="#ffffff"
         android:maxWidth="300dp"
+        android:textStyle="bold"
         android:text="SOFTWARE ENGINEERING AND DISCREETE AND MATHEMATICS FS"
         android:layout_toRightOf="@id/schedule_type"
         android:textSize="17sp" />
@@ -40,19 +41,11 @@
         android:text="11:40"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:id="@+id/schedule_startTime"
-        android:background="@android:color/transparent"/>
+        android:id="@+id/schedule_Time"
+        android:background="@android:color/transparent"
+        android:layout_below="@id/schedule_title"
+        android:layout_toEndOf="@id/schedule_type"/>
 
-    <TextView
-        android:text="12:31"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:id="@+id/schedule_endTime"
-        />
 
 
 </RelativeLayout>

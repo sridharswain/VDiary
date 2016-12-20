@@ -42,11 +42,6 @@ public class listAdapter_schedule extends BaseAdapter {
         return position;
     }
 
-    public class Holder
-    {
-        TextView subname,attend,teachrname,grnbar,timedisplayer;
-
-    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -54,18 +49,17 @@ public class listAdapter_schedule extends BaseAdapter {
         subject course=scheduleList.get(position);
         TextView title= ((TextView)rowview.findViewById(R.id.schedule_title));
         TextView type =(TextView)rowview.findViewById(R.id.schedule_type);
-        TextView startTime=(TextView)rowview.findViewById(R.id.schedule_startTime);
-        TextView endTime=(TextView)rowview.findViewById(R.id.schedule_endTime);
+        TextView Time=(TextView)rowview.findViewById(R.id.schedule_Time);
         title.setText(course.title);
-        startTime.setText(course.startTime);
-        endTime.setText(course.endTime);
         if(!course.type.equals("")){
             type.setText(course.type);
-
+            Time.setText(course.startTime+" - "+course.endTime);
         }
         else{
             type.setVisibility(View.INVISIBLE);
             title.setTextColor(context.getResources().getColor(R.color.Slight_white_orange));
+            title.setTextSize(14);
+            Time.setVisibility(View.INVISIBLE);
         }
         return rowview;
     }
