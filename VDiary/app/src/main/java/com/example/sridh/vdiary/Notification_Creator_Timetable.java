@@ -28,8 +28,7 @@ public class Notification_Creator_Timetable {
         context=x;
     }
 
-    public void create_notification_timetable()
-    {
+    public void create_notification_timetable() {
         NotificationCompat.Builder notibuilder=new NotificationCompat.Builder(context);
         notibuilder.setContentTitle(title);
         notibuilder.setContentText(name_and_teachersname);
