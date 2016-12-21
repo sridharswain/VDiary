@@ -279,15 +279,20 @@ public class workSpace extends AppCompatActivity {
                                 public void onClick(View v) {
                                     Calendar c=Calendar.getInstance();
                                     c.set(finalDate.getYear(),finalDate.getMonth(),finalDate.getDayOfMonth(),finalTime.getCurrentHour(),finalTime.getCurrentMinute());
-                                    Notification_Holder n=new Notification_Holder(c,finalTitle.getText().toString(),finalOther.getText().toString());
-                                    vClass.notes.add(n);
-                                    schedule_todo_notification(n);
-                                    Gson json=new Gson();
-                                    String temporary=json.toJson(vClass.notes);
-                                    editor.putString("todolist",temporary);
-                                    editor.apply();
-                                    adap.update(vClass.notes);
-                                    alert.cancel();
+
+                                    if(finalTitle.getText().toString()!=null && finalTitle.getText().toString().equals("")!=true && finalOther.getText().toString()!=null && finalOther.getText().toString().equals("")!=true) {
+                                        Notification_Holder n=new Notification_Holder(c,finalTitle.getText().toString(),finalOther.getText().toString());
+                                        vClass.notes.add(n);
+                                        schedule_todo_notification(n);
+                                        Gson json = new Gson();
+                                        String temporary = json.toJson(vClass.notes);
+                                        editor.putString("todolist", temporary);
+                                        editor.apply();
+                                        adap.update(vClass.notes);
+                                        alert.cancel();
+                                    }
+                                    else
+                                        Toast.makeText(getContext(), "Both title and note must contain some text", Toast.LENGTH_SHORT).show();
 
                                 }
                             });
