@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -178,10 +177,5 @@ public class schedule extends AppCompatActivity {
             return null;
         }
     }
-    public static void fortoast()
-    {
-        Toast.makeText(s, schedule.i+" ", Toast.LENGTH_SHORT).show();
-    }
-
 }
 
