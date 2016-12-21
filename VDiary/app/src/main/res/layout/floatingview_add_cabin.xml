@@ -52,5 +52,4 @@
         android:layout_marginTop="2dp"
         android:layout_below="@+id/alert_cabin_comment"
         android:layout_centerHorizontal="true" />
-
 </RelativeLayout>

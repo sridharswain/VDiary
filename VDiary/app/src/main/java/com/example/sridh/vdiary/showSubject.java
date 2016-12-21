@@ -1,7 +1,6 @@
 package com.example.sridh.vdiary;
 
 import android.content.SharedPreferences;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,6 +30,7 @@ public class showSubject extends AppCompatActivity {
     int height;
     LinearLayout taskGridLeft;
     LinearLayout taskGridRight;
+    int[] colors=new int[]{R.color.teal,R.color.sunflower,R.color.nephritis,R.color.belize,R.color.green_cyan,R.color.amethyst,R.color.pomegranate};
     public static ListAdapter todoList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +41,8 @@ public class showSubject extends AppCompatActivity {
         show(clicked);  //Initialize the popup activity to show the contents of the subject
         tasks=vClass.courseTasks.get(clicked.code);
         if(tasks!=null){
-            updateTaskView();
+            layTaskView();
+            (findViewById(R.id.no_task_text)).setVisibility(View.INVISIBLE);
             available=true;
         }
     }
@@ -65,6 +65,7 @@ public class showSubject extends AppCompatActivity {
         taskGridRight.getLayoutParams().width= taskViewWdth;
     }
     void initMenu(){
+        bar.setBackgroundColor(getResources().getColor(R.color.taskbar_orange));
         bar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -79,33 +80,32 @@ public class showSubject extends AppCompatActivity {
             }
         });
     }
-
     void writeToPrefs(){
         SharedPreferences.Editor prefEditor= getSharedPreferences("academicPrefs",MODE_PRIVATE).edit();
         prefEditor.putString("tasks",jsonBuilder.toJson(vClass.courseTasks));
         prefEditor.commit();
     }
-
-    void updateTaskView(){
+    void layTaskView(){
         //Toast.makeText(getApplicationContext(),tasks.get(0).title,Toast.LENGTH_LONG).show();
         int i=0;
         taskGridLeft.removeAllViews();
         taskGridRight.removeAllViews();
         while(i<tasks.size()){
-            taskGridLeft.addView(addTask(tasks.get(i)));
+            taskGridLeft.addView(addTask(i));
             i++;
             if(i<tasks.size())
-                taskGridRight.addView(addTask(tasks.get(i)));
+                taskGridRight.addView(addTask(i));
             i++;
         }
     }
-    View addTask(task cTask){
+    View addTask(int index){
+        task cTask= tasks.get(index);
         View taskView= getLayoutInflater().inflate(R.layout.course_task_view,null);
         ((TextView)taskView.findViewById(R.id.task_title)).setText(cTask.title);
         ((TextView)taskView.findViewById(R.id.task_desc)).setText(cTask.desc);
+        taskView.setBackgroundColor(getResources().getColor(colors[index%(colors.length)]));
         return taskView;
     }
-
     void showTaskAdder(){
         AlertDialog.Builder alertBuilder= new AlertDialog.Builder(this);
         final View alertView= getLayoutInflater().inflate(R.layout.floatingview_add_task,null);
@@ -139,10 +139,10 @@ public class showSubject extends AppCompatActivity {
     }
     void updateTaskGrid(int index){
         if((index)%2==1){
-            taskGridLeft.addView(addTask(tasks.get(index)));
+            taskGridLeft.addView(addTask(index));
         }
         else{
-            taskGridRight.addView(addTask(tasks.get(index)));
+            taskGridRight.addView(addTask(index));
         }
     }
 }

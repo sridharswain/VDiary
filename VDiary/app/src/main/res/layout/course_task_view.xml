@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="200dp"
-    android:layout_height="200dp"
-    android:orientation="vertical"
-    android:background="@color/windows_color">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
     <TextView
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:layout_width="175dp"
         android:id="@+id/task_title"
-        android:text="This is the title of the task"/>
+        android:text="This is the title of the task"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="17dp"/>
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="175dp"
