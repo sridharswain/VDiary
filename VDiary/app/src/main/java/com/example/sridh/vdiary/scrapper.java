@@ -29,6 +29,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class scrapper extends AppCompatActivity {
@@ -58,7 +59,7 @@ public class scrapper extends AppCompatActivity {
         else{
             initWebViews();
             setUp();
-            vClass.setStatBar(getWindow(),getApplicationContext());
+            vClass.setStatusBar(getWindow(),getApplicationContext());
             new compileInf().execute();
         }
     }
@@ -68,19 +69,19 @@ public class scrapper extends AppCompatActivity {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view,url);
             String webTitle =web.getTitle();
-            if(tryRefresh){
-                if(webTitle.equals("") || webTitle.equals("Webpage not available")){
+            if(webTitle.equals("") || webTitle.equals("Webpage not available")){
+                if(tryRefresh){
                     Toast.makeText(getApplicationContext(),"Connection Failed!",Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(scrapper.this,workSpace.class));
                     finish();
                     return;
                 }
-            }
-            else if(webTitle.equals("") || webTitle.equals("Webpage not available")){
-                status.setText("Connection Falied!");
-                load(true);
-                reload.setVisibility(View.VISIBLE);
-                return;
+                else{
+                    status.setText("Connection Falied!");
+                    load(true);
+                    reload.setVisibility(View.VISIBLE);
+                    return;
+                }
             }
             else if(web.getUrl().equals("https://academicscc.vit.ac.in/student/stud_login.asp")) {
                 web.evaluateJavascript(getcmd("return document.getElementsByName(\"message\")[0].value"), new ValueCallback<String>() {
@@ -157,7 +158,7 @@ public class scrapper extends AppCompatActivity {
         Bitmap capImg= BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         captcha.setImageBitmap(capImg);
         load(false);
-    } //CONVERTS THE BASE-64 STRING TO BUTMAP IMAGE AND SETS TO CAPTCHA IMAGEVIEW
+    } //CONVERTS THE BASE-64 STRING TO BITMAP IMAGE AND SETS TO CAPTCHA IMAGEVIEW
 
     private void setUp(){
         setContentView(R.layout.activity_login);
@@ -527,6 +528,10 @@ public class scrapper extends AppCompatActivity {
         SharedPreferences prefs= getSharedPreferences("academicPrefs",MODE_PRIVATE);
         String allSubJson=prefs.getString("allSub",null);
         String scheduleJson =prefs.getString("schedule",null);
+        String taskJson= prefs.getString("tasks",null);
+        if(taskJson!=null){
+            vClass.courseTasks=jsonBuilder.fromJson(taskJson,new TypeToken<Map<String,List<task>>>(){}.getType());
+        }
         if(allSubJson!=null && scheduleJson!=null){
             vClass.subList=jsonBuilder.fromJson(allSubJson,new TypeToken<ArrayList<subject>>(){}.getType());
             vClass.timeTable=jsonBuilder.fromJson(scheduleJson, new TypeToken<ArrayList<ArrayList<subject>>>(){}.getType());

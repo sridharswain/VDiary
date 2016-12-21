@@ -52,8 +52,6 @@ public class schedule extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Schedule");
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the five
-        // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
@@ -64,7 +62,7 @@ public class schedule extends AppCompatActivity {
         if(todayIndex>1 && todayIndex<7){
             mViewPager.setCurrentItem(todayIndex-2,true);
         }
-        vClass.setStatBar(getWindow(),getApplicationContext());
+        vClass.setStatusBar(getWindow(),getApplicationContext());
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);

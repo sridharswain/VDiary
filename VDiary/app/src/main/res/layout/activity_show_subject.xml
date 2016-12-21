@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/subject_Title"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="30sp"
+        android:textSize="25sp"
         android:layout_below="@+id/showToolbar"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
@@ -36,9 +36,39 @@
         android:layout_height="wrap_content"
         android:id="@+id/subject_Teacher"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="20sp"
+        android:textSize="17sp"
         android:layout_below="@+id/subject_Title"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/subject_Teacher">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:scrollbars="vertical"
+            android:id="@+id/task_grid_view">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:scrollbars="vertical"
+                android:id="@+id/task_grid_view_left"
+                android:layout_alignParentLeft="true">
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:scrollbars="vertical"
+                android:id="@+id/task_grid_view_right"
+                android:layout_alignParentRight="true">
+            </LinearLayout>
+            </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>

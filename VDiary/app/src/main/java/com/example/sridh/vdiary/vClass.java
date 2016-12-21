@@ -7,6 +7,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +22,9 @@ public class vClass {
     public static String cat1;
     public static String cat2;
     public static String fat;
-    public static Map<String,Boolean> lis=new HashMap<>();
     public static List<Notification_Holder> notes=new ArrayList<>();
-    public static void setStatBar(Window window,Context context){
+    public static Map<String,List<task>> courseTasks= new HashMap<>();
+    public static void setStatusBar(Window window, Context context){
         if(Build.VERSION.SDK_INT>=21){
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -37,5 +38,33 @@ class Note
     String note;
     String time;
     String date;
+}
+class Cabin_Details
+{
+    public String name;
+    public String cabin;
+    public String others;
+}
+class subject {
+    public String code;
+    public String title;
+    public String teacher;
+    public String attString;
+    public String room;
+    public int ctd;
+    public String startTime;
+    public String endTime;
+    public String type;
+}
+
+class task{
+    String title;
+    String desc;
+    Calendar deadLine;
+    public task(String heading,String description, Calendar deadDate){
+        title=heading;
+        desc=description;
+        deadLine=deadDate;
+    }
 }
 

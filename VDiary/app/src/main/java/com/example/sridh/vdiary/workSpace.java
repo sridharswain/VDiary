@@ -15,7 +15,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +27,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -98,7 +96,7 @@ public class workSpace extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-        vClass.setStatBar(getWindow(),getApplicationContext());
+        vClass.setStatusBar(getWindow(),getApplicationContext());
 
     }
     void setToolbars(){
@@ -260,7 +258,7 @@ public class workSpace extends AppCompatActivity {
 
 
                             final AlertDialog alert;
-                            View root=getActivity().getLayoutInflater().inflate(R.layout.floatingview_todo,null);
+                            View root=getActivity().getLayoutInflater().inflate(R.layout.floatingview_add_todo,null);
                             title=(EditText) root.findViewById(R.id.title);
                             other=(EditText)root.findViewById(R.id.note);
                             time=(TimePicker)root.findViewById(R.id.timePicker);
@@ -340,7 +338,7 @@ public class workSpace extends AppCompatActivity {
 
         void showCabinAlertDialog(final cabinDetailAdapter cabinListAdapter){
             final AlertDialog.Builder alertBuilder= new AlertDialog.Builder(context);
-            final View alertCabinView=getActivity().getLayoutInflater().inflate(R.layout.alert_add_cabin,null);
+            final View alertCabinView=getActivity().getLayoutInflater().inflate(R.layout.floatingview_add_cabin,null);
             alertBuilder.setView(alertCabinView);
             final AlertDialog alert = alertBuilder.create();
             alertCabinView.findViewById(R.id.alert_cabin_addButton).setOnClickListener(new View.OnClickListener() {
