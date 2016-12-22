@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.sridh.vdiary.schedule"
     >
-
-
     <item
         android:id="@+id/toWorkSpace"
         android:title="All Subjects"

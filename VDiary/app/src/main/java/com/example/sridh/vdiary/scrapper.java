@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -52,6 +53,17 @@ public class scrapper extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.splash_screen);
+        vClass.setStatusBar(getWindow(),getApplicationContext());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                start();
+            }
+        },1000);
+    }
+
+    void start() {
         if(!tryRefresh && readFromPrefs()){
             startActivity(new Intent(this, workSpace.class));
             finish();
@@ -62,7 +74,7 @@ public class scrapper extends AppCompatActivity {
             vClass.setStatusBar(getWindow(),getApplicationContext());
             new compileInf().execute();
         }
-    }
+    } //STARTS THE PROCESSING
 
     private class loginClient extends WebViewClient{
         @Override

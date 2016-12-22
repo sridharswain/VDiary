@@ -4,21 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.sridh.vdiary.show_subject">
     <item
-        android:id="@+id/action_setMeeting"
-        android:orderInCategory="200"
-        android:title="Set Meeting"
-        app:showAsAction="never"
-        />
-    <item
         android:id="@+id/action_addAssingment"
         android:orderInCategory="200"
-        android:title="Add Assignment"
+        android:title="Add Task"
         app:showAsAction="never"
         />
     <item
         android:id="@+id/action_editSubject"
         android:orderInCategory="200"
-        android:title="Add Assignment"
+        android:title="Edit Subject"
         app:showAsAction="always"
         android:icon="@android:drawable/ic_menu_edit" />
 </menu>

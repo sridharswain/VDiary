@@ -49,7 +49,9 @@
 
         <activity
             android:name=".showSubject"
-            android:theme="@style/AppTheme.popupTheme"></activity>
+            android:theme="@style/AppTheme.popupTheme" />
+        <activity android:name=".launcher">
+        </activity>
     </application>
 
 </manifest>

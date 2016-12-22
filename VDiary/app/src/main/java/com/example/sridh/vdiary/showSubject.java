@@ -28,6 +28,7 @@ public class showSubject extends AppCompatActivity {
     Gson jsonBuilder = new Gson();
     int width;
     int height;
+    TextView notask;
     LinearLayout taskGridLeft;
     LinearLayout taskGridRight;
     int[] colors=new int[]{R.color.teal,R.color.sunflower,R.color.nephritis,R.color.belize,R.color.green_cyan,R.color.amethyst,R.color.pomegranate};
@@ -39,10 +40,10 @@ public class showSubject extends AppCompatActivity {
         int position=getIntent().getIntExtra("position",0);
         clicked= vClass.subList.get(position);
         show(clicked);  //Initialize the popup activity to show the contents of the subject
-        tasks=vClass.courseTasks.get(clicked.code);
+        tasks=vClass.courseTasks.get(clicked.code+clicked.type);
         if(tasks!=null){
             layTaskView();
-            (findViewById(R.id.no_task_text)).setVisibility(View.INVISIBLE);
+            notask.setVisibility(View.INVISIBLE);
             available=true;
         }
     }
@@ -63,6 +64,7 @@ public class showSubject extends AppCompatActivity {
         taskGridLeft.getLayoutParams().width= taskViewWdth;
         taskGridRight=(LinearLayout)findViewById(R.id.task_grid_view_right);
         taskGridRight.getLayoutParams().width= taskViewWdth;
+        notask=(TextView)findViewById(R.id.no_task_text);
     }
     void initMenu(){
         bar.setBackgroundColor(getResources().getColor(R.color.taskbar_orange));
@@ -72,8 +74,6 @@ public class showSubject extends AppCompatActivity {
                 switch(item.getItemId()){
                     case R.id.action_addAssingment:
                         showTaskAdder();
-                        break;
-                    case R.id.action_setMeeting:
                         break;
                 }
                 return true;
@@ -127,9 +127,11 @@ public class showSubject extends AppCompatActivity {
                     if(!available){
                         tasks=new ArrayList<>();
                         available=true;
+                        notask.setVisibility(View.INVISIBLE);
                     }
                     tasks.add(new task(name,desc,deadLine));
-                    vClass.courseTasks.put(clicked.code,tasks);
+
+                    vClass.courseTasks.put(clicked.code+clicked.type,tasks);
                     writeToPrefs();
                     updateTaskGrid(tasks.size()-1);
                     alertBox.cancel();
@@ -138,7 +140,7 @@ public class showSubject extends AppCompatActivity {
         });
     }
     void updateTaskGrid(int index){
-        if((index)%2==1){
+        if((index)%2==0 ){
             taskGridLeft.addView(addTask(index));
         }
         else{

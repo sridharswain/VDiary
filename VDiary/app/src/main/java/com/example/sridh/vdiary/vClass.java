@@ -24,13 +24,14 @@ public class vClass {
     public static String fat;
     public static List<Notification_Holder> notes=new ArrayList<>();
     public static Map<String,List<task>> courseTasks= new HashMap<>();
-    public static void setStatusBar(Window window, Context context){
+    public static void setStatusBar(Window window, Context context) {
         if(Build.VERSION.SDK_INT>=21){
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(context,R.color.taskbar_orange));
         }
-    }
+    }  //CHANGE THE COLOR OF THE STATUS BAR
+    public static List<teacher> teachers= new ArrayList<>();
 }
 class Note
 {
@@ -65,6 +66,26 @@ class task{
         title=heading;
         desc=description;
         deadLine=deadDate;
+    }
+}
+class teacher{
+    String name;
+    String cabin;
+    public teacher(String name,String cabin){
+        this.name=name;
+        this.cabin=cabin;
+    }
+    public String getName(){
+        return this.name;
+    }
+    public String getCabin(){
+        return this.cabin;
+    }
+    public void setName(String name){
+        this.name=name;
+    }
+    public void setCabin(String cabin){
+        this.cabin=cabin;
     }
 }
 
