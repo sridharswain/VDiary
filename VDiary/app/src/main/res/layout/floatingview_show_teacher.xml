@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/descent_orange">
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:id="@+id/show_teacher_name"
         android:textColor="@color/primaryTextColor"
-        android:text="Teacher's Name"
         android:textSize="20sp"/>
     <TextView
         android:layout_height="wrap_content"
@@ -16,5 +16,5 @@
         android:id="@+id/show_teacher_cabin"
         android:textColor="@color/primaryTextColor"
         android:layout_below="@id/show_teacher_name"
-        android:textSize="20sp" />
+        android:textSize="20sp"/>
 </RelativeLayout>
