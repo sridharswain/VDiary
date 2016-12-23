@@ -15,13 +15,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -49,6 +51,7 @@ public class workSpace extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
+
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
@@ -60,7 +63,16 @@ public class workSpace extends AppCompatActivity {
     static Context context;
     public static  List<Cabin_Details> cablist;
     List<Notification_Holder> noti_todo;
+    static ListView resultList;
 
+    @Override
+    public void onBackPressed() {
+            if(resultList.getVisibility()==View.VISIBLE){
+                resultList.setVisibility(View.INVISIBLE);
+            }
+            else finish();
+        return;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,8 +90,8 @@ public class workSpace extends AppCompatActivity {
 
 
         //Get vClass.notes list from shared preferences
-        String get_list=shared.getString("todolist","not present");
-        if(get_list.equals("not present")==false) {
+        String get_list=shared.getString("todolist",null);
+        if(get_list!=null) {
             vClass.notes=Notification_Holder.convert_from_jason(get_list);
         }
         //vClass.notes is initialized
@@ -143,6 +155,8 @@ public class workSpace extends AppCompatActivity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
+        EditText teacherSearch;
+        List<teacher> searchResult;
 
         public PlaceholderFragment() {
         }
@@ -178,10 +192,11 @@ public class workSpace extends AppCompatActivity {
                     }
                     //cablist initialized
 
-                    rootView=inflater.inflate(R.layout.fragment_notes,container,false);
-                    FloatingActionButton fab=(FloatingActionButton)rootView.findViewById(R.id.add);
-                    ListView lv=(ListView)rootView.findViewById(R.id.cabinview);
-                    final cabinDetailAdapter mad=new cabinDetailAdapter(context,cablist);
+                    rootView=inflater.inflate(R.layout.fragment_teachers,container,false);
+                    setSearcher(rootView);
+                    FloatingActionButton fab=(FloatingActionButton)rootView.findViewById(R.id.teachers_add);
+                    ListView lv=(ListView)rootView.findViewById(R.id.teachers_list);
+                    final listAdapter_teachers mad=new listAdapter_teachers(context,cablist);
                     showSubject.todoList=mad;
                     lv.setAdapter(mad);
                     fab.setOnClickListener(new View.OnClickListener() { //Onclick Listener for floating action Button
@@ -239,10 +254,10 @@ public class workSpace extends AppCompatActivity {
                     break;
                 case 2:
                     rootView=inflater.inflate(R.layout.fragment_notes,container,false);
-                    ListView lview1=(ListView)rootView.findViewById(R.id.cabinview);
-                    final todo_adapter adap=new todo_adapter(context,vClass.notes);
+                    ListView lview1=(ListView)rootView.findViewById(R.id.notes_list);
+                    final listAdapter_todo adap=new listAdapter_todo(context,vClass.notes);
                     lview1.setAdapter(adap);
-                    FloatingActionButton fb=(FloatingActionButton)rootView.findViewById(R.id.add);
+                    FloatingActionButton fb=(FloatingActionButton)rootView.findViewById(R.id.notes_add);
 
 
                     //Enter each element of listview
@@ -341,7 +356,7 @@ public class workSpace extends AppCompatActivity {
             alarmManager.set(AlarmManager.RTC_WAKEUP,n.cal.getTimeInMillis(),pendingIntent);
         }
 
-        void showCabinAlertDialog(final cabinDetailAdapter cabinListAdapter){
+        void showCabinAlertDialog(final listAdapter_teachers cabinListAdapter){
             final AlertDialog.Builder alertBuilder= new AlertDialog.Builder(context);
             final View alertCabinView=getActivity().getLayoutInflater().inflate(R.layout.floatingview_add_cabin,null);
             alertBuilder.setView(alertCabinView);
@@ -372,6 +387,45 @@ public class workSpace extends AppCompatActivity {
             });
             alert.show();
         }  //CREATE AND HANDLES THE ALERT DIALOG BOX TO ADD CABIN
+
+
+        void setSearcher(View view){
+            searchResult= new ArrayList<>();
+            teacherSearch=(EditText)view.findViewById(R.id.teachers_searchText);
+            resultList=(ListView)view.findViewById(R.id.teachers_search_list);
+            final listAdapter_searchTeacher searchAdapter= new listAdapter_searchTeacher(context,searchResult);
+            resultList.setAdapter(searchAdapter);
+            teacherSearch.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    searchResult.clear();
+                    String search=teacherSearch.getText().toString();
+                    if(!(search.length()<2)){
+                        resultList.setVisibility(View.VISIBLE);
+                        for(int i=0;i<vClass.teachers.size();i++){
+                            teacher var = vClass.teachers.get(i);
+                            if(var.name.toLowerCase().contains(search.toLowerCase())){
+                                searchResult.add(var);
+                            }
+                        }
+                    }
+                    else{
+                        resultList.setVisibility(View.INVISIBLE);
+                    }
+                    searchAdapter.update(searchResult);
+                }
+            });
+        }
     }
 
     /**
@@ -410,124 +464,4 @@ public class workSpace extends AppCompatActivity {
             return null;
         }
     }
-
 }
-
-class cabinDetailAdapter extends BaseAdapter// LIST ADAPTER FOR CABIN VIEW
-{
-    LayoutInflater inflater=null;
-    List<Cabin_Details> cab;
-    Context context;
-    public View view;
-
-    cabinDetailAdapter(Context c, List<Cabin_Details> lis)
-    {
-        cab=lis;
-        context=c;
-        inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
-
-    @Override
-    public int getCount() {
-        return cab.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return cab.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public class Holder
-    {
-        public TextView name,cabin,others;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        view=inflater.inflate(R.layout.rowview_cabin,null);
-        Holder holder=new Holder();
-        //Initializing
-        holder.name=(TextView)view.findViewById(R.id.newname);
-        holder.cabin=(TextView)view.findViewById(R.id.newcabin);
-        holder.others=(TextView)view.findViewById(R.id.newOthers);
-        //Setting Data
-        holder.name.setText(cab.get(position).name);
-        holder.cabin.setText(cab.get(position).cabin);
-        holder.others.setText(cab.get(position).others);
-
-        return view;
-    }
-
-    public void updatecontent(List<Cabin_Details> listt)
-    {
-        cab=listt;
-        notifyDataSetChanged();
-    }
-}
- class todo_adapter extends BaseAdapter
- {
-     LayoutInflater inflater=null;
-     List<Notification_Holder> list;
-     Context context;
-     public View view1;
-
-     public todo_adapter(Context con,List<Notification_Holder> n)
-     {
-         context=con;
-         list=n;
-         inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-     }
-
-
-     @Override
-     public int getCount() {
-         return list.size();
-     }
-
-     @Override
-     public Object getItem(int position) {
-         return list.get(position);
-     }
-
-     @Override
-     public long getItemId(int position) {
-         return position;
-     }
-
-     class Holder
-     {
-        TextView title,note,time,date;
-     }
-
-     @Override
-     public View getView(int position, View convertView, ViewGroup parent) {
-         view1=inflater.inflate(R.layout.rowview_todo,null);
-         Holder holder=new Holder();
-         holder.title=(TextView)view1.findViewById(R.id.titleview);
-         holder.note=(TextView)view1.findViewById(R.id.noteview);
-         holder.time=(TextView)view1.findViewById(R.id.timeview);
-         holder.date=(TextView)view1.findViewById(R.id.dateview);
-         holder.title.setText(list.get(position).title);
-         holder.note.setText(list.get(position).content);
-         holder.date.setText(list.get(position).cal.get(Calendar.DATE)+"/"+list.get(position).cal.get(Calendar.MONTH)+"/"+list.get(position).cal.get(Calendar.YEAR)+" ");
-         int x=list.get(position).cal.get(Calendar.AM_PM);
-         String ampm;
-         if(x==1)
-             ampm="PM";
-         else
-         ampm="AM";
-         holder.time.setText(list.get(position).cal.get(Calendar.HOUR)+":"+list.get(position).cal.get(Calendar.MINUTE)+ " "+ampm+" ");
-         return view1;
-     }
-
-     public void update(List<Notification_Holder> not)
-     {
-         list=not;
-         notifyDataSetChanged();
-     }
- }

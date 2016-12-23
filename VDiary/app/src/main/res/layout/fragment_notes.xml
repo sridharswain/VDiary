@@ -7,7 +7,7 @@
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/cabinview"
+        android:id="@+id/notes_list"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:drawSelectorOnTop="true"
@@ -22,6 +22,6 @@
         android:layout_alignParentEnd="true"
         app:backgroundTint="#f27742"
         android:src="@drawable/plus_5"
-        android:id="@+id/add"
+        android:id="@+id/notes_add"
         android:scaleType="fitCenter" />
 </RelativeLayout>

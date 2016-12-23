@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:hint="Search.."
+        android:id="@+id/teachers_searchText"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/teachers_searchText"
+        android:text="S"
+        android:id="@+id/teacher_search_button"/>
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/teachers_list"
+        android:layout_centerVertical="true"
+        android:layout_below="@id/teachers_searchText"
+        android:drawSelectorOnTop="true"
+        android:stackFromBottom="false"
+        android:contextClickable="false"
+        android:dividerHeight="5dp"
+        android:choiceMode="singleChoice" />
+    <android.support.design.widget.FloatingActionButton
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        app:backgroundTint="#f27742"
+        android:src="@drawable/plus_5"
+        android:id="@+id/teachers_add"
+        android:scaleType="fitCenter" />
+    <ListView
+        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/teachers_searchText"
+        android:id="@+id/teachers_search_list"
+        android:background="@drawable/soft_corner"
+        android:visibility="invisible"/>
+
+</RelativeLayout>

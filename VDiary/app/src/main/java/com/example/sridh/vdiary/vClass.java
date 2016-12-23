@@ -6,6 +6,8 @@ import android.support.v4.content.ContextCompat;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.firebase.client.Firebase;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -17,7 +19,7 @@ import java.util.Map;
  */
 public class vClass {
     public static List<subject> subList = new ArrayList<subject>();
-    public static  List<List<subject>> timeTable = new ArrayList<>();
+    public static List<List<subject>> timeTable = new ArrayList<>();
     public static String semStart;
     public static String cat1;
     public static String cat2;
@@ -32,6 +34,7 @@ public class vClass {
         }
     }  //CHANGE THE COLOR OF THE STATUS BAR
     public static List<teacher> teachers= new ArrayList<>();
+    public static String FIREBASE_URL= "https://vdiary-a25b2.firebaseio.com/";
 }
 class Note
 {
@@ -71,10 +74,6 @@ class task{
 class teacher{
     String name;
     String cabin;
-    public teacher(String name,String cabin){
-        this.name=name;
-        this.cabin=cabin;
-    }
     public String getName(){
         return this.name;
     }
