@@ -58,7 +58,6 @@ public class scrapper extends AppCompatActivity {
         setContentView(R.layout.splash_screen);
         vClass.setStatusBar(getWindow(),getApplicationContext());
         start();
-        Firebase.setAndroidContext(this);
     }
 
     void start() {
@@ -68,6 +67,7 @@ public class scrapper extends AppCompatActivity {
         }
         else{
             initWebViews();
+            Firebase.setAndroidContext(this);
             database= new Firebase(vClass.FIREBASE_URL);
             setUp();
             vClass.setStatusBar(getWindow(),getApplicationContext());
