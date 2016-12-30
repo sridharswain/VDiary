@@ -4,8 +4,8 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/descent_orange</item>
-        <item name="colorPrimaryDark">@color/descent_orange</item>
-        <item name="colorAccent">@color/descent_orange</item>
+        <item name="colorPrimaryDark">@color/taskbar_orange</item>
+        <item name="colorAccent">@color/windows_color</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -17,17 +17,6 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="FullscreenTheme" parent="AppTheme">
-        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
-        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
-    </style>
-
-    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
-    </style>
 
     <style name="AppTheme.popupTheme" parent="AppTheme.NoActionBar">
         <item name="android:windowIsFloating">true</item>

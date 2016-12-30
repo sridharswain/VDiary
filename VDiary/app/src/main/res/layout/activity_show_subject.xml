@@ -5,8 +5,7 @@
     android:id="@+id/activity_show_subject"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.sridh.vdiary.showSubject"
-    android:background="@color/divider">
+    tools:context="com.example.sridh.vdiary.showSubject">
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -56,7 +55,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/subject_Teacher"
-        android:id="@+id/show_subject_scoller">
+        android:id="@+id/show_subject_scoller"
+        android:layout_marginTop="2dp">
 
         <RelativeLayout
             android:layout_width="match_parent"

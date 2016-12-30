@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -82,8 +83,6 @@ public class workSpace extends AppCompatActivity {
 
        // Notification_Creator nc=new Notification_Creator("x","y","z",context);  //Test notification
         //nc.create_notification();
-
-
         shared=getSharedPreferences("todoshared",MODE_PRIVATE);
 
 
@@ -198,6 +197,7 @@ public class workSpace extends AppCompatActivity {
                     ListView lv=(ListView)rootView.findViewById(R.id.teachers_list);
                     final listAdapter_teachers mad=new listAdapter_teachers(context,cablist);
                     showSubject.todoList=mad;
+                    listAdapter_searchTeacher.teacherAdapter=mad;
                     lv.setAdapter(mad);
                     fab.setOnClickListener(new View.OnClickListener() { //Onclick Listener for floating action Button
                         @Override

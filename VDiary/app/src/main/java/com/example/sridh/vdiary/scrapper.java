@@ -38,11 +38,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class scrapper extends AppCompatActivity {
-    EditText regBox;
-    EditText passBox;
-    EditText captchaBox;
-    WebView web;
-    WebView att;
+    EditText regBox,passBox,captchaBox;
+    WebView web,att;
     ImageView captcha,login;
     CheckBox cb;
     TextView status;
@@ -60,14 +57,8 @@ public class scrapper extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
         vClass.setStatusBar(getWindow(),getApplicationContext());
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                start();
-            }
-        },1000);
+        start();
         Firebase.setAndroidContext(this);
-        database= new Firebase(vClass.FIREBASE_URL);
     }
 
     void start() {
@@ -77,6 +68,7 @@ public class scrapper extends AppCompatActivity {
         }
         else{
             initWebViews();
+            database= new Firebase(vClass.FIREBASE_URL);
             setUp();
             vClass.setStatusBar(getWindow(),getApplicationContext());
             new compileInf().execute();
@@ -623,7 +615,7 @@ public class scrapper extends AppCompatActivity {
     } //PLACE THE LAB IN THERE CORRECT POSITION BY INSERTION SORT
 
     void load(boolean x){
-        if(x==true){
+        if(x){
             loadView.setVisibility(View.VISIBLE);
             loginView.setVisibility(View.INVISIBLE);
         }

@@ -18,11 +18,7 @@
             android:name=".scrapper"
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".schedule"
@@ -50,7 +46,13 @@
         <activity
             android:name=".showSubject"
             android:theme="@style/AppTheme.popupTheme" />
-        <activity android:name=".launcher">
+        <activity android:name=".splashScreen"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

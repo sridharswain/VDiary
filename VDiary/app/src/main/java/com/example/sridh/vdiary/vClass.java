@@ -5,9 +5,6 @@ import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.view.Window;
 import android.view.WindowManager;
-
-import com.firebase.client.Firebase;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;

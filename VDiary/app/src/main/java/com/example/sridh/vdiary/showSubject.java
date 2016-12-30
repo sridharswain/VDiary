@@ -1,6 +1,7 @@
 package com.example.sridh.vdiary;
 
 import android.content.SharedPreferences;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ public class showSubject extends AppCompatActivity {
             notask.setVisibility(View.INVISIBLE);
             available=true;
         }
+
     }
     void show(subject sub){
         DisplayMetrics dm = new DisplayMetrics();
@@ -103,7 +105,9 @@ public class showSubject extends AppCompatActivity {
         View taskView= getLayoutInflater().inflate(R.layout.course_task_view,null);
         ((TextView)taskView.findViewById(R.id.task_title)).setText(cTask.title);
         ((TextView)taskView.findViewById(R.id.task_desc)).setText(cTask.desc);
-        taskView.setBackgroundColor(getResources().getColor(colors[index%(colors.length)]));
+        taskView.setBackground(getResources().getDrawable(R.drawable.soft_corner_taskview));
+        GradientDrawable softShape=(GradientDrawable)taskView.getBackground();
+        softShape.setColor(getResources().getColor(colors[index%(colors.length)]));
         return taskView;
     }
     void showTaskAdder(){

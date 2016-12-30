@@ -20,8 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        app:backgroundTint="#f27742"
-        android:src="@drawable/plus_5"
+        app:backgroundTint="@color/taskbar_orange"
+        android:src="@drawable/plus4"
         android:id="@+id/notes_add"
         android:scaleType="fitCenter" />
 </RelativeLayout>
