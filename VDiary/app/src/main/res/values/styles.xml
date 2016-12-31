@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/descent_orange</item>
         <item name="colorPrimaryDark">@color/taskbar_orange</item>
-        <item name="colorAccent">@color/windows_color</item>
+        <item name="colorAccent">@color/taskbar_orange</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

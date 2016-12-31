@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white">
     <EditText
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -15,7 +16,7 @@
         android:text="S"
         android:id="@+id/teacher_search_button"/>
     <ListView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/teachers_list"
         android:layout_centerVertical="true"
@@ -23,8 +24,9 @@
         android:drawSelectorOnTop="true"
         android:stackFromBottom="false"
         android:contextClickable="false"
-        android:dividerHeight="5dp"
-        android:choiceMode="singleChoice" />
+        android:dividerHeight="1dp"
+        android:choiceMode="singleChoice"
+        android:background="@android:color/white"/>
     <android.support.design.widget.FloatingActionButton
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"

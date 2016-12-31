@@ -6,10 +6,18 @@
     android:layout_height="match_parent"
     tools:context="com.example.sridh.vdiary.scrapper">
 <RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:id="@+id/loginView"
-    android:visibility="invisible">
+    android:visibility="visible"
+    android:layout_centerInParent="true">
+    <ImageView
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:id="@+id/imageView"
+        android:src="@drawable/logo"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,13 +54,6 @@
         android:src="@drawable/download"
         android:scaleType="fitXY" />
 
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:id="@+id/imageView"
-        android:src="@drawable/logo"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
 
     <ImageButton
         android:layout_width="50dp"
@@ -77,33 +78,33 @@
     <!--Loading content-->
 </RelativeLayout>
     <RelativeLayout
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:id="@+id/loadView"
-        android:visibility="visible">
+        android:visibility="invisible">
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:id="@+id/Loadlogo"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:src="@drawable/logo"
+            android:layout_marginBottom="150dp"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/status"
-            android:layout_below="@id/Loadlogo"
-            android:layout_margin="30dp"
-            android:layout_centerHorizontal="true"
-            android:text="Fetching Courses..."/>
+            android:text="Fetching Courses..."
+            android:layout_alignBottom="@+id/Loadlogo"
+            android:layout_centerHorizontal="true" />
 
         <android.support.design.widget.FloatingActionButton
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_below="@id/status"
             android:layout_centerHorizontal="true"
-            android:layout_margin="30dp"
+            android:layout_marginTop="30dp"
             android:id="@+id/refresh_FloatButton"
             android:src="@drawable/refresh"
             android:visibility="invisible"/>

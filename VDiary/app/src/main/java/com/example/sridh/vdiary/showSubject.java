@@ -40,6 +40,7 @@ public class showSubject extends AppCompatActivity {
         setContentView(R.layout.activity_show_subject);
         int position=getIntent().getIntExtra("position",0);
         clicked= vClass.subList.get(position);
+        getDimensions();
         show(clicked);  //Initialize the popup activity to show the contents of the subject
         tasks=vClass.courseTasks.get(clicked.code+clicked.type);
         if(tasks!=null){
@@ -49,11 +50,13 @@ public class showSubject extends AppCompatActivity {
         }
 
     }
-    void show(subject sub){
+    void getDimensions(){
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         width=dm.widthPixels;
         height=dm.heightPixels;
+    }
+    void show(subject sub){
         getWindow().setLayout(width,(int)(.6*height));
         bar=(Toolbar)findViewById(R.id.showToolbar);
         bar.inflateMenu(R.menu.menu_show_subject);
@@ -134,7 +137,6 @@ public class showSubject extends AppCompatActivity {
                         notask.setVisibility(View.INVISIBLE);
                     }
                     tasks.add(new task(name,desc,deadLine));
-
                     vClass.courseTasks.put(clicked.code+clicked.type,tasks);
                     writeToPrefs();
                     updateTaskGrid(tasks.size()-1);

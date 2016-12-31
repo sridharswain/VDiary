@@ -2,17 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#dbd6d6"
     android:orientation="vertical">
-    <TextView
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Enter details of Note"
-        android:id="@+id/textView3"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="4dp" />
+        android:background="?attr/colorPrimary"
+        android:theme="?attr/actionBarTheme"
+        android:minHeight="?attr/actionBarSize"
+        app:title="Add To Do">
+    </android.support.v7.widget.Toolbar>
 <ScrollView
     android:layout_height="wrap_content"
     android:layout_width="match_parent">
@@ -22,33 +22,31 @@
         android:orientation="vertical">
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/title"
-        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="true"
         android:minWidth="200dp"
         android:layout_marginTop="15dp"
-        android:hint="Enter title"
-        android:layout_marginLeft="10dp"
-        android:drawableTint="#000000" />
+        android:hint="Enter title" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/note"
-        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="true"
         android:layout_below="@+id/title"
         android:layout_marginTop="15dp"
-        android:hint="Enter Note"
-        android:layout_marginLeft="10dp" />
+        android:hint="Enter Note" />
 
     <TimePicker
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/timePicker"
-        android:layout_below="@+id/note" />
+        android:layout_below="@+id/note"
+        android:layout_centerHorizontal="true"/>
 
     <DatePicker
         android:layout_width="wrap_content"
@@ -65,7 +63,8 @@
         android:text="Set Reminder"
         android:id="@+id/enterbutton"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/datePicker"/>
     </RelativeLayout>
     </ScrollView>
 

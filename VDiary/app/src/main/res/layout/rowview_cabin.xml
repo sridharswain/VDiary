@@ -1,27 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="360dp"
-        android:layout_height="100dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="#48af38" />
-
-    <TextView
-        android:layout_width="340dp"
-        android:layout_height="80dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/textView2"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="#ffffff"
-        android:background="#ffffff" />
+    android:layout_height="match_parent"
+    android:background="@drawable/border_rowview_teacher">
 
     <TextView
         android:layout_width="wrap_content"
@@ -29,9 +10,6 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="name"
         android:id="@+id/newname"
-        android:layout_alignTop="@+id/textView2"
-        android:layout_alignStart="@+id/textView2"
-        android:layout_margin="5dp"
         android:textStyle="bold" />
 
     <TextView
@@ -41,8 +19,6 @@
         android:text="Cabin"
         android:id="@+id/newcabin"
         android:layout_below="@+id/newname"
-        android:layout_alignStart="@+id/textView2"
-        android:layout_margin="5dp"
         android:textStyle="bold" />
 
     <TextView
@@ -51,9 +27,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="others"
         android:id="@+id/newOthers"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_alignTop="@+id/newcabin"
-        android:layout_alignEnd="@+id/textView2"
+        android:layout_below="@id/newcabin"
         android:textStyle="italic" />
+
 </RelativeLayout>

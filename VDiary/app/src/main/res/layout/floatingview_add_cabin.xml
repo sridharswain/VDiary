@@ -19,27 +19,29 @@
         app:title="Add Teacher" />
     <EditText
         android:layout_height="wrap_content"
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
         android:hint="Teacher's Name"
         android:id="@+id/alert_cabin_teacherName"
-        android:layout_below="@id/alert_cabin_toolbar"/>
+        android:layout_below="@id/alert_cabin_toolbar"
+        android:layout_centerHorizontal="true"/>
 
     <EditText
         android:layout_height="wrap_content"
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
         android:hint="Cabin Address"
         android:id="@+id/alert_cabin_cabinAddress"
         android:layout_below="@id/alert_cabin_teacherName"
-        />
+        android:layout_centerHorizontal="true"/>
 
     <EditText
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
         android:layout_height="75dp"
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/alert_cabin_comment"
         android:hint="Comment..."
-        android:layout_below="@id/alert_cabin_cabinAddress" />
+        android:layout_below="@id/alert_cabin_cabinAddress"
+        android:layout_centerHorizontal="true"/>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"

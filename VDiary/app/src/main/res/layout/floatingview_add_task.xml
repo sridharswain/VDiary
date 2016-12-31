@@ -15,24 +15,27 @@
         </android.support.v7.widget.Toolbar>
     <EditText
         android:layout_height="wrap_content"
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
         android:hint="Title"
         android:id="@+id/add_task_title"
-        android:layout_below="@id/add_task_toolbar"/>
+        android:layout_below="@id/add_task_toolbar"
+        android:layout_centerHorizontal="true"/>
     <EditText
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
         android:layout_height="75dp"
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/add_task_desc"
         android:hint="Description..."
-        android:layout_below="@id/add_task_title" />
+        android:layout_below="@id/add_task_title"
+        android:layout_centerHorizontal="true"/>
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_below="@id/add_task_desc"
         android:text="DeadLine:"
-        android:textSize="18dp"/>
+        android:textSize="18sp"
+        android:layout_alignParentStart="true"/>
     <DatePicker
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
