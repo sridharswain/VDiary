@@ -1,5 +1,8 @@
 package com.example.sridh.vdiary;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -8,6 +11,7 @@ import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
@@ -28,11 +32,23 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class scrapper extends AppCompatActivity {
+    //for Notifications
+    public static String title;
+    public static String name_and_teachersname;
+    public static Calendar timings;
+    public static Context context;
+    public static PendingIntent pintent;
+    public static SharedPreferences shared;
+    public static SharedPreferences.Editor editor;
+    static int n_id=0;
+    //END
+
     EditText regBox;
     EditText passBox;
     EditText captchaBox;
@@ -52,6 +68,12 @@ public class scrapper extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context=this;
+        shared=context.getSharedPreferences("notiftimetable",Context.MODE_PRIVATE);
+        editor=shared.edit();
+        n_id=shared.getInt("id_time",0);
+
+
         if(!tryRefresh && readFromPrefs()){
             startActivity(new Intent(this, workSpace.class));
             finish();
@@ -502,6 +524,58 @@ public class scrapper extends AppCompatActivity {
                 }
             }
             writeToPrefs();
+            //Sparsha code starts from here to schedule notifications for the timetable class
+            for(int k=0;k<vClass.timeTable.size();k++)
+            {
+                List<subject> f=vClass.timeTable.get(k);
+                for(int l=0;l<f.size();l++)
+                {
+                    subject sub=f.get(l);
+                    if(!sub.type.equals("")) {
+                        NotificationCompat.Builder notificationbuilder = new NotificationCompat.Builder(scrapper.context);
+                        notificationbuilder.setContentTitle(sub.title);
+                        notificationbuilder.setContentText(sub.room+" "+sub.teacher+" "+sub.startTime+" - "+sub.endTime);
+                        Intent intent=new Intent(scrapper.context,scrapper.class);
+                        notificationbuilder.setSmallIcon(R.drawable.logo);
+                        notificationbuilder.setTicker("You have a class now");
+                        PendingIntent pendingIntent=PendingIntent.getActivity(scrapper.context,(int) System.currentTimeMillis(),intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                        notificationbuilder.setContentIntent(pendingIntent);
+                        notificationbuilder.setAutoCancel(true);
+                        AlarmManager alarmManager=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                        Intent in=new Intent(scrapper.this,NotifyServiceTimetable.class);
+                        PendingIntent pintent=PendingIntent.getBroadcast(context,scrapper.n_id,in,0);
+                        n_id++;
+                        scrapper.editor.putInt("id_time",n_id);
+                        Calendar c=Calendar.getInstance();
+                        int st_hr,st_min,ampm;
+                        st_hr=Integer.parseInt(sub.startTime.substring(0,2));
+                        st_min=Integer.parseInt(sub.startTime.substring(3,5));
+                        String kk=sub.startTime.substring(6);
+
+                        if(kk.equals("AM"))
+                            ampm=1;
+                        else
+                        ampm=0;
+                        c.setTimeInMillis(System.currentTimeMillis());
+                        c.set(Calendar.HOUR,st_hr);
+                        c.set(Calendar.MINUTE,st_min);
+                        c.set(Calendar.DAY_OF_WEEK,k+2);
+                        c.set(Calendar.AM_PM,ampm);
+                       // Toast.makeText(scrapper.this, c.getDisplayName(Calendar.DAY_OF_WEEK,Calendar.LONG, Locale.getDefault()), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(scrapper.this, st_hr+" "+st_min+" "+ampm +"", Toast.LENGTH_SHORT).show();
+
+                        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),24*7*60*60*1000,pintent);
+
+
+
+                    }
+
+                }
+                //Toast.makeText(scrapper.this, "Alarm set for "+k, Toast.LENGTH_SHORT).show();
+            }
+
+
+
             startActivity(new Intent(scrapper.this,workSpace.class));
             finish();
         }

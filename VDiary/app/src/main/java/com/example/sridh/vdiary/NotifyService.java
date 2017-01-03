@@ -3,7 +3,6 @@ package com.example.sridh.vdiary;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -24,7 +23,6 @@ public class NotifyService extends BroadcastReceiver {
 
         Gson js=new Gson();
         notifholder=js.fromJson(intent.getStringExtra("one"),t);
-        Toast.makeText(context, notifholder.title+"  "+notifholder.content, Toast.LENGTH_SHORT).show();
         Notification_Creator notifcreator=new Notification_Creator(notifholder.title,notifholder.content,notifholder.cal,context);
         notifcreator.create_notification();
     }

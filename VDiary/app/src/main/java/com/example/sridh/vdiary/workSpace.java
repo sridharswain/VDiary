@@ -60,6 +60,7 @@ public class workSpace extends AppCompatActivity {
     static Context context;
     public static  List<Cabin_Details> cablist;
     List<Notification_Holder> noti_todo;
+    static int id=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +68,7 @@ public class workSpace extends AppCompatActivity {
         setContentView(R.layout.activity_workspace);
         context =this;
         noti_todo=new ArrayList<>();
-
-       // Notification_Creator nc=new Notification_Creator("x","y","z",context);  //Test notification
-        //nc.create_notification();
-
+        //Toast.makeText(context, Calendar.getInstance().getDisplayName(Calendar.DAY_OF_WEEK,Calendar.LONG, Locale.getDefault())+"", Toast.LENGTH_SHORT).show();
 
         shared=getSharedPreferences("todoshared",MODE_PRIVATE);
 
@@ -85,6 +83,7 @@ public class workSpace extends AppCompatActivity {
         //vClass.notes is initialized
 
         editor=shared.edit();
+        id=shared.getInt("identifier",0);
         setToolbars();
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -337,7 +336,9 @@ public class workSpace extends AppCompatActivity {
             Gson js=new Gson();
             String f=js.toJson(n);
             intent.putExtra("one",f);
-            PendingIntent pendingIntent=PendingIntent.getBroadcast(getContext(),0,intent,0);
+            PendingIntent pendingIntent=PendingIntent.getBroadcast(getContext(),id,intent,0);
+            id++;
+            editor.putInt("identifier",id);
             alarmManager.set(AlarmManager.RTC_WAKEUP,n.cal.getTimeInMillis(),pendingIntent);
         }
 
