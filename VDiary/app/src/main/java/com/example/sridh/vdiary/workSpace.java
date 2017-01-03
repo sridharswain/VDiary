@@ -17,13 +17,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -64,12 +62,9 @@ public class workSpace extends AppCompatActivity {
     static Context context;
     public static  List<Cabin_Details> cablist;
     List<Notification_Holder> noti_todo;
-<<<<<<< HEAD
     static int id=0;
-=======
-    static ListView resultList;
->>>>>>> origin/master
 
+    static ListView resultList;
     @Override
     public void onBackPressed() {
             if(resultList.getVisibility()==View.VISIBLE){
@@ -84,14 +79,11 @@ public class workSpace extends AppCompatActivity {
         setContentView(R.layout.activity_workspace);
         context =this;
         noti_todo=new ArrayList<>();
-<<<<<<< HEAD
         //Toast.makeText(context, Calendar.getInstance().getDisplayName(Calendar.DAY_OF_WEEK,Calendar.LONG, Locale.getDefault())+"", Toast.LENGTH_SHORT).show();
 
-=======
 
        // Notification_Creator nc=new Notification_Creator("x","y","z",context);  //Test notification
         //nc.create_notification();
->>>>>>> origin/master
         shared=getSharedPreferences("todoshared",MODE_PRIVATE);
 
 

@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -43,7 +42,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class scrapper extends AppCompatActivity {
-<<<<<<< HEAD
+
     //for Notifications
     public static String title;
     public static String name_and_teachersname;
@@ -55,15 +54,8 @@ public class scrapper extends AppCompatActivity {
     static int n_id=0;
     //END
 
-    EditText regBox;
-    EditText passBox;
-    EditText captchaBox;
-    WebView web;
-    WebView att;
-=======
     EditText regBox,passBox,captchaBox;
     WebView web,att;
->>>>>>> origin/master
     ImageView captcha,login;
     CheckBox cb;
     TextView status;
@@ -79,21 +71,18 @@ public class scrapper extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-<<<<<<< HEAD
         context=this;
         shared=context.getSharedPreferences("notiftimetable",Context.MODE_PRIVATE);
         editor=shared.edit();
         n_id=shared.getInt("id_time",0);
 
 
-=======
         setContentView(R.layout.splash_screen);
         vClass.setStatusBar(getWindow(),getApplicationContext());
         start();
     }
 
     void start() {
->>>>>>> origin/master
         if(!tryRefresh && readFromPrefs()){
             startActivity(new Intent(this, workSpace.class));
             finish();
@@ -548,7 +537,7 @@ public class scrapper extends AppCompatActivity {
             }
             writeToPrefs();
             //Sparsha code starts from here to schedule notifications for the timetable class
-            for(int k=0;k<vClass.timeTable.size();k++)
+            /*for(int k=0;k<vClass.timeTable.size();k++)
             {
                 List<subject> f=vClass.timeTable.get(k);
                 for(int l=0;l<f.size();l++)
@@ -595,7 +584,25 @@ public class scrapper extends AppCompatActivity {
 
                 }
                 //Toast.makeText(scrapper.this, "Alarm set for "+k, Toast.LENGTH_SHORT).show();
-            }
+            }*/
+            List<subject> f=vClass.timeTable.get(0);
+            subject sub=f.get(0);
+            NotificationCompat.Builder notificationbuilder = new NotificationCompat.Builder(scrapper.context);
+            notificationbuilder.setContentTitle(sub.title);
+            notificationbuilder.setContentText(sub.room+" "+sub.teacher+" "+sub.startTime+" - "+sub.endTime);
+            Intent intent=new Intent(scrapper.context,scrapper.class);
+            notificationbuilder.setSmallIcon(R.drawable.logo);
+            notificationbuilder.setTicker("You have a class now");
+            PendingIntent pendingIntent=PendingIntent.getActivity(scrapper.context,(int) System.currentTimeMillis(),intent,PendingIntent.FLAG_UPDATE_CURRENT);
+            notificationbuilder.setContentIntent(pendingIntent);
+            notificationbuilder.setAutoCancel(true);
+
+
+
+            AlarmManager alarmManager=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+            Intent in=new Intent(scrapper.this,NotifyServiceTimetable.class);
+            PendingIntent pintent=PendingIntent.getBroadcast(context,scrapper.n_id,in,0);
+            alarmManager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),pintent);
 
 
 
