@@ -1,0 +1,38 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/descent_orange</item>
+        <item name="colorPrimaryDark">@color/taskbar_orange</item>
+        <item name="colorAccent">@color/taskbar_orange</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <style name="AppTheme.popupTheme" parent="AppTheme.NoActionBar">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="colorPrimary">@color/descent_orange</item>
+        <item name="colorPrimaryDark">@color/descent_orange</item>
+        <item name="colorAccent">@color/descent_orange</item>
+    </style>
+
+    <style name="MyAppBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/descent_orange</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+    </style>
+
+
+
+</resources>

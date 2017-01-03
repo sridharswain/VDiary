@@ -5,7 +5,6 @@ import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.view.Window;
 import android.view.WindowManager;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -17,20 +16,22 @@ import java.util.Map;
  */
 public class vClass {
     public static List<subject> subList = new ArrayList<subject>();
-    public static  List<List<subject>> timeTable = new ArrayList<>();
+    public static List<List<subject>> timeTable = new ArrayList<>();
     public static String semStart;
     public static String cat1;
     public static String cat2;
     public static String fat;
     public static List<Notification_Holder> notes=new ArrayList<>();
     public static Map<String,List<task>> courseTasks= new HashMap<>();
-    public static void setStatusBar(Window window, Context context){
+    public static void setStatusBar(Window window, Context context) {
         if(Build.VERSION.SDK_INT>=21){
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(context,R.color.taskbar_orange));
         }
-    }
+    }  //CHANGE THE COLOR OF THE STATUS BAR
+    public static List<teacher> teachers= new ArrayList<>();
+    public static String FIREBASE_URL= "https://vdiary-a25b2.firebaseio.com/";
 }
 class Note
 {
@@ -65,6 +66,22 @@ class task{
         title=heading;
         desc=description;
         deadLine=deadDate;
+    }
+}
+class teacher{
+    String name;
+    String cabin;
+    public String getName(){
+        return this.name;
+    }
+    public String getCabin(){
+        return this.cabin;
+    }
+    public void setName(String name){
+        this.name=name;
+    }
+    public void setCabin(String cabin){
+        this.cabin=cabin;
     }
 }
 

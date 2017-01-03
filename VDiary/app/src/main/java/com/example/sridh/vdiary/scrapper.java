@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -38,6 +43,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class scrapper extends AppCompatActivity {
+<<<<<<< HEAD
     //for Notifications
     public static String title;
     public static String name_and_teachersname;
@@ -54,6 +60,10 @@ public class scrapper extends AppCompatActivity {
     EditText captchaBox;
     WebView web;
     WebView att;
+=======
+    EditText regBox,passBox,captchaBox;
+    WebView web,att;
+>>>>>>> origin/master
     ImageView captcha,login;
     CheckBox cb;
     TextView status;
@@ -63,28 +73,40 @@ public class scrapper extends AppCompatActivity {
     boolean gotSchedule=false;
     Gson jsonBuilder = new Gson();
     static boolean tryRefresh=false;
+    Firebase database;
     List<String> attList = new ArrayList<>();
     List<String> ctdList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< HEAD
         context=this;
         shared=context.getSharedPreferences("notiftimetable",Context.MODE_PRIVATE);
         editor=shared.edit();
         n_id=shared.getInt("id_time",0);
 
 
+=======
+        setContentView(R.layout.splash_screen);
+        vClass.setStatusBar(getWindow(),getApplicationContext());
+        start();
+    }
+
+    void start() {
+>>>>>>> origin/master
         if(!tryRefresh && readFromPrefs()){
             startActivity(new Intent(this, workSpace.class));
             finish();
         }
         else{
             initWebViews();
+            Firebase.setAndroidContext(this);
+            database= new Firebase(vClass.FIREBASE_URL);
             setUp();
             vClass.setStatusBar(getWindow(),getApplicationContext());
             new compileInf().execute();
         }
-    }
+    } //STARTS THE PROCESSING
 
     private class loginClient extends WebViewClient{
         @Override
@@ -123,6 +145,7 @@ public class scrapper extends AppCompatActivity {
                 });
             }
             else{
+                getTeacherCabins();
                 status.setText("Fetching Courses...");
                 web.setWebViewClient(new scheduleClient());
                 web.loadUrl("https://academicscc.vit.ac.in/student/course_regular.asp?sem=FS");
@@ -173,7 +196,7 @@ public class scrapper extends AppCompatActivity {
 
         return "(function(){"+js+"})()";
 
-    } //return the cmd format of the given code
+    } //RETURN THE FUNCTION FORMAT OF THE GIVEN COMMAND
 
     private void setCaptcha(String imgString){
         byte[] decodedString = Base64.decode(imgString,0);
@@ -599,10 +622,15 @@ public class scrapper extends AppCompatActivity {
     } //WRITE ACADEMIC CONTENT TO SHARED PREFERENCES
 
     boolean readFromPrefs(){
-        SharedPreferences prefs= getSharedPreferences("academicPrefs",MODE_PRIVATE);
-        String allSubJson=prefs.getString("allSub",null);
-        String scheduleJson =prefs.getString("schedule",null);
-        String taskJson= prefs.getString("tasks",null);
+        SharedPreferences academicPrefs= getSharedPreferences("academicPrefs",MODE_PRIVATE);
+        String allSubJson=academicPrefs.getString("allSub",null);
+        String scheduleJson =academicPrefs.getString("schedule",null);
+        String taskJson= academicPrefs.getString("tasks",null);
+        SharedPreferences teacherPrefs=getSharedPreferences("teacherPrefs",MODE_PRIVATE);
+        String teachers =teacherPrefs.getString("teachers",null);
+        if(teachers!=null){
+            vClass.teachers=jsonBuilder.fromJson(teachers,new TypeToken<List<teacher>>(){}.getType());
+        }
         if(taskJson!=null){
             vClass.courseTasks=jsonBuilder.fromJson(taskJson,new TypeToken<Map<String,List<task>>>(){}.getType());
         }
@@ -672,7 +700,7 @@ public class scrapper extends AppCompatActivity {
     } //PLACE THE LAB IN THERE CORRECT POSITION BY INSERTION SORT
 
     void load(boolean x){
-        if(x==true){
+        if(x){
             loadView.setVisibility(View.VISIBLE);
             loginView.setVisibility(View.INVISIBLE);
         }
@@ -681,4 +709,25 @@ public class scrapper extends AppCompatActivity {
             loginView.setVisibility(View.VISIBLE);
         }
     }   //SWITCH BETWEEN LOADING SCREEN AND LOGIN SCREEN
+
+    void getTeacherCabins(){
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                vClass.teachers.clear();
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    teacher newTeacher = snapshot.getValue(teacher.class);
+                    vClass.teachers.add(newTeacher);
+                }
+                SharedPreferences.Editor editor = getSharedPreferences("teacherPrefs",MODE_PRIVATE).edit();
+                editor.putString("teachers",(jsonBuilder.toJson(vClass.teachers)));
+                editor.commit();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                //DO NOTHING
+            }
+        });
+    }  //GET THE CABIN DETAILS OF TEACHERS FORM FIREBASE DATABASE
 }
