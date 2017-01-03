@@ -11,7 +11,6 @@ import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
@@ -68,6 +67,7 @@ public class scrapper extends AppCompatActivity {
     Firebase database;
     List<String> attList = new ArrayList<>();
     List<String> ctdList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -537,26 +537,15 @@ public class scrapper extends AppCompatActivity {
             }
             writeToPrefs();
             //Sparsha code starts from here to schedule notifications for the timetable class
-            /*for(int k=0;k<vClass.timeTable.size();k++)
+            for(int k=0;k<vClass.timeTable.size();k++)
             {
                 List<subject> f=vClass.timeTable.get(k);
                 for(int l=0;l<f.size();l++)
                 {
                     subject sub=f.get(l);
                     if(!sub.type.equals("")) {
-                        NotificationCompat.Builder notificationbuilder = new NotificationCompat.Builder(scrapper.context);
-                        notificationbuilder.setContentTitle(sub.title);
-                        notificationbuilder.setContentText(sub.room+" "+sub.teacher+" "+sub.startTime+" - "+sub.endTime);
-                        Intent intent=new Intent(scrapper.context,scrapper.class);
-                        notificationbuilder.setSmallIcon(R.drawable.logo);
-                        notificationbuilder.setTicker("You have a class now");
-                        PendingIntent pendingIntent=PendingIntent.getActivity(scrapper.context,(int) System.currentTimeMillis(),intent,PendingIntent.FLAG_UPDATE_CURRENT);
-                        notificationbuilder.setContentIntent(pendingIntent);
-                        notificationbuilder.setAutoCancel(true);
                         AlarmManager alarmManager=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
                         Intent in=new Intent(scrapper.this,NotifyServiceTimetable.class);
-                        PendingIntent pintent=PendingIntent.getBroadcast(context,scrapper.n_id,in,0);
-                        n_id++;
                         scrapper.editor.putInt("id_time",n_id);
                         Calendar c=Calendar.getInstance();
                         int st_hr,st_min,ampm;
@@ -574,7 +563,11 @@ public class scrapper extends AppCompatActivity {
                         c.set(Calendar.DAY_OF_WEEK,k+2);
                         c.set(Calendar.AM_PM,ampm);
                        // Toast.makeText(scrapper.this, c.getDisplayName(Calendar.DAY_OF_WEEK,Calendar.LONG, Locale.getDefault()), Toast.LENGTH_SHORT).show();
-                        Toast.makeText(scrapper.this, st_hr+" "+st_min+" "+ampm +"", Toast.LENGTH_SHORT).show();
+                        Notification_Holder nh=new Notification_Holder(c,"title","content");
+                        Gson j=new Gson();
+                        in.putExtra("one",j.toJson(nh));
+                        PendingIntent pintent=PendingIntent.getBroadcast(context,scrapper.n_id,in,0);
+                        n_id++;
 
                         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),24*7*60*60*1000,pintent);
 
@@ -584,28 +577,16 @@ public class scrapper extends AppCompatActivity {
 
                 }
                 //Toast.makeText(scrapper.this, "Alarm set for "+k, Toast.LENGTH_SHORT).show();
-            }*/
-            List<subject> f=vClass.timeTable.get(0);
-            subject sub=f.get(0);
-            NotificationCompat.Builder notificationbuilder = new NotificationCompat.Builder(scrapper.context);
-            notificationbuilder.setContentTitle(sub.title);
-            notificationbuilder.setContentText(sub.room+" "+sub.teacher+" "+sub.startTime+" - "+sub.endTime);
-            Intent intent=new Intent(scrapper.context,scrapper.class);
-            notificationbuilder.setSmallIcon(R.drawable.logo);
-            notificationbuilder.setTicker("You have a class now");
-            PendingIntent pendingIntent=PendingIntent.getActivity(scrapper.context,(int) System.currentTimeMillis(),intent,PendingIntent.FLAG_UPDATE_CURRENT);
-            notificationbuilder.setContentIntent(pendingIntent);
-            notificationbuilder.setAutoCancel(true);
+            }
 
-
-
-            AlarmManager alarmManager=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-            Intent in=new Intent(scrapper.this,NotifyServiceTimetable.class);
-            PendingIntent pintent=PendingIntent.getBroadcast(context,scrapper.n_id,in,0);
-            alarmManager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),pintent);
-
-
-
+            /*AlarmManager alarmManager=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+            Intent intent=new Intent(scrapper.this,NotifyService.class);
+            Notification_Holder nh=new Notification_Holder(Calendar.getInstance(),"ss","xx");
+            Gson j=new Gson();
+            intent.putExtra("one",j.toJson(nh));
+            PendingIntent pendingIntent=PendingIntent.getBroadcast(context,99,intent,0);
+            //alarmManager.set(AlarmManager.RTC_WAKEUP,n.cal.getTimeInMillis(),pendingIntent);
+            alarmManager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),pendingIntent);*/
             startActivity(new Intent(scrapper.this,workSpace.class));
             finish();
         }

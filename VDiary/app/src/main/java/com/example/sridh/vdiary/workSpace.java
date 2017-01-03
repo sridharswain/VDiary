@@ -79,6 +79,9 @@ public class workSpace extends AppCompatActivity {
         setContentView(R.layout.activity_workspace);
         context =this;
         noti_todo=new ArrayList<>();
+
+
+
         //Toast.makeText(context, Calendar.getInstance().getDisplayName(Calendar.DAY_OF_WEEK,Calendar.LONG, Locale.getDefault())+"", Toast.LENGTH_SHORT).show();
 
 
@@ -241,6 +244,8 @@ public class workSpace extends AppCompatActivity {
                     });
                     break;
                 case 0:
+
+
                     rootView=inflater.inflate(R.layout.fragment_courses,container,false);
                     ListView lview=(ListView)rootView.findViewById(R.id.course_listview);
                     listAdapter_courses cadd=new listAdapter_courses(context,vClass.subList);
@@ -357,7 +362,9 @@ public class workSpace extends AppCompatActivity {
             PendingIntent pendingIntent=PendingIntent.getBroadcast(getContext(),id,intent,0);
             id++;
             editor.putInt("identifier",id);
-            alarmManager.set(AlarmManager.RTC_WAKEUP,n.cal.getTimeInMillis(),pendingIntent);
+            //alarmManager.set(AlarmManager.RTC_WAKEUP,n.cal.getTimeInMillis(),pendingIntent);
+            alarmManager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),pendingIntent);
+
         }
 
         void showCabinAlertDialog(final listAdapter_teachers cabinListAdapter){
