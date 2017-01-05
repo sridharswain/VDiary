@@ -40,4 +40,5 @@
     <color name="primaryTextColor">#212121</color>
     <color name="secTextColor">#757575</color>
     <color name="divider">#BDBDBD</color>
+    <color name="black_transparent">#72000000</color>
 </resources>

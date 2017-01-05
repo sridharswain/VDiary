@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/soft_corner_listview">
+    android:background="@drawable/soft_corner_listview"
+    android:clipChildren="false"
+    android:clipToPadding="false">
     <TextView
-        android:layout_height="20dp"
-        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:id="@+id/task_title"
         android:text="This is the title of the task"
         android:textColor="@color/primaryTextColor"
-        android:textSize="17dp"/>
+        android:textSize="17sp"
+        android:maxHeight="23dp"
+        />
     <TextView
         android:layout_height="wrap_content"
-        android:layout_width="175dp"
+        android:layout_width="match_parent"
         android:id="@+id/task_desc"
-        android:text="this is the description of the task"/>
-</LinearLayout>
+        android:text="this is the description of the task"
+        android:layout_below="@id/task_title"
+        android:layout_marginTop="5dp"/>
+</RelativeLayout>

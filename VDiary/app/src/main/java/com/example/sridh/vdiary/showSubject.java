@@ -2,6 +2,7 @@ package com.example.sridh.vdiary;
 
 import android.content.SharedPreferences;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,9 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -32,6 +31,7 @@ public class showSubject extends AppCompatActivity {
     TextView notask;
     LinearLayout taskGridLeft;
     LinearLayout taskGridRight;
+    int taskViewWidth;
     int[] colors=new int[]{R.color.teal,R.color.sunflower,R.color.nephritis,R.color.belize,R.color.green_cyan,R.color.amethyst,R.color.pomegranate};
     public static ListAdapter todoList;
     @Override
@@ -48,7 +48,6 @@ public class showSubject extends AppCompatActivity {
             notask.setVisibility(View.INVISIBLE);
             available=true;
         }
-
     }
     void getDimensions(){
         DisplayMetrics dm = new DisplayMetrics();
@@ -57,7 +56,7 @@ public class showSubject extends AppCompatActivity {
         height=dm.heightPixels;
     }
     void show(subject sub){
-        getWindow().setLayout(width,(int)(.6*height));
+        getWindow().setLayout(width,((int)(0.6*height)));
         bar=(Toolbar)findViewById(R.id.showToolbar);
         bar.inflateMenu(R.menu.menu_show_subject);
         bar.setTitle(sub.code);
@@ -65,10 +64,10 @@ public class showSubject extends AppCompatActivity {
         ((TextView)findViewById(R.id.subject_Title)).setText(sub.title);
         ((TextView)findViewById(R.id.subject_Teacher)).setText(sub.teacher);
         taskGridLeft=(LinearLayout)findViewById(R.id.task_grid_view_left);
-        int taskViewWdth=((int) (width*0.496));
-        taskGridLeft.getLayoutParams().width= taskViewWdth;
+        taskViewWidth=((int) (width*0.496));
+        taskGridLeft.getLayoutParams().width= taskViewWidth;
         taskGridRight=(LinearLayout)findViewById(R.id.task_grid_view_right);
-        taskGridRight.getLayoutParams().width= taskViewWdth;
+        taskGridRight.getLayoutParams().width= taskViewWidth;
         notask=(TextView)findViewById(R.id.no_task_text);
     }
     void initMenu(){
@@ -96,21 +95,22 @@ public class showSubject extends AppCompatActivity {
         taskGridLeft.removeAllViews();
         taskGridRight.removeAllViews();
         while(i<tasks.size()){
-            taskGridLeft.addView(addTask(i));
+            taskGridLeft.addView(getTaskView(i));
             i++;
             if(i<tasks.size())
-                taskGridRight.addView(addTask(i));
+                taskGridRight.addView(getTaskView(i));
             i++;
         }
     }
-    View addTask(int index){
-        task cTask= tasks.get(index);
-        View taskView= getLayoutInflater().inflate(R.layout.course_task_view,null);
+    View getTaskView(int index){
+        final task cTask= tasks.get(index);
+        final View taskView= getLayoutInflater().inflate(R.layout.course_task_view,null);
         ((TextView)taskView.findViewById(R.id.task_title)).setText(cTask.title);
         ((TextView)taskView.findViewById(R.id.task_desc)).setText(cTask.desc);
         taskView.setBackground(getResources().getDrawable(R.drawable.soft_corner_taskview));
         GradientDrawable softShape=(GradientDrawable)taskView.getBackground();
-        softShape.setColor(getResources().getColor(colors[index%(colors.length)]));
+        final int colorIndex=index%(colors.length);
+        softShape.setColor(getResources().getColor(colors[colorIndex]));
         return taskView;
     }
     void showTaskAdder(){
@@ -147,10 +147,10 @@ public class showSubject extends AppCompatActivity {
     }
     void updateTaskGrid(int index){
         if((index)%2==0 ){
-            taskGridLeft.addView(addTask(index));
+            taskGridLeft.addView(getTaskView(index));
         }
         else{
-            taskGridRight.addView(addTask(index));
+            taskGridRight.addView(getTaskView(index));
         }
     }
 }

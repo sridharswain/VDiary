@@ -13,12 +13,20 @@
         app:title="Add Task"
         android:id="@+id/add_task_toolbar">
         </android.support.v7.widget.Toolbar>
+    <ScrollView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@id/add_task_toolbar"
+        android:id="@+id/add_task_scrollbar">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <EditText
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:maxHeight="50dp"
         android:hint="Title"
         android:id="@+id/add_task_title"
-        android:layout_below="@id/add_task_toolbar"
         android:layout_centerHorizontal="true"/>
     <EditText
         android:layout_width="match_parent"
@@ -44,6 +52,8 @@
         android:calendarViewShown="false"
         android:layout_below="@id/add_task_desc"
         android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+    </ScrollView>
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -53,6 +63,6 @@
         app:srcCompat="@drawable/dual_1_right"
         android:id="@+id/add_task_addButton"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/add_task_deadLine"/>
+        android:layout_below="@id/add_task_scrollbar"/>
 
 </RelativeLayout>

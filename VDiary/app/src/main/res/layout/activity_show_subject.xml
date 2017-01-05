@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_show_subject"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.sridh.vdiary.showSubject">
+    tools:context="com.example.sridh.vdiary.showSubject"
+    android:clipChildren="false">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/subject_Teacher"
+        android:id="@+id/show_subject_scoller"
+        android:layout_marginTop="2dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:scrollbars="vertical"
+            android:id="@+id/task_grid_view">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:scrollbars="vertical"
+                android:id="@+id/task_grid_view_left"
+                android:layout_alignParentLeft="true"
+                android:showDividers="middle"
+                android:divider="@drawable/divider">
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:scrollbars="vertical"
+                android:id="@+id/task_grid_view_right"
+                android:layout_alignParentRight="true"
+                android:showDividers="middle"
+                android:divider="@drawable/divider">
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,8 +52,6 @@
         android:layout_alignParentStart="true"
         android:id="@+id/showToolbar"
         android:elevation="0dp"/>
-
-
     <TextView
         android:text="Title"
         android:layout_width="wrap_content"
@@ -51,40 +85,6 @@
         android:layout_centerVertical="true"
         android:id="@+id/no_task_text"/>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/subject_Teacher"
-        android:id="@+id/show_subject_scoller"
-        android:layout_marginTop="2dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:scrollbars="vertical"
-            android:id="@+id/task_grid_view">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:scrollbars="vertical"
-                android:id="@+id/task_grid_view_left"
-                android:layout_alignParentLeft="true"
-                android:showDividers="middle"
-                android:divider="@drawable/divider">
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:scrollbars="vertical"
-                android:id="@+id/task_grid_view_right"
-                android:layout_alignParentRight="true"
-                android:showDividers="middle"
-                android:divider="@drawable/divider">
-            </LinearLayout>
-            </RelativeLayout>
-    </ScrollView>
 
 </RelativeLayout>
