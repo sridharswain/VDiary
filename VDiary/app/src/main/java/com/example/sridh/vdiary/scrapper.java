@@ -62,6 +62,7 @@ public class scrapper extends AppCompatActivity {
     FloatingActionButton reload;
     boolean gotAttendance=false;
     boolean gotSchedule=false;
+    boolean attendanceStatus=true;
     Gson jsonBuilder = new Gson();
     static boolean tryRefresh=false;
     Firebase database;
@@ -75,7 +76,9 @@ public class scrapper extends AppCompatActivity {
         shared=context.getSharedPreferences("notiftimetable",Context.MODE_PRIVATE);
         editor=shared.edit();
         n_id=shared.getInt("id_time",0);
-
+        //FIREBASE INITIATION
+        Firebase.setAndroidContext(this);
+        database= new Firebase(vClass.FIREBASE_URL);
 
         setContentView(R.layout.splash_screen);
         vClass.setStatusBar(getWindow(),getApplicationContext());
@@ -89,8 +92,6 @@ public class scrapper extends AppCompatActivity {
         }
         else{
             initWebViews();
-            Firebase.setAndroidContext(this);
-            database= new Firebase(vClass.FIREBASE_URL);
             setUp();
             vClass.setStatusBar(getWindow(),getApplicationContext());
             new compileInf().execute();
@@ -137,9 +138,9 @@ public class scrapper extends AppCompatActivity {
                 getTeacherCabins();
                 status.setText("Fetching Courses...");
                 web.setWebViewClient(new scheduleClient());
-                web.loadUrl("https://academicscc.vit.ac.in/student/course_regular.asp?sem=FS");
+                web.loadUrl("https://academicscc.vit.ac.in/student/course_regular.asp?sem="+vClass.SEM);
                 att.setWebViewClient(new attendanceClient());
-                att.loadUrl("https://academicscc.vit.ac.in/student/attn_report.asp?sem=FS");
+                att.loadUrl("https://academicscc.vit.ac.in/student/attn_report.asp?sem="+vClass.SEM);
             }
         }
 
@@ -440,62 +441,65 @@ public class scrapper extends AppCompatActivity {
         });
     } // GET DATA FROM TIME TABLE
 
-    private void getAttendance(){
-        att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[2].cells[2].innerText"), new ValueCallback<String>() {
-            @Override
-            public void onReceiveValue(String value) {
-                vClass.semStart=trim(value);
-                att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[2].cells[3].innerText"), new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String value) {
-                        vClass.cat1=trim(value);
-                        att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[3].cells[3].innerText"), new ValueCallback<String>() {
-                            @Override
-                            public void onReceiveValue(String value) {
-                                vClass.cat2=trim(value);
-                                att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[4].cells[3].innerText"), new ValueCallback<String>() {
-                                    @Override
-                                    public void onReceiveValue(String value) {
-                                        vClass.fat=trim(value);
-                                        if(att.getUrl().equals("https://academicscc.vit.ac.in/student/attn_report.asp?sem=FS")){
+    private void getAttendance() {
+        if (att.getUrl().equals("https://academicscc.vit.ac.in/student/attn_report.asp?sem="+vClass.SEM)) {
+            att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[2].cells[2].innerText"), new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String value) {
+                    vClass.semStart = trim(value);
+                    att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[2].cells[3].innerText"), new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String value) {
+                            vClass.cat1 = trim(value);
+                            att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[3].cells[3].innerText"), new ValueCallback<String>() {
+                                @Override
+                                public void onReceiveValue(String value) {
+                                    vClass.cat2 = trim(value);
+                                    att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[4].cells[3].innerText"), new ValueCallback<String>() {
+                                        @Override
+                                        public void onReceiveValue(String value) {
+                                            vClass.fat = trim(value);
                                             att.loadUrl("https://academicscc.vit.ac.in/student/attn_report.asp?sem=FS" + "&fmdt=" + vClass.semStart + "&todt=" + vClass.fat);
                                         }
-                                        else {
-                                            att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows.length"), new ValueCallback<String>() {
-                                                @Override
-                                                public void onReceiveValue(String value) {
-                                                    final int rows=Integer.parseInt(value);
-                                                    for(int i=1;i<rows;i++){
-                                                        final int j=i;
-                                                        att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows["+ j +"].cells[8].innerText"), new ValueCallback<String>() {
-                                                            @Override
-                                                            public void onReceiveValue(String value) {
-                                                                attList.add(trim(value));
-                                                                att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows[" + j +"].cells[7].innerText"), new ValueCallback<String>() {
-                                                                    @Override
-                                                                    public void onReceiveValue(String value) {
-                                                                        ctdList.add(trim(value));
-                                                                        if(j==rows-1){
-                                                                            status.setText("Merging Attendance...");
-                                                                            gotAttendance=true;
-                                                                        }
-                                                                    }
-                                                                });
-                                                            }
-                                                        });
-                                                    }
-                                                }
-                                            });
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        else if(att.getUrl().equals("https://academicscc.vit.ac.in/student/attn_report.asp?sem="+vClass.SEM + "&fmdt=" + vClass.semStart + "&todt=" + vClass.fat)){
+            att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows.length"), new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String value) {
+                    final int rows = Integer.parseInt(value);
+                    for (int i = 1; i < rows; i++) {
+                        final int j = i;
+                        att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows[" + j + "].cells[8].innerText"), new ValueCallback<String>() {
+                            @Override
+                            public void onReceiveValue(String value) {
+                                attList.add(trim(value));
+                                att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows[" + j + "].cells[7].innerText"), new ValueCallback<String>() {
+                                    @Override
+                                    public void onReceiveValue(String value) {
+                                        ctdList.add(trim(value));
+                                        if (j == rows - 1) {
+                                            status.setText("Merging Attendance...");
+                                            gotAttendance = true;
                                         }
                                     }
                                 });
                             }
                         });
                     }
-                });
-            }
-        });
-    }  //GET DATAFROM THE ATTENDANCE PAGE
+                }
+            });
+        }
+        else{
+            attendanceStatus=false;
+        }
+    }//GET DATAFROM THE ATTENDANCE PAGE
 
     class compileInf extends AsyncTask<Void,Void,Void>{
         @Override
@@ -514,11 +518,17 @@ public class scrapper extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             status.setText("Summarizing Views...");
-            for(int i=0;i<vClass.subList.size();i++){
-                vClass.subList.get(i).ctd=Integer.parseInt(ctdList.get(i));
-                vClass.subList.get(i).attString=attList.get(i)+"%";
-                subject x =vClass.subList.get(i);
-                Log.d("Sub",x.code+" "+x.type+" "+x.attString);
+            if(attendanceStatus) {
+                for (int i = 0; i < vClass.subList.size(); i++) {
+                    vClass.subList.get(i).ctd = Integer.parseInt(ctdList.get(i));
+                    vClass.subList.get(i).attString = attList.get(i) + "%";
+                }
+            }
+            else{
+                for (int i = 0; i < vClass.subList.size(); i++) {
+                    vClass.subList.get(i).ctd = 0;
+                    vClass.subList.get(i).attString =String.valueOf(0)+"%";
+                }
             }
             for(List<subject> i:vClass.timeTable){
                 for(int count=0;count<i.size();count++){
@@ -607,8 +617,13 @@ public class scrapper extends AppCompatActivity {
         String taskJson= academicPrefs.getString("tasks",null);
         SharedPreferences teacherPrefs=getSharedPreferences("teacherPrefs",MODE_PRIVATE);
         String teachers =teacherPrefs.getString("teachers",null);
+        String customTeachers=teacherPrefs.getString("customTeachers",null);
+        if(customTeachers!=null){
+            vClass.cablist=jsonBuilder.fromJson(customTeachers,new TypeToken<List<Cabin_Details>>(){}.getType());
+        }
         if(teachers!=null){
             vClass.teachers=jsonBuilder.fromJson(teachers,new TypeToken<List<teacher>>(){}.getType());
+            new tryUpdateDatabase().execute();
         }
         if(taskJson!=null){
             vClass.courseTasks=jsonBuilder.fromJson(taskJson,new TypeToken<Map<String,List<task>>>(){}.getType());
@@ -695,8 +710,13 @@ public class scrapper extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 vClass.teachers.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    teacher newTeacher = snapshot.getValue(teacher.class);
-                    vClass.teachers.add(newTeacher);
+                    try {
+                        teacher newTeacher = snapshot.getValue(teacher.class);
+                        vClass.teachers.add(newTeacher);
+                    }
+                    catch (Exception e){
+                        //DO NOT ADD THE CHANGE REQUESTED TEACHER DETAILS
+                    }
                 }
                 SharedPreferences.Editor editor = getSharedPreferences("teacherPrefs",MODE_PRIVATE).edit();
                 editor.putString("teachers",(jsonBuilder.toJson(vClass.teachers)));
@@ -709,4 +729,18 @@ public class scrapper extends AppCompatActivity {
             }
         });
     }  //GET THE CABIN DETAILS OF TEACHERS FORM FIREBASE DATABASE
+
+    class tryUpdateDatabase extends AsyncTask<Void,Void,Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            int customListCount=vClass.cablist.size();
+            if(customListCount>0){
+                for(int i=0;i<customListCount;i++){
+                    database.child("custom").child(String.valueOf(i)).setValue(vClass.cablist.get(i));
+                }
+            }
+            return null;
+        }
+    } //CREATE A REQUEST IN THE DATABASE TO UPDATE
 }

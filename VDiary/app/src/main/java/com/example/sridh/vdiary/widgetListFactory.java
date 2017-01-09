@@ -29,7 +29,7 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
             String scheduleJson=prefs.getString("schedule",null);
             if(scheduleJson!=null){
                 Gson g= new Gson();
-                timeTable=g.fromJson(scheduleJson,new TypeToken<ArrayList<ArrayList<subject>>>() {}.getType());
+                timeTable=g.fromJson(scheduleJson,new TypeToken<ArrayList<List<subject>>>() {}.getType());
                 todaySchedule=timeTable.get(today-2);
             }
     }

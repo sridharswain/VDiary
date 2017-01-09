@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+
 public class workSpace extends AppCompatActivity {
 
     /**
@@ -60,7 +61,7 @@ public class workSpace extends AppCompatActivity {
     public static SharedPreferences shared;
     public static SharedPreferences.Editor editor;
     static Context context;
-    public static  List<Cabin_Details> cablist;
+
     List<Notification_Holder> noti_todo;
     static int id=0;
 
@@ -105,7 +106,6 @@ public class workSpace extends AppCompatActivity {
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        cablist=new ArrayList<>();
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -184,23 +184,11 @@ public class workSpace extends AppCompatActivity {
             switch(getArguments().getInt(ARG_SECTION_NUMBER)-1)
             {
                 case 1:
-
-                    //Initializing cablist from shared preferences
-                    String temp=shared.getString("list","");
-                    Type type= new TypeToken<List<Cabin_Details>>(){}.getType();
-
-
-                    if(!temp.equals("")) {
-                        Gson json = new Gson();
-                        cablist = json.fromJson(temp, type);
-                    }
-                    //cablist initialized
-
                     rootView=inflater.inflate(R.layout.fragment_teachers,container,false);
                     setSearcher(rootView);
                     FloatingActionButton fab=(FloatingActionButton)rootView.findViewById(R.id.teachers_add);
                     ListView lv=(ListView)rootView.findViewById(R.id.teachers_list);
-                    final listAdapter_teachers mad=new listAdapter_teachers(context,cablist);
+                    final listAdapter_teachers mad=new listAdapter_teachers(context,vClass.cablist);
                     showSubject.todoList=mad;
                     listAdapter_searchTeacher.teacherAdapter=mad;
                     lv.setAdapter(mad);
@@ -227,13 +215,10 @@ public class workSpace extends AppCompatActivity {
                             delete.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    cablist.remove(position);
-                                    mad.updatecontent(cablist);
+                                    vClass.cablist.remove(position);
+                                    mad.updatecontent(vClass.cablist);
                                     aler.cancel();
-                                    Gson json=new Gson();
-                                    String k=json.toJson(cablist);
-                                    editor.putString("list",k);
-                                    editor.apply();
+                                    writeCabListToPrefs();
 
                                 }
                             });
@@ -386,13 +371,10 @@ public class workSpace extends AppCompatActivity {
                         c.name= name;
                         c.cabin=cabin;
                         c.others=comment;
-                        cablist.add(c);
-                        cabinListAdapter.updatecontent(cablist);
+                        vClass.cablist.add(c);
+                        writeCabListToPrefs();
+                        cabinListAdapter.updatecontent(vClass.cablist);
                         alert.cancel();
-                        Gson json=new Gson();
-                        String k=json.toJson(cablist);
-                        editor.putString("list",k);
-                        editor.apply();
                     }
                 }
             });
@@ -475,4 +457,12 @@ public class workSpace extends AppCompatActivity {
             return null;
         }
     }
+
+    public static void writeCabListToPrefs() {
+        Gson json=new Gson();
+        String cabListJson=json.toJson(vClass.cablist);
+        SharedPreferences.Editor cabListEditor= context.getSharedPreferences("teacherPrefs",MODE_PRIVATE).edit();
+        cabListEditor.putString("customTeachers",cabListJson);
+        cabListEditor.commit();
+    } //SAVE THE CONTENT OF CABLIST TO THE PREFERENCES
 }

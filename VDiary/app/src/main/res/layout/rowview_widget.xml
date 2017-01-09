@@ -38,7 +38,8 @@
         android:textSize="15dp"
         android:layout_below="@+id/widget_title"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="35dp"
+        android:layout_marginEnd="15dp"
+        android:layout_alignParentEnd="true"
         android:textColor="@android:color/white"/>
 
 </RelativeLayout>

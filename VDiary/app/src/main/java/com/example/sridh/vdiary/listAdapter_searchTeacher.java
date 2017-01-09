@@ -93,9 +93,10 @@ public class listAdapter_searchTeacher extends BaseAdapter {
                 Cabin_Details editedTeacher= new Cabin_Details();
                 editedTeacher.cabin=cabin.getText().toString();
                 editedTeacher.name=found.name;
-                workSpace.cablist.add(editedTeacher);
+                vClass.cablist.add(editedTeacher);
                 editedTeacher.others="Custom";
-                teacherAdapter.updatecontent(workSpace.cablist);
+                teacherAdapter.updatecontent(vClass.cablist);
+                workSpace.writeCabListToPrefs();
                 alertDialog.cancel();
                 //SHOW THAT WE WILL UPDATE THE DATABASE SOON
             }

@@ -31,7 +31,10 @@ public class vClass {
         }
     }  //CHANGE THE COLOR OF THE STATUS BAR
     public static List<teacher> teachers= new ArrayList<>();
+    public static  List<Cabin_Details> cablist=new ArrayList<>();
     public static String FIREBASE_URL= "https://vdiary-a25b2.firebaseio.com/";
+    //PARAMETERS FOR CHANGING THE LINKS
+    public static String SEM = "WS";
 }
 class Note
 {
