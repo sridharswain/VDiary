@@ -545,7 +545,7 @@ public class scrapper extends AppCompatActivity {
                     subject sub=f.get(l);
                     if(!sub.type.equals("")) {
                         AlarmManager alarmManager=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-                        Intent in=new Intent(scrapper.this,NotifyServiceTimetable.class);
+                        Intent in=new Intent(scrapper.this,NotifyService.class);
                         scrapper.editor.putInt("id_time",n_id);
                         Calendar c=Calendar.getInstance();
                         int st_hr,st_min,ampm;
@@ -554,39 +554,30 @@ public class scrapper extends AppCompatActivity {
                         String kk=sub.startTime.substring(6);
 
                         if(kk.equals("AM"))
-                            ampm=1;
+                            ampm=0;
                         else
-                        ampm=0;
-                        c.setTimeInMillis(System.currentTimeMillis());
+                            ampm=1;
+
                         c.set(Calendar.HOUR,st_hr);
                         c.set(Calendar.MINUTE,st_min);
+                        c.set(Calendar.SECOND,0);
                         c.set(Calendar.DAY_OF_WEEK,k+2);
                         c.set(Calendar.AM_PM,ampm);
-                       // Toast.makeText(scrapper.this, c.getDisplayName(Calendar.DAY_OF_WEEK,Calendar.LONG, Locale.getDefault()), Toast.LENGTH_SHORT).show();
-                        Notification_Holder nh=new Notification_Holder(c,"title","content");
+                        Notification_Holder nh=new Notification_Holder(c,sub.title+" "+sub.code,sub.teacher);
                         Gson j=new Gson();
                         in.putExtra("one",j.toJson(nh));
                         PendingIntent pintent=PendingIntent.getBroadcast(context,scrapper.n_id,in,0);
                         n_id++;
 
-                        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),24*7*60*60*1000,pintent);
+                        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,c.getTimeInMillis()-5*60*1000,24*7*60*60*1000,pintent);
 
 
 
                     }
 
                 }
-                //Toast.makeText(scrapper.this, "Alarm set for "+k, Toast.LENGTH_SHORT).show();
             }
 
-            /*AlarmManager alarmManager=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-            Intent intent=new Intent(scrapper.this,NotifyService.class);
-            Notification_Holder nh=new Notification_Holder(Calendar.getInstance(),"ss","xx");
-            Gson j=new Gson();
-            intent.putExtra("one",j.toJson(nh));
-            PendingIntent pendingIntent=PendingIntent.getBroadcast(context,99,intent,0);
-            //alarmManager.set(AlarmManager.RTC_WAKEUP,n.cal.getTimeInMillis(),pendingIntent);
-            alarmManager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),pendingIntent);*/
             startActivity(new Intent(scrapper.this,workSpace.class));
             finish();
         }
