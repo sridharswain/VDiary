@@ -547,7 +547,7 @@ public class scrapper extends AppCompatActivity {
                     }
                 }
             }
-            writeToPrefs();
+
             //Sparsha code starts from here to schedule notifications for the timetable class
             for(int k=0;k<vClass.timeTable.size();k++)
             {
@@ -579,8 +579,8 @@ public class scrapper extends AppCompatActivity {
                         Gson j=new Gson();
                         in.putExtra("one",j.toJson(nh));
                         PendingIntent pintent=PendingIntent.getBroadcast(context,scrapper.n_id,in,0);
+                        vClass.timeTable.get(k).get(l).notif_id=n_id;
                         n_id++;
-
                         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,c.getTimeInMillis()-5*60*1000,24*7*60*60*1000,pintent);
 
 
@@ -589,7 +589,7 @@ public class scrapper extends AppCompatActivity {
 
                 }
             }
-
+            writeToPrefs();
             startActivity(new Intent(scrapper.this,workSpace.class));
             finish();
         }

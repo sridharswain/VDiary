@@ -59,7 +59,7 @@ class subject {
     public String startTime;
     public String endTime;
     public String type;
-    public String notif_id;
+    public int notif_id;
 }
 
 class task{
