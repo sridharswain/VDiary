@@ -18,6 +18,7 @@ public class Notification_Holder {
     String content;
     String ticker;
     boolean scheduled;
+    int id;
 
     public Notification_Holder(Calendar i,String title,String content)
     {

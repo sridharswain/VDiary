@@ -33,9 +33,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -63,7 +61,7 @@ public class workSpace extends AppCompatActivity {
     static Context context;
 
     List<Notification_Holder> noti_todo;
-    static int id=0;
+    static int id=1000;
 
     static ListView resultList;
     @Override
@@ -80,19 +78,7 @@ public class workSpace extends AppCompatActivity {
         setContentView(R.layout.activity_workspace);
         context =this;
         noti_todo=new ArrayList<>();
-
-
-
-        //Toast.makeText(context, Calendar.getInstance().getDisplayName(Calendar.DAY_OF_WEEK,Calendar.LONG, Locale.getDefault())+"", Toast.LENGTH_SHORT).show();
-
-
-       // Notification_Creator nc=new Notification_Creator("x","y","z",context);  //Test notification
-        //nc.create_notification();
         shared=getSharedPreferences("todoshared",MODE_PRIVATE);
-
-
-
-
         //Get vClass.notes list from shared preferences
         String get_list=shared.getString("todolist",null);
         if(get_list!=null) {
@@ -101,7 +87,7 @@ public class workSpace extends AppCompatActivity {
         //vClass.notes is initialized
 
         editor=shared.edit();
-        id=shared.getInt("identifier",0);
+        id=shared.getInt("identifier",1000);
         setToolbars();
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -289,8 +275,10 @@ public class workSpace extends AppCompatActivity {
 
                                     if(finalTitle.getText().toString()!=null && finalTitle.getText().toString().equals("")!=true && finalOther.getText().toString()!=null && finalOther.getText().toString().equals("")!=true) {
                                         Notification_Holder n=new Notification_Holder(c,finalTitle.getText().toString(),finalOther.getText().toString());
-                                        vClass.notes.add(n);
+                                        n.cal=c;
                                         schedule_todo_notification(n);
+                                        n.id=id-1;
+                                        vClass.notes.add(n);
                                         Gson json = new Gson();
                                         String temporary = json.toJson(vClass.notes);
                                         editor.putString("todolist", temporary);
@@ -323,6 +311,13 @@ public class workSpace extends AppCompatActivity {
                              del.setOnClickListener(new View.OnClickListener() {
                                  @Override
                                  public void onClick(View v) {
+                                     //cancel the alarm for that particular note
+                                     AlarmManager alarmManager=(AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
+                                     Intent intent=new Intent(getActivity(),NotifyService.class);
+                                     PendingIntent pendingIntent=PendingIntent.getBroadcast(getContext(),vClass.notes.get(position).id,intent,PendingIntent.FLAG_CANCEL_CURRENT);
+                                     alarmManager.cancel(pendingIntent);
+                                     pendingIntent.cancel();
+                                     //done cancelling alarm
                                      vClass.notes.remove(position);
                                      adap.update(vClass.notes);
                                      ale.cancel();
@@ -348,7 +343,7 @@ public class workSpace extends AppCompatActivity {
             id++;
             editor.putInt("identifier",id);
             //alarmManager.set(AlarmManager.RTC_WAKEUP,n.cal.getTimeInMillis(),pendingIntent);
-            alarmManager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),pendingIntent);
+            alarmManager.set(AlarmManager.RTC_WAKEUP,n.cal.getTimeInMillis(),pendingIntent);
 
         }
 

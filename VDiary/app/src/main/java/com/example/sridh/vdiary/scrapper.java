@@ -575,7 +575,7 @@ public class scrapper extends AppCompatActivity {
                         c.set(Calendar.SECOND,0);
                         c.set(Calendar.DAY_OF_WEEK,k+2);
                         c.set(Calendar.AM_PM,ampm);
-                        Notification_Holder nh=new Notification_Holder(c,sub.title+" "+sub.code,sub.teacher);
+                        Notification_Holder nh=new Notification_Holder(c,sub.title+" "+sub.code,sub.room);
                         Gson j=new Gson();
                         in.putExtra("one",j.toJson(nh));
                         PendingIntent pintent=PendingIntent.getBroadcast(context,scrapper.n_id,in,0);
