@@ -27,7 +27,6 @@
         android:text="SOFTWARE ENGINEERING AND DISCREETE AND MATHEMATICS FS"
         android:layout_toRightOf="@id/widget_type"
         android:textSize="17sp"
-        android:layout_alignParentEnd="true"
         android:textStyle="normal|bold" />
 
     <TextView
@@ -35,11 +34,20 @@
         android:layout_height="wrap_content"
         android:id="@+id/widget_Time"
         android:text="12:30PM"
-        android:textSize="15dp"
-        android:layout_below="@+id/widget_title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="15dp"
+        android:textSize="13sp"
+        android:layout_marginEnd="5dp"
+        android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/widget_title"
+        android:id="@+id/widget_room"
+        android:textSize="13sp"
+        android:layout_toEndOf="@id/widget_type"
+        android:textColor="@android:color/white"
+        android:layout_marginLeft="10dp"/>
 
 </RelativeLayout>

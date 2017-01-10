@@ -413,6 +413,7 @@ public class scrapper extends AppCompatActivity {
                                                             sub.code="";
                                                             sub.title=text;
                                                             sub.type="";
+                                                            sub.room="";
                                                             web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[1].cells[" + (cell + Integer.parseInt(String.valueOf(extraTime.get()))) +"].innerText.toString()"), new ValueCallback<String>() {
                                                                 @Override
                                                                 public void onReceiveValue(String value) {
@@ -537,6 +538,7 @@ public class scrapper extends AppCompatActivity {
                         i.get(count).attString=sub.attString;
                         i.get(count).teacher=sub.teacher;
                         i.get(count).title=sub.title;
+                        i.get(count).room=sub.room;
                         if(sub.type.equals("ELA") || sub.type.equals("LO")){
                             i.remove(count+1);
                             placeCorrectly(i.get(count),i);

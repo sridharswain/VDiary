@@ -65,8 +65,9 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
             row.setViewVisibility(R.id.widget_Time,View.INVISIBLE);
         }
         else{
-            row.setTextViewText(R.id.widget_Time,session.startTime+" - "+session.endTime);
+            row.setTextViewText(R.id.widget_Time,session.startTime.toLowerCase());
             row.setTextViewText(R.id.widget_type,session.type);
+            row.setTextViewText(R.id.widget_room,session.room);
         }
         return row;
     }

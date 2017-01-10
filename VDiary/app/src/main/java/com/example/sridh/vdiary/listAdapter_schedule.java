@@ -2,6 +2,7 @@ package com.example.sridh.vdiary;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,16 +51,21 @@ public class listAdapter_schedule extends BaseAdapter {
         TextView title= ((TextView)rowview.findViewById(R.id.schedule_title));
         TextView type =(TextView)rowview.findViewById(R.id.schedule_type);
         TextView Time=(TextView)rowview.findViewById(R.id.schedule_Time);
+        TextView room= (TextView)rowview.findViewById(R.id.schedule_room);
         title.setText(course.title);
         if(!course.type.equals("")){
             type.setText(course.type);
             Time.setText(course.startTime+" - "+course.endTime);
+            room.setText(course.room);
+            Log.d("course",course.title);
+            Log.d("Room",course.room);
         }
         else{
             type.setVisibility(View.INVISIBLE);
             title.setTextColor(context.getResources().getColor(R.color.Slight_white_orange));
             title.setTextSize(14);
             Time.setVisibility(View.INVISIBLE);
+            room.setVisibility(View.INVISIBLE);
         }
         return rowview;
     }

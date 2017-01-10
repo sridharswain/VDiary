@@ -38,13 +38,21 @@
 
 
     <TextView
-        android:text="11:40"
+        android:text="11:00AM - 11:50AM"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/schedule_Time"
         android:background="@android:color/transparent"
         android:layout_below="@id/schedule_title"
         android:layout_toEndOf="@id/schedule_type"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/schedule_room"
+        android:layout_toEndOf="@id/schedule_Time"
+        android:layout_marginStart="15dp"
+        android:layout_below="@id/schedule_title"
+        android:text="AB605"/>
 
 
 
