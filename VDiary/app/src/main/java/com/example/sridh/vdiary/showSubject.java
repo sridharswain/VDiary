@@ -59,7 +59,6 @@ public class showSubject extends AppCompatActivity {
         getWindow().setLayout(width,((int)(0.6*height)));
         bar=(Toolbar)findViewById(R.id.showToolbar);
         bar.inflateMenu(R.menu.menu_show_subject);
-        bar.setTitle(sub.code);
         initMenu();
         ((TextView)findViewById(R.id.subject_Title)).setText(sub.title);
         ((TextView)findViewById(R.id.subject_Teacher)).setText(sub.teacher);

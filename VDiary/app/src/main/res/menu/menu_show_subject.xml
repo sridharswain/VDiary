@@ -6,13 +6,7 @@
     <item
         android:id="@+id/action_addAssingment"
         android:orderInCategory="200"
-        android:title="Add Task"
-        app:showAsAction="never"
-        />
-    <item
-        android:id="@+id/action_editSubject"
-        android:orderInCategory="200"
-        android:title="Edit Subject"
+        android:title="+task"
         app:showAsAction="always"
-        android:icon="@android:drawable/ic_menu_edit" />
+        />
 </menu>

@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class scrapper extends AppCompatActivity {
@@ -108,13 +109,10 @@ public class scrapper extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Connection Failed!",Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(scrapper.this,workSpace.class));
                     finish();
-                    return;
                 }
                 else{
                     status.setText("Connection Falied!");
-                    load(true);
-                    reload.setVisibility(View.VISIBLE);
-                    return;
+                    showRetry();
                 }
             }
             else if(web.getUrl().equals("https://academicscc.vit.ac.in/student/stud_login.asp")) {
@@ -210,6 +208,7 @@ public class scrapper extends AppCompatActivity {
         reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                web.setWebViewClient(new loginClient());
                 web.loadUrl("https://academicscc.vit.ac.in/student/stud_login.asp");
                 status.setText("Building Captcha...");
                 reload.setVisibility(View.INVISIBLE);
@@ -277,6 +276,7 @@ public class scrapper extends AppCompatActivity {
                                             final String room=trim(value);
                                             if(!room.equals("NIL")){
                                                 final subject sub= new subject();
+                                                //ROOM
                                                 sub.room=room;
                                                 //Toast.makeText(getApplicationContext(),room,Toast.LENGTH_LONG).show();
                                                 //CODE
@@ -500,7 +500,7 @@ public class scrapper extends AppCompatActivity {
         else{
             attendanceStatus=false;
         }
-    }//GET DATAFROM THE ATTENDANCE PAGE
+    }//GET DATA FROM THE ATTENDANCE PAGE
 
     class compileInf extends AsyncTask<Void,Void,Void>{
         @Override
@@ -518,80 +518,76 @@ public class scrapper extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            status.setText("Summarizing Views...");
-            if(attendanceStatus) {
-                for (int i = 0; i < vClass.subList.size(); i++) {
-                    vClass.subList.get(i).ctd = Integer.parseInt(ctdList.get(i));
-                    vClass.subList.get(i).attString = attList.get(i) + "%";
+            try {
+                status.setText("Summarizing Views...");
+                if (attendanceStatus) {
+                    for (int i = 0; i < vClass.subList.size(); i++) {
+                        vClass.subList.get(i).ctd = Integer.parseInt(ctdList.get(i));
+                        vClass.subList.get(i).attString = attList.get(i) + "%";
+                    }
+                } else {
+                    for (int i = 0; i < vClass.subList.size(); i++) {
+                        vClass.subList.get(i).ctd = 0;
+                        vClass.subList.get(i).attString = String.valueOf(0) + "%";
+                    }
                 }
-            }
-            else{
-                for (int i = 0; i < vClass.subList.size(); i++) {
-                    vClass.subList.get(i).ctd = 0;
-                    vClass.subList.get(i).attString =String.valueOf(0)+"%";
-                }
-            }
-            for(List<subject> i:vClass.timeTable){
-                for(int count=0;count<i.size();count++){
-                    subject sub=getSubject(i.get(count).code,i.get(count).type);
-                    if(sub!=null){
-                        i.get(count).attString=sub.attString;
-                        i.get(count).teacher=sub.teacher;
-                        i.get(count).title=sub.title;
-                        i.get(count).room=sub.room;
-                        if(sub.type.equals("ELA") || sub.type.equals("LO")){
-                            i.remove(count+1);
-                            placeCorrectly(i.get(count),i);
+                for (List<subject> i : vClass.timeTable) {
+                    for (int count = 0; count < i.size(); count++) {
+                        subject sub = getSubject(i.get(count).code, i.get(count).type);
+                        if (sub != null) {
+                            i.get(count).attString = sub.attString;
+                            i.get(count).teacher = sub.teacher;
+                            i.get(count).title = sub.title;
+                            i.get(count).room = sub.room;
+                            if (sub.type.equals("ELA") || sub.type.equals("LO")) {
+                                i.remove(count + 1);
+                                placeCorrectly(i.get(count), i);
+                            }
+                            //Log.d("Subject",i.get(count).code+" "+" "+ i.get(count).title+" "+i.get(count).teacher+" "+i.get(count).attString+" "+i.get(count).time);
                         }
-                        //Log.d("Subject",i.get(count).code+" "+" "+ i.get(count).title+" "+i.get(count).teacher+" "+i.get(count).attString+" "+i.get(count).time);
                     }
                 }
-            }
-            writeToPrefs();
-            //Sparsha code starts from here to schedule notifications for the timetable class
-            for(int k=0;k<vClass.timeTable.size();k++)
-            {
-                List<subject> f=vClass.timeTable.get(k);
-                for(int l=0;l<f.size();l++)
-                {
-                    subject sub=f.get(l);
-                    if(!sub.type.equals("")) {
-                        AlarmManager alarmManager=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-                        Intent in=new Intent(scrapper.this,NotifyService.class);
-                        scrapper.editor.putInt("id_time",n_id);
-                        Calendar c=Calendar.getInstance();
-                        int st_hr,st_min,ampm;
-                        st_hr=Integer.parseInt(sub.startTime.substring(0,2));
-                        st_min=Integer.parseInt(sub.startTime.substring(3,5));
-                        String kk=sub.startTime.substring(6);
+                writeToPrefs();
+                //Sparsha code starts from here to schedule notifications for the timetable class
+                for (int k = 0; k < vClass.timeTable.size(); k++) {
+                    List<subject> f = vClass.timeTable.get(k);
+                    for (int l = 0; l < f.size(); l++) {
+                        subject sub = f.get(l);
+                        if (!sub.type.equals("")) {
+                            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                            Intent in = new Intent(scrapper.this, NotifyService.class);
+                            scrapper.editor.putInt("id_time", n_id);
+                            Calendar c = Calendar.getInstance();
+                            int st_hr, st_min, ampm;
+                            st_hr = Integer.parseInt(sub.startTime.substring(0, 2));
+                            st_min = Integer.parseInt(sub.startTime.substring(3, 5));
+                            String kk = sub.startTime.substring(6);
 
-                        if(kk.equals("AM"))
-                            ampm=0;
-                        else
-                            ampm=1;
-
-                        c.set(Calendar.HOUR,st_hr);
-                        c.set(Calendar.MINUTE,st_min);
-                        c.set(Calendar.SECOND,0);
-                        c.set(Calendar.DAY_OF_WEEK,k+2);
-                        c.set(Calendar.AM_PM,ampm);
-                        Notification_Holder nh=new Notification_Holder(c,sub.title+" "+sub.code,sub.teacher);
-                        Gson j=new Gson();
-                        in.putExtra("one",j.toJson(nh));
-                        PendingIntent pintent=PendingIntent.getBroadcast(context,scrapper.n_id,in,0);
-                        n_id++;
-
-                        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,c.getTimeInMillis()-5*60*1000,24*7*60*60*1000,pintent);
-
-
-
+                            if (kk.equals("AM"))
+                                ampm = 0;
+                            else
+                                ampm = 1;
+                            c.set(Calendar.HOUR, st_hr);
+                            c.set(Calendar.MINUTE, st_min);
+                            c.set(Calendar.SECOND, 0);
+                            c.set(Calendar.DAY_OF_WEEK, k + 2);
+                            c.set(Calendar.AM_PM, ampm);
+                            Notification_Holder nh = new Notification_Holder(c, sub.title + " " + sub.code, sub.teacher);
+                            Gson j = new Gson();
+                            in.putExtra("one", j.toJson(nh));
+                            PendingIntent pintent = PendingIntent.getBroadcast(context, scrapper.n_id, in, 0);
+                            n_id++;
+                            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() - 5 * 60 * 1000, 24 * 7 * 60 * 60 * 1000, pintent);
+                        }
                     }
-
                 }
+                startActivity(new Intent(scrapper.this, workSpace.class));
+                finish();
             }
-
-            startActivity(new Intent(scrapper.this,workSpace.class));
-            finish();
+            catch (Exception e){
+                showRetry();
+                return;
+            }
         }
     } //REARRANGE THE INFORMATION SCRAPPED FORM THE WEBPAGE
 
@@ -745,4 +741,10 @@ public class scrapper extends AppCompatActivity {
             return null;
         }
     } //CREATE A REQUEST IN THE DATABASE TO UPDATE
+
+
+    void showRetry(){
+        load(true);
+        reload.setVisibility(View.VISIBLE);
+    }
 }

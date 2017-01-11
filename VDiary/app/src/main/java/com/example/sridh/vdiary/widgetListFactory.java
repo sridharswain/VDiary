@@ -56,6 +56,7 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
     @Override
     public RemoteViews getViewAt(int position) {
         RemoteViews row = new RemoteViews(ctxt.getPackageName(),R.layout.rowview_widget);
+        row.removeAllViews(R.layout.rowview_widget);
         subject session=todaySchedule.get(position);
         row.setTextViewText(R.id.widget_title,session.title);
         if(session.type.equals("")){
@@ -63,11 +64,13 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
             row.setTextViewTextSize(R.id.widget_title,1,13);
             row.setViewVisibility(R.id.widget_type, View.INVISIBLE);
             row.setViewVisibility(R.id.widget_Time,View.INVISIBLE);
+            Log.d("Widget",session.title+"  NUll");
         }
         else{
             row.setTextViewText(R.id.widget_Time,session.startTime.toLowerCase());
             row.setTextViewText(R.id.widget_type,session.type);
             row.setTextViewText(R.id.widget_room,session.room);
+            Log.d("Widget",session.title+"  Subject");
         }
         return row;
     }
