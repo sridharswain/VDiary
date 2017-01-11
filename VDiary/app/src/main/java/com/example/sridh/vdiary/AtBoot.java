@@ -40,7 +40,9 @@ public class AtBoot extends BroadcastReceiver {
             alarmManager.set(AlarmManager.RTC_WAKEUP, vClass.notes.get(i).cal.getTimeInMillis(),pendingIntent);
         }
 
-        
+
+
+
 
     }
 }
