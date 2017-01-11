@@ -42,7 +42,7 @@ public class Notification_Creator {
 
         Vibrator vib=(Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
         if(vib.hasVibrator()) {
-            vib.vibrate(400);
+            vib.vibrate(1500);
         }
     }
 }
