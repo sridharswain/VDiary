@@ -55,6 +55,8 @@ public class workSpace extends AppCompatActivity {
     /**
      * The {@link ViewPager} that will host the section contents.
      */
+    static workSpace w;
+
     private ViewPager mViewPager;
     public static SharedPreferences shared;
     public static SharedPreferences.Editor editor;
@@ -77,6 +79,7 @@ public class workSpace extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workspace);
         context =this;
+        w=this;
         noti_todo=new ArrayList<>();
         shared=getSharedPreferences("todoshared",MODE_PRIVATE);
         //Get vClass.notes list from shared preferences
@@ -342,10 +345,10 @@ public class workSpace extends AppCompatActivity {
             PendingIntent pendingIntent=PendingIntent.getBroadcast(getContext(),id,intent,0);
             id++;
             editor.putInt("identifier",id);
-            //alarmManager.set(AlarmManager.RTC_WAKEUP,n.cal.getTimeInMillis(),pendingIntent);
             alarmManager.set(AlarmManager.RTC_WAKEUP,n.cal.getTimeInMillis(),pendingIntent);
 
         }
+
 
         void showCabinAlertDialog(final listAdapter_teachers cabinListAdapter){
             final AlertDialog.Builder alertBuilder= new AlertDialog.Builder(context);

@@ -1,7 +1,6 @@
 package com.example.sridh.vdiary;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +57,7 @@ public class listAdapter_schedule extends BaseAdapter {
             Time.setText(course.startTime+" - "+course.endTime);
             room.setText(course.room);
             Log.d("course",course.title);
-            Log.d("Room",course.room);
+
         }
         else{
             type.setVisibility(View.INVISIBLE);
