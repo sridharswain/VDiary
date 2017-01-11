@@ -547,8 +547,8 @@ public class scrapper extends AppCompatActivity {
                         }
                     }
                 }
-<<<<<<< HEAD
                 writeToPrefs();
+
                 //Sparsha code starts from here to schedule notifications for the timetable class
                 for (int k = 0; k < vClass.timeTable.size(); k++) {
                     List<subject> f = vClass.timeTable.get(k);
@@ -568,74 +568,34 @@ public class scrapper extends AppCompatActivity {
                                 ampm = 0;
                             else
                                 ampm = 1;
+
                             c.set(Calendar.HOUR, st_hr);
                             c.set(Calendar.MINUTE, st_min);
                             c.set(Calendar.SECOND, 0);
                             c.set(Calendar.DAY_OF_WEEK, k + 2);
                             c.set(Calendar.AM_PM, ampm);
-                            Notification_Holder nh = new Notification_Holder(c, sub.title + " " + sub.code, sub.teacher);
+                            Notification_Holder nh = new Notification_Holder(c, sub.title + " " + sub.code, sub.room);
                             Gson j = new Gson();
                             in.putExtra("one", j.toJson(nh));
                             PendingIntent pintent = PendingIntent.getBroadcast(context, scrapper.n_id, in, 0);
+                            vClass.timeTable.get(k).get(l).notif_id = n_id;
                             n_id++;
                             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() - 5 * 60 * 1000, 24 * 7 * 60 * 60 * 1000, pintent);
+
+
                         }
-=======
-            }
-
-            //Sparsha code starts from here to schedule notifications for the timetable class
-            for(int k=0;k<vClass.timeTable.size();k++)
-            {
-                List<subject> f=vClass.timeTable.get(k);
-                for(int l=0;l<f.size();l++)
-                {
-                    subject sub=f.get(l);
-                    if(!sub.type.equals("")) {
-                        AlarmManager alarmManager=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-                        Intent in=new Intent(scrapper.this,NotifyService.class);
-                        scrapper.editor.putInt("id_time",n_id);
-                        Calendar c=Calendar.getInstance();
-                        int st_hr,st_min,ampm;
-                        st_hr=Integer.parseInt(sub.startTime.substring(0,2));
-                        st_min=Integer.parseInt(sub.startTime.substring(3,5));
-                        String kk=sub.startTime.substring(6);
-
-                        if(kk.equals("AM"))
-                            ampm=0;
-                        else
-                            ampm=1;
-
-                        c.set(Calendar.HOUR,st_hr);
-                        c.set(Calendar.MINUTE,st_min);
-                        c.set(Calendar.SECOND,0);
-                        c.set(Calendar.DAY_OF_WEEK,k+2);
-                        c.set(Calendar.AM_PM,ampm);
-                        Notification_Holder nh=new Notification_Holder(c,sub.title+" "+sub.code,sub.room);
-                        Gson j=new Gson();
-                        in.putExtra("one",j.toJson(nh));
-                        PendingIntent pintent=PendingIntent.getBroadcast(context,scrapper.n_id,in,0);
-                        vClass.timeTable.get(k).get(l).notif_id=n_id;
-                        n_id++;
-                        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,c.getTimeInMillis()-5*60*1000,24*7*60*60*1000,pintent);
-
-
-
->>>>>>> 4c1ea7baafd4051a3ad8b7d918ecd7c7dfcefe78
                     }
+                    startActivity(new Intent(scrapper.this, workSpace.class));
+                    finish();
                 }
-                startActivity(new Intent(scrapper.this, workSpace.class));
-                finish();
             }
             catch (Exception e){
                 showRetry();
                 return;
             }
-<<<<<<< HEAD
-=======
             writeToPrefs();
             startActivity(new Intent(scrapper.this,workSpace.class));
             finish();
->>>>>>> 4c1ea7baafd4051a3ad8b7d918ecd7c7dfcefe78
         }
     } //REARRANGE THE INFORMATION SCRAPPED FORM THE WEBPAGE
 
