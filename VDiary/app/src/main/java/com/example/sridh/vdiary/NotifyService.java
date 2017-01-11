@@ -1,8 +1,8 @@
 package com.example.sridh.vdiary;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.WakefulBroadcastReceiver;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -13,7 +13,7 @@ import java.lang.reflect.Type;
  * Created by Sparsha Saha on 12/12/2016.
  */
 
-public class NotifyService extends BroadcastReceiver {
+public class NotifyService extends WakefulBroadcastReceiver {
 
 
     @Override

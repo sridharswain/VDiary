@@ -19,6 +19,7 @@ public class Notification_Holder {
     String ticker;
     boolean scheduled;
     int id;
+    long mills;
 
     public Notification_Holder(Calendar i,String title,String content)
     {
@@ -27,6 +28,7 @@ public class Notification_Holder {
         this.content=content;
         this.ticker=title;
         scheduled=false;
+        mills=cal.getTimeInMillis();
     }
 
     public static String convert_to_jason(List<Notification_Holder> lis)
