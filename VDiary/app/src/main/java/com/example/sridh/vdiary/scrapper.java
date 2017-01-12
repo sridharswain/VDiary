@@ -593,6 +593,7 @@ public class scrapper extends AppCompatActivity {
             }
             catch (Exception e){
                 showRetry();
+                status.setText("Slow Connection!");
                 return;
             }
             writeToPrefs();
@@ -755,6 +756,7 @@ public class scrapper extends AppCompatActivity {
 
     void showRetry(){
         load(true);
+        status.setText("Connection Failed");
         reload.setVisibility(View.VISIBLE);
     } //SHOW THE RETRY VIEW
     void getDimensions(){
