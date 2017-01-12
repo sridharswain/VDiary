@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.webkit.SslErrorHandler;
@@ -83,6 +84,7 @@ public class scrapper extends AppCompatActivity {
 
         setContentView(R.layout.splash_screen);
         vClass.setStatusBar(getWindow(),getApplicationContext());
+        getDimensions();
         start();
     }
 
@@ -754,5 +756,11 @@ public class scrapper extends AppCompatActivity {
     void showRetry(){
         load(true);
         reload.setVisibility(View.VISIBLE);
+    } //SHOW THE RETRY VIEW
+    void getDimensions(){
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        vClass.width=dm.widthPixels;
+        vClass.height=dm.heightPixels;
     }
 }

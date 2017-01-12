@@ -21,6 +21,8 @@ public class vClass {
     public static String cat1;
     public static String cat2;
     public static String fat;
+    public static int width;
+    public static int  height;
     public static List<Notification_Holder> notes=new ArrayList<>();
     public static Map<String,List<task>> courseTasks= new HashMap<>();
     public static void setStatusBar(Window window, Context context) {

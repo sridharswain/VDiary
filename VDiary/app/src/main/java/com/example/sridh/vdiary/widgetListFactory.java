@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -55,34 +54,32 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
 
     @Override
     public RemoteViews getViewAt(int position) {
-        RemoteViews row = new RemoteViews(ctxt.getPackageName(),R.layout.rowview_widget);
-        row.removeAllViews(R.layout.rowview_widget);
+        RemoteViews row;
+        //row.removeAllViews(); //CODE TO BE TESTED
         subject session=todaySchedule.get(position);
-        row.setTextViewText(R.id.widget_title,session.title);
         if(session.type.equals("")){
-            row.setTextColor(R.id.widget_title,ctxt.getResources().getColor(R.color.Slight_white_orange));
-            row.setTextViewTextSize(R.id.widget_title,1,13);
-            row.setViewVisibility(R.id.widget_type, View.INVISIBLE);
-            row.setViewVisibility(R.id.widget_Time,View.INVISIBLE);
-            Log.d("Widget",session.title+"  NUll");
+            row = new RemoteViews(ctxt.getPackageName(),R.layout.rowview_widget_free_slot);
+            row.setTextViewText(R.id.widget_free_slot_title,session.title);
         }
         else{
+            row = new RemoteViews(ctxt.getPackageName(),R.layout.rowview_widget_class_slot);
+            row.setTextViewText(R.id.widget_title,session.title);
             row.setTextViewText(R.id.widget_Time,session.startTime.toLowerCase());
             row.setTextViewText(R.id.widget_type,session.type);
             row.setTextViewText(R.id.widget_room,session.room);
-            Log.d("Widget",session.title+"  Subject");
         }
         return row;
     }
 
     @Override
     public RemoteViews getLoadingView() {
-        return (new RemoteViews(ctxt.getPackageName(),R.layout.activity_login));
+        //return (new RemoteViews(ctxt.getPackageName(),R.layout.activity_login));
+        return null;
     }
 
     @Override
     public int getViewTypeCount() {
-        return 1;
+        return 2;
     }
 
     @Override
@@ -92,6 +89,6 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 }

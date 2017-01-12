@@ -4,17 +4,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
-        android:layout_width="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/notes_list"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:drawSelectorOnTop="true"
-        android:stackFromBottom="false"
-        android:contextClickable="false"
-        android:dividerHeight="5dp"
-        android:choiceMode="singleChoice" />
+        android:layout_below="@+id/subject_Teacher"
+        android:id="@+id/show_subject_scoller"
+        android:layout_margin="3dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:scrollbars="vertical"
+            android:id="@+id/task_grid_view">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:scrollbars="vertical"
+                android:id="@+id/task_grid_view_left"
+                android:layout_alignParentLeft="true"
+                android:showDividers="middle"
+                android:divider="@drawable/divider">
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:scrollbars="vertical"
+                android:id="@+id/task_grid_view_right"
+                android:layout_alignParentRight="true"
+                android:showDividers="middle"
+                android:divider="@drawable/divider">
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
     <android.support.design.widget.FloatingActionButton
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"

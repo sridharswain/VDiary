@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -62,8 +63,8 @@ public class workSpace extends AppCompatActivity {
     public static SharedPreferences.Editor editor;
     static Context context;
 
-    List<Notification_Holder> noti_todo;
     static int id=1000;
+
 
     static ListView resultList;
     @Override
@@ -80,7 +81,6 @@ public class workSpace extends AppCompatActivity {
         setContentView(R.layout.activity_workspace);
         context =this;
         w=this;
-        noti_todo=new ArrayList<>();
         shared=getSharedPreferences("todoshared",MODE_PRIVATE);
         //Get vClass.notes list from shared preferences
         String get_list=shared.getString("todolist",null);
@@ -168,7 +168,7 @@ public class workSpace extends AppCompatActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+                                 final Bundle savedInstanceState) {
             View rootView=null;
             switch(getArguments().getInt(ARG_SECTION_NUMBER)-1)
             {
@@ -235,12 +235,8 @@ public class workSpace extends AppCompatActivity {
                     break;
                 case 2:
                     rootView=inflater.inflate(R.layout.fragment_notes,container,false);
-                    ListView lview1=(ListView)rootView.findViewById(R.id.notes_list);
-                    final listAdapter_todo adap=new listAdapter_todo(context,vClass.notes);
-                    lview1.setAdapter(adap);
+                    populateTaskGrid(rootView,savedInstanceState);
                     FloatingActionButton fb=(FloatingActionButton)rootView.findViewById(R.id.notes_add);
-
-
                     //Enter each element of listview
                     fb.setOnClickListener(new View.OnClickListener() { //Floating action button onclick listener
                         @Override
@@ -282,11 +278,11 @@ public class workSpace extends AppCompatActivity {
                                         schedule_todo_notification(n);
                                         n.id=id-1;
                                         vClass.notes.add(n);
+                                        updateTaskGrid(vClass.notes.indexOf(n),savedInstanceState);
                                         Gson json = new Gson();
                                         String temporary = json.toJson(vClass.notes);
                                         editor.putString("todolist", temporary);
                                         editor.apply();
-                                        adap.update(vClass.notes);
                                         alert.cancel();
                                     }
                                     else
@@ -297,40 +293,6 @@ public class workSpace extends AppCompatActivity {
                         }
                     });
 
-                    // OnItemclicklistener for Click for each item for listview1
-                     lview1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                         @Override
-                         public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                             final LinearLayout layouts=new LinearLayout(context);
-                             final Button del=new Button(context);
-                             del.setText("Delete");
-                             layouts.addView(del);
-                             final AlertDialog ale;
-                             AlertDialog.Builder buil=new AlertDialog.Builder(context);
-                             buil.setView(layouts);
-                             ale=buil.create();
-                             ale.show();
-
-                             del.setOnClickListener(new View.OnClickListener() {
-                                 @Override
-                                 public void onClick(View v) {
-                                     //cancel the alarm for that particular note
-                                     AlarmManager alarmManager=(AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
-                                     Intent intent=new Intent(getActivity(),NotifyService.class);
-                                     PendingIntent pendingIntent=PendingIntent.getBroadcast(getContext(),vClass.notes.get(position).id,intent,PendingIntent.FLAG_CANCEL_CURRENT);
-                                     alarmManager.cancel(pendingIntent);
-                                     pendingIntent.cancel();
-                                     //done cancelling alarm
-                                     vClass.notes.remove(position);
-                                     adap.update(vClass.notes);
-                                     ale.cancel();
-                                     editor.putString("todolist",Notification_Holder.convert_to_jason(vClass.notes));
-                                     editor.apply();
-                                 }
-                             });
-
-                         }
-                     });
             }
 
             return rootView;
@@ -417,6 +379,46 @@ public class workSpace extends AppCompatActivity {
                 }
             });
         }
+        LinearLayout taskGridLeft,taskGridRight;
+        void populateTaskGrid(View root,Bundle saved){
+            taskGridLeft=(LinearLayout)root.findViewById(R.id.task_grid_view_left);
+            int taskViewWidth=((int) (vClass.width*0.490));
+            taskGridLeft.getLayoutParams().width= taskViewWidth;
+            taskGridRight=(LinearLayout)root.findViewById(R.id.task_grid_view_right);
+            taskGridRight.getLayoutParams().width= taskViewWidth;
+            if(vClass.notes.size()>0){
+                int i=0;
+                taskGridLeft.removeAllViews();
+                taskGridRight.removeAllViews();
+                while(i<vClass.notes.size()){
+                    taskGridLeft.addView(getTaskView(i,saved));
+                    i++;
+                    if(i<vClass.notes.size())
+                        taskGridRight.addView(getTaskView(i,saved));
+                    i++;
+                }
+            }
+        }
+        int[] colors=new int[]{R.color.teal,R.color.sunflower,R.color.nephritis,R.color.belize,R.color.green_cyan,R.color.amethyst,R.color.pomegranate};
+        View getTaskView(int index, Bundle saved){
+            final Notification_Holder cTask= vClass.notes.get(index);
+            final View taskView= getLayoutInflater(saved).inflate(R.layout.course_task_view,null);
+            ((TextView)taskView.findViewById(R.id.task_title)).setText(cTask.title);
+            ((TextView)taskView.findViewById(R.id.task_desc)).setText(cTask.content);
+            taskView.setBackground(getResources().getDrawable(R.drawable.soft_corner_taskview));
+            GradientDrawable softShape=(GradientDrawable)taskView.getBackground();
+            final int colorIndex=index%(colors.length);
+            softShape.setColor(getResources().getColor(colors[colorIndex]));
+            return taskView;
+        }
+        void updateTaskGrid(int index,Bundle saved){
+            if((index)%2==0 ){
+                taskGridLeft.addView(getTaskView(index,saved));
+            }
+            else{
+                taskGridRight.addView(getTaskView(index,saved));
+            }
+        } //UPDATE THE TASK GRID WHEN NEW TASK IS ADDED
     }
 
     /**

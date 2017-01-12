@@ -26,8 +26,8 @@ public class showSubject extends AppCompatActivity {
     boolean available=false;
     List<task> tasks=null;
     Gson jsonBuilder = new Gson();
-    int width;
-    int height;
+    int width=vClass.width;
+    int height=vClass.height;
     TextView notask;
     LinearLayout taskGridLeft;
     LinearLayout taskGridRight;
@@ -40,7 +40,6 @@ public class showSubject extends AppCompatActivity {
         setContentView(R.layout.activity_show_subject);
         int position=getIntent().getIntExtra("position",0);
         clicked= vClass.subList.get(position);
-        getDimensions();
         show(clicked);  //Initialize the popup activity to show the contents of the subject
         tasks=vClass.courseTasks.get(clicked.code+clicked.type);
         if(tasks!=null){
@@ -48,12 +47,6 @@ public class showSubject extends AppCompatActivity {
             notask.setVisibility(View.INVISIBLE);
             available=true;
         }
-    }
-    void getDimensions(){
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        width=dm.widthPixels;
-        height=dm.heightPixels;
     }
     void show(subject sub){
         getWindow().setLayout(width,((int)(0.6*height)));
@@ -151,5 +144,5 @@ public class showSubject extends AppCompatActivity {
         else{
             taskGridRight.addView(getTaskView(index));
         }
-    }
+    } //UPDATE THE TASK GRID WHEN NEW TASK IS ADDED
 }

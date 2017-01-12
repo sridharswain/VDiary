@@ -84,7 +84,4 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:id="@+id/no_task_text"/>
-
-
-
 </RelativeLayout>
