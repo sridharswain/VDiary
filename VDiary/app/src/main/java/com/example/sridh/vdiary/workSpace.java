@@ -278,7 +278,7 @@ public class workSpace extends AppCompatActivity {
                                         schedule_todo_notification(n);
                                         n.id=id-1;
                                         vClass.notes.add(n);
-                                        updateTaskGrid(vClass.notes.indexOf(n),savedInstanceState);
+                                        updateTaskGrid(vClass.notes.size()-1,savedInstanceState);
                                         Gson json = new Gson();
                                         String temporary = json.toJson(vClass.notes);
                                         editor.putString("todolist", temporary);
@@ -327,6 +327,17 @@ public class workSpace extends AppCompatActivity {
                         Toast.makeText(context,"Invalid Data !",Toast.LENGTH_LONG).show();
                     }
                     else{
+
+                        for (int i=0;i<vClass.cablist.size();i++){
+                            if(vClass.cablist.get(i).name.toLowerCase().equals(name.toLowerCase())){
+                                vClass.cablist.get(i).cabin=cabin;
+                                vClass.cablist.get(i).others=comment;
+                                writeCabListToPrefs();
+                                cabinListAdapter.updatecontent(vClass.cablist);
+                                alert.cancel();
+                                return;
+                            }
+                        }
                         Cabin_Details c=new Cabin_Details();
                         c.name= name;
                         c.cabin=cabin;
@@ -382,7 +393,7 @@ public class workSpace extends AppCompatActivity {
         LinearLayout taskGridLeft,taskGridRight;
         void populateTaskGrid(View root,Bundle saved){
             taskGridLeft=(LinearLayout)root.findViewById(R.id.task_grid_view_left);
-            int taskViewWidth=((int) (vClass.width*0.490));
+            int taskViewWidth=((int) (vClass.width*0.492));
             taskGridLeft.getLayoutParams().width= taskViewWidth;
             taskGridRight=(LinearLayout)root.findViewById(R.id.task_grid_view_right);
             taskGridRight.getLayoutParams().width= taskViewWidth;

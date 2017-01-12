@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.List;
 
 /**
@@ -19,6 +21,7 @@ public class listAdapter_searchTeacher extends BaseAdapter {
     List<teacher> searchResult;
     LayoutInflater inflater;
     static listAdapter_teachers teacherAdapter;
+    TextView editcabin;
     public listAdapter_searchTeacher(Context context, List<teacher> results){
         this.context=context;
         this.searchResult=results;
@@ -76,7 +79,7 @@ public class listAdapter_searchTeacher extends BaseAdapter {
                 //ACTIVITY TO EXECUTE IF THE GIVEN INFORMATION IS WRONG
                 view.findViewById(R.id.layout_edit_teacher).setVisibility(View.VISIBLE);
                 cabin.setVisibility(View.INVISIBLE);
-                TextView editcabin=((TextView)view.findViewById(R.id.edit_teacher_cabin));
+                editcabin=((TextView)view.findViewById(R.id.edit_teacher_cabin));
                 editcabin.setText(found.cabin);
                 if(editcabin.requestFocus()) {
                     InputMethodManager iMM = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -90,8 +93,19 @@ public class listAdapter_searchTeacher extends BaseAdapter {
             public void onClick(View view) {
                 //CODE TO EXECUTE TO SAVE THE TEAHCER INFORMATION.
                 //SHOW EDITED ADDRESS TO THE TEACHER LISTVIEW
+
+                for (int i=0;i<vClass.cablist.size();i++){
+                    if(vClass.cablist.get(i).name.equals(found.name)){
+                        vClass.cablist.get(i).setCabin(editcabin.getText().toString());
+                        workSpace.writeCabListToPrefs();
+                        teacherAdapter.updatecontent(vClass.cablist);
+                        alertDialog.cancel();
+                        Toast.makeText(context, "Revision requested", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
                 Cabin_Details editedTeacher= new Cabin_Details();
-                editedTeacher.cabin=cabin.getText().toString();
+                editedTeacher.cabin=editcabin.getText().toString();
                 editedTeacher.name=found.name;
                 vClass.cablist.add(editedTeacher);
                 editedTeacher.others="Custom";

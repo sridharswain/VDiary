@@ -122,7 +122,7 @@ public class scrapper extends AppCompatActivity {
                     @Override
                     public void onReceiveValue(String message) {
                         if (!message.equals("\"\"") & !message.equals("null")) {
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -280,7 +280,6 @@ public class scrapper extends AppCompatActivity {
                                                 final subject sub= new subject();
                                                 //ROOM
                                                 sub.room=room;
-                                                //Toast.makeText(getApplicationContext(),room,Toast.LENGTH_LONG).show();
                                                 //CODE
                                                 web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[1].innerText.toString()"), new ValueCallback<String>() {
                                                     @Override
@@ -634,9 +633,7 @@ public class scrapper extends AppCompatActivity {
             vClass.teachers=jsonBuilder.fromJson(teachers,new TypeToken<List<teacher>>(){}.getType());
             new tryUpdateDatabase().execute();
         }
-        if(taskJson!=null){
-            vClass.courseTasks=jsonBuilder.fromJson(taskJson,new TypeToken<Map<String,List<task>>>(){}.getType());
-        }
+
         if(allSubJson!=null && scheduleJson!=null){
             vClass.subList=jsonBuilder.fromJson(allSubJson,new TypeToken<ArrayList<subject>>(){}.getType());
             vClass.timeTable=jsonBuilder.fromJson(scheduleJson, new TypeToken<ArrayList<ArrayList<subject>>>(){}.getType());

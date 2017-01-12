@@ -16,6 +16,6 @@ public class splashScreen extends AppCompatActivity {
             public void run() {
                 startActivity(new Intent(splashScreen.this,scrapper.class));
             }
-        },1000);
+        },550);
     }
 }

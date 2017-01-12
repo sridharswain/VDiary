@@ -24,7 +24,6 @@ public class vClass {
     public static int width;
     public static int  height;
     public static List<Notification_Holder> notes=new ArrayList<>();
-    public static Map<String,List<task>> courseTasks= new HashMap<>();
     public static void setStatusBar(Window window, Context context) {
         if(Build.VERSION.SDK_INT>=21){
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -50,6 +49,18 @@ class Cabin_Details
     public String name;
     public String cabin;
     public String others;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCabin(String cabin) {
+        this.cabin = cabin;
+    }
+
+    public void setOthers(String others) {
+        this.others = others;
+    }
 }
 class subject {
     public String code;
@@ -64,16 +75,7 @@ class subject {
     public int notif_id;
 }
 
-class task{
-    String title;
-    String desc;
-    Calendar deadLine;
-    public task(String heading,String description, Calendar deadDate){
-        title=heading;
-        desc=description;
-        deadLine=deadDate;
-    }
-}
+
 class teacher{
     String name;
     String cabin;

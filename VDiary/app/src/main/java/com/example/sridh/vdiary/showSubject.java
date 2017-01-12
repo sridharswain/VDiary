@@ -23,16 +23,12 @@ import java.util.List;
 public class showSubject extends AppCompatActivity {
     Toolbar bar;
     subject clicked;
-    boolean available=false;
-    List<task> tasks=null;
-    Gson jsonBuilder = new Gson();
     int width=vClass.width;
     int height=vClass.height;
     TextView notask;
     LinearLayout taskGridLeft;
     LinearLayout taskGridRight;
     int taskViewWidth;
-    int[] colors=new int[]{R.color.teal,R.color.sunflower,R.color.nephritis,R.color.belize,R.color.green_cyan,R.color.amethyst,R.color.pomegranate};
     public static ListAdapter todoList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +37,6 @@ public class showSubject extends AppCompatActivity {
         int position=getIntent().getIntExtra("position",0);
         clicked= vClass.subList.get(position);
         show(clicked);  //Initialize the popup activity to show the contents of the subject
-        tasks=vClass.courseTasks.get(clicked.code+clicked.type);
-        if(tasks!=null){
-            layTaskView();
-            notask.setVisibility(View.INVISIBLE);
-            available=true;
-        }
     }
     void show(subject sub){
         getWindow().setLayout(width,((int)(0.6*height)));
@@ -69,80 +59,11 @@ public class showSubject extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch(item.getItemId()){
                     case R.id.action_addAssingment:
-                        showTaskAdder();
+                        //
                         break;
                 }
                 return true;
             }
         });
     }
-    void writeToPrefs(){
-        SharedPreferences.Editor prefEditor= getSharedPreferences("academicPrefs",MODE_PRIVATE).edit();
-        prefEditor.putString("tasks",jsonBuilder.toJson(vClass.courseTasks));
-        prefEditor.commit();
-    }
-    void layTaskView(){
-        //Toast.makeText(getApplicationContext(),tasks.get(0).title,Toast.LENGTH_LONG).show();
-        int i=0;
-        taskGridLeft.removeAllViews();
-        taskGridRight.removeAllViews();
-        while(i<tasks.size()){
-            taskGridLeft.addView(getTaskView(i));
-            i++;
-            if(i<tasks.size())
-                taskGridRight.addView(getTaskView(i));
-            i++;
-        }
-    }
-    View getTaskView(int index){
-        final task cTask= tasks.get(index);
-        final View taskView= getLayoutInflater().inflate(R.layout.course_task_view,null);
-        ((TextView)taskView.findViewById(R.id.task_title)).setText(cTask.title);
-        ((TextView)taskView.findViewById(R.id.task_desc)).setText(cTask.desc);
-        taskView.setBackground(getResources().getDrawable(R.drawable.soft_corner_taskview));
-        GradientDrawable softShape=(GradientDrawable)taskView.getBackground();
-        final int colorIndex=index%(colors.length);
-        softShape.setColor(getResources().getColor(colors[colorIndex]));
-        return taskView;
-    }
-    void showTaskAdder(){
-        AlertDialog.Builder alertBuilder= new AlertDialog.Builder(this);
-        final View alertView= getLayoutInflater().inflate(R.layout.floatingview_add_task,null);
-        alertBuilder.setView(alertView);
-        final AlertDialog alertBox= alertBuilder.create();
-        alertBox.show();
-        (alertView.findViewById(R.id.add_task_addButton)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String name=((TextView)alertView.findViewById(R.id.add_task_title)).getText().toString().trim();
-                String desc=((TextView)alertView.findViewById(R.id.add_task_desc)).getText().toString().trim();
-                DatePicker date=(DatePicker)alertView.findViewById(R.id.add_task_deadLine);
-                if(name.equals("")){
-                    Toast.makeText(getApplicationContext(),"Invalid Data !",Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Calendar deadLine= Calendar.getInstance();
-                    deadLine.set(date.getYear(),date.getMonth(),date.getDayOfMonth());
-                    if(!available){
-                        tasks=new ArrayList<>();
-                        available=true;
-                        notask.setVisibility(View.INVISIBLE);
-                    }
-                    tasks.add(new task(name,desc,deadLine));
-                    vClass.courseTasks.put(clicked.code+clicked.type,tasks);
-                    writeToPrefs();
-                    updateTaskGrid(tasks.size()-1);
-                    alertBox.cancel();
-                }
-            }
-        });
-    }
-    void updateTaskGrid(int index){
-        if((index)%2==0 ){
-            taskGridLeft.addView(getTaskView(index));
-        }
-        else{
-            taskGridRight.addView(getTaskView(index));
-        }
-    } //UPDATE THE TASK GRID WHEN NEW TASK IS ADDED
 }
