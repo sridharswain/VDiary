@@ -546,7 +546,7 @@ public class scrapper extends AppCompatActivity {
                         }
                     }
                 }
-                writeToPrefs();
+
 
                 //Sparsha code starts from here to schedule notifications for the timetable class
                 for (int k = 0; k < vClass.timeTable.size(); k++) {
@@ -580,12 +580,8 @@ public class scrapper extends AppCompatActivity {
                             vClass.timeTable.get(k).get(l).notif_id = n_id;
                             n_id++;
                             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() - 5 * 60 * 1000, 24 * 7 * 60 * 60 * 1000, pintent);
-
-
                         }
                     }
-                    startActivity(new Intent(scrapper.this, workSpace.class));
-                    finish();
                 }
             }
             catch (Exception e){
@@ -593,6 +589,10 @@ public class scrapper extends AppCompatActivity {
                 status.setText("Slow Connection!");
                 return;
             }
+            Calendar calendar=Calendar.getInstance();
+            String last_ref=calendar.get(Calendar.DATE)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ "  "+ calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
+            editor.putString("last_ref",last_ref);
+            editor.apply();
             writeToPrefs();
             startActivity(new Intent(scrapper.this,workSpace.class));
             finish();
