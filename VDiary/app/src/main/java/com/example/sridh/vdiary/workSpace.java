@@ -412,6 +412,7 @@ public class workSpace extends AppCompatActivity {
             final Notification_Holder cTask = vClass.notes.get(index);
             final View taskView = getLayoutInflater(saved).inflate(R.layout.course_task_view, null);
             ((TextView) taskView.findViewById(R.id.task_title)).setText(cTask.title);
+            TextView deadLineTextView= (TextView) taskView.findViewById(R.id.task_deadLine);
             ((TextView) taskView.findViewById(R.id.task_desc)).setText(cTask.content);
             (taskView.findViewById(R.id.task_delete)).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -425,7 +426,16 @@ public class workSpace extends AppCompatActivity {
                 }
             });
             Calendar deadLine = cTask.cal;
-            ((TextView) taskView.findViewById(R.id.task_deadLine)).setText(deadLine.get(Calendar.DATE) + "/" + (deadLine.get(Calendar.MONTH) + 1) + "/" + deadLine.get(Calendar.YEAR));
+            int today = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+            int taskDay= cTask.cal.get(Calendar.DAY_OF_YEAR);
+            String deadLineText;
+            if(today==taskDay){
+                deadLineText="Today";
+            }
+            else{
+                deadLineText=deadLine.get(Calendar.DATE) + "/" + (deadLine.get(Calendar.MONTH) + 1) + "/" + deadLine.get(Calendar.YEAR);
+            }
+            deadLineTextView.setText(deadLineText+" "+deadLine.get(Calendar.HOUR)+":"+deadLine.get(Calendar.MINUTE)+getAMPM(deadLine.get(Calendar.AM_PM)));
             taskView.setBackground(getResources().getDrawable(R.drawable.soft_corner_taskview));
             GradientDrawable softShape = (GradientDrawable) taskView.getBackground();
             final int colorIndex = index % (colors.length);
@@ -433,11 +443,17 @@ public class workSpace extends AppCompatActivity {
             taskView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-
                     return false;
                 }
             });
             return taskView;
+        }
+
+        String getAMPM(int AMPM){
+            if(AMPM==0)
+                return "AM";
+            else
+                return "PM";
         }
 
         void delTask(int index) {

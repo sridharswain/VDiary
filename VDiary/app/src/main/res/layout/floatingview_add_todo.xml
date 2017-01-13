@@ -46,7 +46,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/timePicker"
         android:layout_below="@+id/note"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:timePickerMode="spinner"/>
 
     <DatePicker
         android:layout_width="wrap_content"
