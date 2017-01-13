@@ -1,23 +1,14 @@
 package com.example.sridh.vdiary;
 
-import android.content.SharedPreferences;
-import android.graphics.drawable.GradientDrawable;
-import android.os.Handler;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.google.gson.Gson;
-import java.util.ArrayList;
-import java.util.Calendar;
+
 import java.util.List;
 
 public class showSubject extends AppCompatActivity {
@@ -25,7 +16,7 @@ public class showSubject extends AppCompatActivity {
     subject clicked;
     int width=vClass.width;
     int height=vClass.height;
-    TextView notask;
+    static TextView test;
     LinearLayout taskGridLeft;
     LinearLayout taskGridRight;
     int taskViewWidth;
@@ -36,6 +27,9 @@ public class showSubject extends AppCompatActivity {
         setContentView(R.layout.activity_show_subject);
         int position=getIntent().getIntExtra("position",0);
         clicked= vClass.subList.get(position);
+        test=(TextView)findViewById(R.id.testview);
+        Async_search a=new Async_search(position);
+        a.execute();
         show(clicked);  //Initialize the popup activity to show the contents of the subject
     }
     void show(subject sub){
@@ -45,12 +39,7 @@ public class showSubject extends AppCompatActivity {
         initMenu();
         ((TextView)findViewById(R.id.subject_Title)).setText(sub.title);
         ((TextView)findViewById(R.id.subject_Teacher)).setText(sub.teacher);
-        taskGridLeft=(LinearLayout)findViewById(R.id.task_grid_view_left);
-        taskViewWidth=((int) (width*0.496));
-        taskGridLeft.getLayoutParams().width= taskViewWidth;
-        taskGridRight=(LinearLayout)findViewById(R.id.task_grid_view_right);
-        taskGridRight.getLayoutParams().width= taskViewWidth;
-        notask=(TextView)findViewById(R.id.no_task_text);
+
     }
     void initMenu(){
         bar.setBackgroundColor(getResources().getColor(R.color.taskbar_orange));
@@ -65,5 +54,43 @@ public class showSubject extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    static void setText(String j)
+    {
+        test.setText(j);
+    }
+}
+
+class Async_search extends AsyncTask<Void,Void,Void>
+{
+    int position;
+    String x="";
+
+    Async_search(int x)
+    {
+        position=x;
+    }
+
+    @Override
+    protected Void doInBackground(Void... params) {
+        subject sub=vClass.subList.get(position);
+
+        for(int i=0;i<vClass.timeTable.size();i++)
+        {
+            List<subject> z=vClass.timeTable.get(i);
+            for(int j=0;j<z.size();j++)
+            {
+                if(z.get(j).title.equals(sub.title) && z.get(j).type.equals(sub.type))
+                    x=x+i+';';
+            }
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        showSubject.setText(x);
+        super.onPostExecute(aVoid);
     }
 }
