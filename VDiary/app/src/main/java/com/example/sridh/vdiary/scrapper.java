@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class scrapper extends AppCompatActivity {
@@ -582,12 +581,8 @@ public class scrapper extends AppCompatActivity {
                             vClass.timeTable.get(k).get(l).notif_id = n_id;
                             n_id++;
                             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() - 5 * 60 * 1000, 24 * 7 * 60 * 60 * 1000, pintent);
-
-
                         }
                     }
-                    startActivity(new Intent(scrapper.this, workSpace.class));
-                    finish();
                 }
             }
             catch (Exception e){

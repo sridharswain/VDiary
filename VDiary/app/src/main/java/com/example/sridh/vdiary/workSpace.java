@@ -299,15 +299,17 @@ public class workSpace extends AppCompatActivity {
         }
 
         public void schedule_todo_notification(Notification_Holder n) {
-            AlarmManager alarmManager=(AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
-            Intent intent=new Intent(getActivity(),NotifyService.class);
-            Gson js=new Gson();
-            String f=js.toJson(n);
-            intent.putExtra("one",f);
-            PendingIntent pendingIntent=PendingIntent.getBroadcast(getContext(),id,intent,0);
-            id++;
-            editor.putInt("identifier",id);
-            alarmManager.set(AlarmManager.RTC_WAKEUP,n.cal.getTimeInMillis(),pendingIntent);
+            if(n.cal.getTimeInMillis()>System.currentTimeMillis()) {
+                AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+                Intent intent = new Intent(getActivity(), NotifyService.class);
+                Gson js = new Gson();
+                String f = js.toJson(n);
+                intent.putExtra("one", f);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), id, intent, 0);
+                id++;
+                editor.putInt("identifier", id);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, n.cal.getTimeInMillis(), pendingIntent);
+            }
 
         }
 

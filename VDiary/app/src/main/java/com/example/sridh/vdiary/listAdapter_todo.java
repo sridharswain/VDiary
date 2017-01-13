@@ -59,14 +59,24 @@ class listAdapter_todo extends BaseAdapter
         holder.date=(TextView)view1.findViewById(R.id.dateview);
         holder.title.setText(list.get(position).title);
         holder.note.setText(list.get(position).content);
-        holder.date.setText(list.get(position).cal.get(Calendar.DATE)+"/"+list.get(position).cal.get(Calendar.MONTH)+"/"+list.get(position).cal.get(Calendar.YEAR)+" ");
+
+        holder.date.setText(list.get(position).cal.get(Calendar.DATE)+"/"+(list.get(position).cal.get(Calendar.MONTH)+1)+"/"+list.get(position).cal.get(Calendar.YEAR)+" ");
         int x=list.get(position).cal.get(Calendar.AM_PM);
         String ampm;
         if(x==1)
             ampm="PM";
         else
             ampm="AM";
-        holder.time.setText(list.get(position).cal.get(Calendar.HOUR)+":"+list.get(position).cal.get(Calendar.MINUTE)+ " "+ampm+" ");
+
+        String time_mins;
+        if(list.get(position).cal.get(Calendar.MINUTE)<10)
+        {
+            time_mins="0"+list.get(position).cal.get(Calendar.MINUTE);
+        }
+        else
+            time_mins=list.get(position).cal.get(Calendar.MINUTE)+"";
+
+        holder.time.setText(list.get(position).cal.get(Calendar.HOUR)+":"+time_mins+ " "+ampm+" ");
         return view1;
     }
 
