@@ -38,7 +38,6 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class scrapper extends AppCompatActivity {
@@ -547,7 +546,7 @@ public class scrapper extends AppCompatActivity {
                         }
                     }
                 }
-                writeToPrefs();
+
 
                 //Sparsha code starts from here to schedule notifications for the timetable class
                 for (int k = 0; k < vClass.timeTable.size(); k++) {
@@ -590,6 +589,10 @@ public class scrapper extends AppCompatActivity {
                 status.setText("Slow Connection!");
                 return;
             }
+            Calendar calendar=Calendar.getInstance();
+            String last_ref=calendar.get(Calendar.DATE)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ "  "+ calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
+            editor.putString("last_ref",last_ref);
+            editor.apply();
             writeToPrefs();
             startActivity(new Intent(scrapper.this,workSpace.class));
             finish();
