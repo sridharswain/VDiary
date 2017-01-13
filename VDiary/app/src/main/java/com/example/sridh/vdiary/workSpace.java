@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -187,7 +189,6 @@ public class workSpace extends AppCompatActivity {
                             showCabinAlertDialog(mad);
                         }
                     });
-
                     lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -211,15 +212,10 @@ public class workSpace extends AppCompatActivity {
 
                                 }
                             });
-
-
-
                         }
                     });
                     break;
                 case 0:
-
-
                     rootView=inflater.inflate(R.layout.fragment_courses,container,false);
                     ListView lview=(ListView)rootView.findViewById(R.id.course_listview);
                     listAdapter_courses cadd=new listAdapter_courses(context,vClass.subList);
@@ -241,14 +237,11 @@ public class workSpace extends AppCompatActivity {
                     fb.setOnClickListener(new View.OnClickListener() { //Floating action button onclick listener
                         @Override
                         public void onClick(View v) {
-
                             final EditText title;
                             EditText other;
                             TimePicker time;
                             DatePicker date;
                             Button ok;
-
-
                             final AlertDialog alert;
                             View root=getActivity().getLayoutInflater().inflate(R.layout.floatingview_add_todo,null);
                             title=(EditText) root.findViewById(R.id.title);
@@ -271,7 +264,6 @@ public class workSpace extends AppCompatActivity {
                                 public void onClick(View v) {
                                     Calendar c=Calendar.getInstance();
                                     c.set(finalDate.getYear(),finalDate.getMonth(),finalDate.getDayOfMonth(),finalTime.getCurrentHour(),finalTime.getCurrentMinute());
-
                                     if(finalTitle.getText().toString()!=null && finalTitle.getText().toString().equals("")!=true && finalOther.getText().toString()!=null && finalOther.getText().toString().equals("")!=true) {
                                         Notification_Holder n=new Notification_Holder(c,finalTitle.getText().toString(),finalOther.getText().toString());
                                         n.cal=c;
@@ -287,14 +279,12 @@ public class workSpace extends AppCompatActivity {
                                     }
                                     else
                                         Toast.makeText(getContext(), "Both title and note must contain some text", Toast.LENGTH_SHORT).show();
-
                                 }
                             });
                         }
                     });
 
             }
-
             return rootView;
         }
 
@@ -308,7 +298,6 @@ public class workSpace extends AppCompatActivity {
             id++;
             editor.putInt("identifier",id);
             alarmManager.set(AlarmManager.RTC_WAKEUP,n.cal.getTimeInMillis(),pendingIntent);
-
         }
 
 
@@ -411,16 +400,47 @@ public class workSpace extends AppCompatActivity {
             }
         }
         int[] colors=new int[]{R.color.teal,R.color.sunflower,R.color.nephritis,R.color.belize,R.color.green_cyan,R.color.amethyst,R.color.pomegranate};
-        View getTaskView(int index, Bundle saved){
+        View getTaskView(final int index, Bundle saved){
             final Notification_Holder cTask= vClass.notes.get(index);
             final View taskView= getLayoutInflater(saved).inflate(R.layout.course_task_view,null);
             ((TextView)taskView.findViewById(R.id.task_title)).setText(cTask.title);
             ((TextView)taskView.findViewById(R.id.task_desc)).setText(cTask.content);
+            (taskView.findViewById(R.id.task_delete)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(index%2!=0){
+                        taskGridRight.removeView(taskView);
+                    }
+                    else{
+                        taskGridLeft.removeView(taskView);
+                    }
+                    delTask(index);
+                }
+            });
+            Calendar deadLine= cTask.cal;
+            ((TextView)taskView.findViewById(R.id.task_deadLine)).setText(deadLine.get(Calendar.DATE)+"/"+(deadLine.get(Calendar.MONTH)+1)+"/"+ deadLine.get(Calendar.YEAR));
             taskView.setBackground(getResources().getDrawable(R.drawable.soft_corner_taskview));
             GradientDrawable softShape=(GradientDrawable)taskView.getBackground();
             final int colorIndex=index%(colors.length);
             softShape.setColor(getResources().getColor(colors[colorIndex]));
+            taskView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+
+                    return false;
+                }
+            });
             return taskView;
+        }
+
+        void delTask(int index){
+            AlarmManager alarmManager= (AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
+            Intent intent= new Intent(getActivity(),NotifyService.class);
+            PendingIntent pendingIntent= PendingIntent.getBroadcast(getContext(),vClass.notes.get(index).id,intent,PendingIntent.FLAG_CANCEL_CURRENT);
+            alarmManager.cancel(pendingIntent);
+            vClass.notes.remove(index);
+            editor.putString("todolist",Notification_Holder.convert_to_jason(vClass.notes));
+            editor.commit();
         }
         void updateTaskGrid(int index,Bundle saved){
             if((index)%2==0 ){

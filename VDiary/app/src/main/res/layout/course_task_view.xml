@@ -12,8 +12,7 @@
         android:id="@+id/task_title"
         android:text="This is the title of the task"
         android:textColor="@color/primaryTextColor"
-        android:textSize="18sp"
-        android:maxHeight="23dp"
+        android:textSize="19sp"
         />
     <TextView
         android:layout_height="wrap_content"
@@ -21,5 +20,23 @@
         android:id="@+id/task_desc"
         android:text="this is the description of the task"
         android:layout_below="@id/task_title"
-        android:layout_marginTop="3dp"/>
+        android:layout_marginTop="3dp"
+        android:textSize="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/task_deadLine"
+        android:textSize="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"/>
+    <ImageButton
+        android:layout_height="25dp"
+        android:layout_width="25dp"
+        android:layout_below="@id/task_desc"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/trash"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent"
+        android:id="@+id/task_delete"/>
 </RelativeLayout>
