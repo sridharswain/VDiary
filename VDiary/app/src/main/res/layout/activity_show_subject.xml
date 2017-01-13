@@ -75,13 +75,14 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:background="@color/taskbar_orange"/>
+
     <TextView
+        android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No Tasks :)"
-        android:textColor="@color/primaryTextColor"
-        android:textSize="20dp"
+        android:layout_below="@+id/show_subject_scoller"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:id="@+id/no_task_text"/>
+        android:layout_marginTop="118dp"
+        android:id="@+id/testview"
+        android:textColor="#000000" />
 </RelativeLayout>
