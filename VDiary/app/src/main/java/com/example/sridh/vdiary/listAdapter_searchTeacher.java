@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,12 +21,14 @@ public class listAdapter_searchTeacher extends BaseAdapter {
     Context context;
     List<teacher> searchResult;
     LayoutInflater inflater;
+    EditText searchBox;
     static listAdapter_teachers teacherAdapter;
     TextView editcabin;
-    public listAdapter_searchTeacher(Context context, List<teacher> results){
+    public listAdapter_searchTeacher(Context context, List<teacher> results,EditText searchBox){
         this.context=context;
         this.searchResult=results;
         inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.searchBox=searchBox;
     }
     @Override
     public int getCount() {
@@ -61,6 +64,7 @@ public class listAdapter_searchTeacher extends BaseAdapter {
     void showTeacher(int position){
         final AlertDialog.Builder alertBuilder= new AlertDialog.Builder(context);;
         final teacher found=searchResult.get(position);
+        searchBox.setText(found.getName());
         final View view= inflater.inflate(R.layout.floatingview_show_teacher,null);
         ((TextView)view.findViewById(R.id.show_teacher_name)).setText(found.name);
         final TextView cabin =(TextView)view.findViewById(R.id.show_teacher_cabin);

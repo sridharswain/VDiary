@@ -3,6 +3,7 @@ package com.example.sridh.vdiary;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.GradientDrawable;
@@ -16,6 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telecom.Call;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,11 +28,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -235,53 +239,65 @@ public class workSpace extends AppCompatActivity {
                     break;
                 case 2:
                     rootView = inflater.inflate(R.layout.fragment_notes, container, false);
-                    populateTaskGrid(rootView, savedInstanceState);
+                    populateTaskGrid(rootView);
                     FloatingActionButton fb = (FloatingActionButton) rootView.findViewById(R.id.notes_add);
                     //Enter each element of listview
                     fb.setOnClickListener(new View.OnClickListener() { //Floating action button onclick listener
                         @Override
                         public void onClick(View v) {
-                            final EditText title;
-                            EditText other;
-                            TimePicker time;
-                            DatePicker date;
-                            Button ok;
                             final AlertDialog alert;
                             View root = getActivity().getLayoutInflater().inflate(R.layout.floatingview_add_todo, null);
-                            title = (EditText) root.findViewById(R.id.title);
-                            other = (EditText) root.findViewById(R.id.note);
-                            time = (TimePicker) root.findViewById(R.id.timePicker);
-                            date = (DatePicker) root.findViewById(R.id.datePicker);
-                            ok = (Button) root.findViewById(R.id.enterbutton);
+                            final EditText title = (EditText) root.findViewById(R.id.title);
+                            final EditText other = (EditText) root.findViewById(R.id.note);
+                            final Switch reminderSwitch =(Switch)root.findViewById(R.id.add_todo_reminder_switch);
+                            Toolbar addTaskToolbar=((Toolbar)root.findViewById(R.id.add_task_toolbar));
+                            addTaskToolbar.inflateMenu(R.menu.menu_add_todo);
+                            reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                                    if(checked) {
+                                        c=null;
+                                        showReminderSetter(reminderSwitch);
+                                        //reminder.set(deadLine.get(Calendar.YEAR), deadLine.get(Calendar.MONTH), deadLine.get(Calendar.DAY_OF_WEEK), deadLine.get(Calendar.HOUR_OF_DAY), deadLine.get(Calendar.MINUTE));
+                                    }
+                                    else {
+                                        c = null;
+                                        reminderSwitch.setText("Set Reminder");
+                                    }
+                                }
+                            });
                             AlertDialog.Builder bui = new AlertDialog.Builder(context);
                             bui.setView(root);
                             alert = bui.create();
                             alert.show();
 
-                            //onlick of button ok
-                            final DatePicker finalDate = date;
-                            final TimePicker finalTime = time;
-                            final EditText finalTitle = title;
-                            final EditText finalOther = other;
-                            ok.setOnClickListener(new View.OnClickListener() {
+
+                            addTaskToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                                 @Override
-                                public void onClick(View v) {
-                                    Calendar c = Calendar.getInstance();
-                                    c.set(finalDate.getYear(), finalDate.getMonth(), finalDate.getDayOfMonth(), finalTime.getCurrentHour(), finalTime.getCurrentMinute());
-                                    if (finalTitle.getText().toString() != null && finalTitle.getText().toString().equals("") != true && finalOther.getText().toString() != null && finalOther.getText().toString().equals("") != true) {
-                                        Notification_Holder n = new Notification_Holder(c, finalTitle.getText().toString(), finalOther.getText().toString());
-                                        n.cal = c;
-                                        schedule_todo_notification(n);
-                                        n.id = id - 1;
-                                        vClass.notes.add(n);
-                                        updateTaskGrid(vClass.notes.size() - 1, savedInstanceState);
-                                        Gson json = new Gson();
-                                        String temporary = json.toJson(vClass.notes);
-                                        editor.putString("todolist", temporary);
-                                        editor.apply();
-                                        alert.cancel();
-                                    } else
-                                        Toast.makeText(getContext(), "Both title and note must contain some text", Toast.LENGTH_SHORT).show();
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    int id = item.getItemId();
+                                    if(id==R.id.action_add_todo) {
+                                        if (title.getText().toString() != null && title.getText().toString().equals("") != true & other.getText().toString() != null && other.getText().toString().equals("") != true) {
+                                            Notification_Holder n;
+                                            if(c!=null) {
+                                                n = new Notification_Holder(c, title.getText().toString(), other.getText().toString());
+                                                schedule_todo_notification(n);
+                                            }
+                                            else
+                                                n = new Notification_Holder(Calendar.getInstance(), title.getText().toString(), other.getText().toString());
+                                            n.id = id - 1;
+                                            vClass.notes.add(n);
+                                            updateTaskGrid(vClass.notes.size() - 1);
+                                            Gson json = new Gson();
+                                            String temporary = json.toJson(vClass.notes);
+                                            editor.putString("todolist", temporary);
+                                            editor.apply();
+                                            alert.cancel();
+                                        } else
+                                            Toast.makeText(getContext(), "Both title and note must contain some text", Toast.LENGTH_SHORT).show();
+                                        return true;
+                                    }
+                                    return false;
                                 }
                             });
                         }
@@ -303,7 +319,42 @@ public class workSpace extends AppCompatActivity {
                 editor.putInt("identifier", id);
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, n.cal.getTimeInMillis(), pendingIntent);
             }
+        }
+        Calendar c;
+        void showReminderSetter(final Switch reminderSwitch){
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+            View dateTimeView = getActivity().getLayoutInflater().inflate(R.layout.floatingview_set_datetime,null);
+            alertBuilder.setView(dateTimeView);
+            final TimePicker time = (TimePicker) dateTimeView.findViewById(R.id.timePicker);
+            final DatePicker date = (DatePicker) dateTimeView.findViewById(R.id.datePicker);
+            Button ok = (Button)dateTimeView.findViewById(R.id.datetime_ok);
+            final AlertDialog alert = alertBuilder.create();
+            ok.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    c=Calendar.getInstance();
+                    c.set(date.getYear(), date.getMonth(), date.getDayOfMonth(), time.getCurrentHour(), time.getCurrentMinute());
+                    alert.cancel();
+                }
+            });
+            (dateTimeView.findViewById(R.id.datetime_cancel)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    alert.cancel();
+                }
+            });
+            alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    if(c==null){
+                        reminderSwitch.setChecked(false);
+                    }else{
+                        reminderSwitch.setText(getDateTimeString(c));
 
+                    }
+                }
+            });
+            alert.show();
         }
 
 
@@ -351,7 +402,7 @@ public class workSpace extends AppCompatActivity {
             searchResult = new ArrayList<>();
             teacherSearch = (EditText) view.findViewById(R.id.teachers_searchText);
             resultList = (ListView) view.findViewById(R.id.teachers_search_list);
-            final listAdapter_searchTeacher searchAdapter = new listAdapter_searchTeacher(context, searchResult);
+            final listAdapter_searchTeacher searchAdapter = new listAdapter_searchTeacher(context, searchResult,teacherSearch);
             resultList.setAdapter(searchAdapter);
             teacherSearch.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -379,6 +430,8 @@ public class workSpace extends AppCompatActivity {
                     } else {
                         resultList.setVisibility(View.INVISIBLE);
                     }
+                    if(searchResult.size()==0)
+                        resultList.setVisibility(View.INVISIBLE);
                     searchAdapter.update(searchResult);
                 }
             });
@@ -386,7 +439,7 @@ public class workSpace extends AppCompatActivity {
 
         LinearLayout taskGridLeft, taskGridRight;
 
-        void populateTaskGrid(View root, Bundle saved) {
+        void populateTaskGrid(View root) {
             taskGridLeft = (LinearLayout) root.findViewById(R.id.task_grid_view_left);
             int taskViewWidth = ((int) (vClass.width * 0.492));
             taskGridLeft.getLayoutParams().width = taskViewWidth;
@@ -397,20 +450,20 @@ public class workSpace extends AppCompatActivity {
                 taskGridLeft.removeAllViews();
                 taskGridRight.removeAllViews();
                 while (i < vClass.notes.size()) {
-                    taskGridLeft.addView(getTaskView(i, saved));
+                    taskGridLeft.addView(getTaskView(i));
                     i++;
                     if (i < vClass.notes.size())
-                        taskGridRight.addView(getTaskView(i, saved));
+                        taskGridRight.addView(getTaskView(i));
                     i++;
                 }
             }
         }
 
-        int[] colors = new int[]{R.color.teal, R.color.sunflower, R.color.nephritis, R.color.belize, R.color.green_cyan, R.color.amethyst, R.color.pomegranate};
+        int[] colors = new int[]{R.color.tufts_blue,R.color.sunflower, R.color.nephritis, R.color.belize, R.color.green_cyan, R.color.amethyst, R.color.pomegranate};
 
-        View getTaskView(final int index, Bundle saved) {
+        View getTaskView(final int index) {
             final Notification_Holder cTask = vClass.notes.get(index);
-            final View taskView = getLayoutInflater(saved).inflate(R.layout.course_task_view, null);
+            final View taskView = getActivity().getLayoutInflater().inflate(R.layout.course_task_view, null);
             ((TextView) taskView.findViewById(R.id.task_title)).setText(cTask.title);
             TextView deadLineTextView= (TextView) taskView.findViewById(R.id.task_deadLine);
             ((TextView) taskView.findViewById(R.id.task_desc)).setText(cTask.content);
@@ -422,20 +475,11 @@ public class workSpace extends AppCompatActivity {
                     } else {
                         taskGridLeft.removeView(taskView);
                     }
-                    delTask(index);
+                    delTask(cTask);
                 }
             });
             Calendar deadLine = cTask.cal;
-            int today = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
-            int taskDay= cTask.cal.get(Calendar.DAY_OF_YEAR);
-            String deadLineText;
-            if(today==taskDay){
-                deadLineText="Today";
-            }
-            else{
-                deadLineText=deadLine.get(Calendar.DATE) + "/" + (deadLine.get(Calendar.MONTH) + 1) + "/" + deadLine.get(Calendar.YEAR);
-            }
-            deadLineTextView.setText(deadLineText+" "+deadLine.get(Calendar.HOUR)+":"+deadLine.get(Calendar.MINUTE)+getAMPM(deadLine.get(Calendar.AM_PM)));
+            deadLineTextView.setText(getDateTimeString(deadLine));
             taskView.setBackground(getResources().getDrawable(R.drawable.soft_corner_taskview));
             GradientDrawable softShape = (GradientDrawable) taskView.getBackground();
             final int colorIndex = index % (colors.length);
@@ -456,21 +500,48 @@ public class workSpace extends AppCompatActivity {
                 return "PM";
         }
 
-        void delTask(int index) {
+        String getMinute(int minute){
+            if(minute<10){
+                return ("0"+minute);
+            }
+            return String.valueOf(minute);
+        }
+        String getDateTimeString(Calendar deadLine){
+            int today = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+            int taskDay= deadLine.get(Calendar.DAY_OF_YEAR);
+            String dateString;
+            String timeString = deadLine.get(Calendar.HOUR)+":"+getMinute(deadLine.get(Calendar.MINUTE))+getAMPM(deadLine.get(Calendar.AM_PM));
+            if(today==taskDay){
+                dateString= "Today";
+            }
+            else if(today==taskDay-1){
+                dateString="Tomorrow";
+            }
+            else if(today==taskDay+1){
+                dateString="Yesterday";
+            }
+            else{
+                dateString=deadLine.get(Calendar.DATE) + "/" + (deadLine.get(Calendar.MONTH) + 1) + "/" + deadLine.get(Calendar.YEAR);
+            }
+
+            return (dateString+" "+timeString);
+        }
+
+        void delTask(Notification_Holder task) {
             AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
             Intent intent = new Intent(getActivity(), NotifyService.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), vClass.notes.get(index).id, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), task.id, intent, PendingIntent.FLAG_CANCEL_CURRENT);
             alarmManager.cancel(pendingIntent);
-            vClass.notes.remove(index);
+            vClass.notes.remove(task);
             editor.putString("todolist", Notification_Holder.convert_to_jason(vClass.notes));
             editor.commit();
         }
 
-        void updateTaskGrid(int index, Bundle saved) {
+        void updateTaskGrid(int index) {
             if ((index) % 2 == 0) {
-                taskGridLeft.addView(getTaskView(index, saved));
+                taskGridLeft.addView(getTaskView(index));
             } else {
-                taskGridRight.addView(getTaskView(index, saved));
+                taskGridRight.addView(getTaskView(index));
             }
         } //UPDATE THE TASK GRID WHEN NEW TASK IS ADDED
     }

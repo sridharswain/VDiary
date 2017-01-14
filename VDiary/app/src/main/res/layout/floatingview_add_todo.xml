@@ -11,7 +11,8 @@
         android:background="?attr/colorPrimary"
         android:theme="?attr/actionBarTheme"
         android:minHeight="?attr/actionBarSize"
-        app:title="Add To Do">
+        app:title="Add To Do"
+        android:id="@+id/add_task_toolbar">
     </android.support.v7.widget.Toolbar>
 <ScrollView
     android:layout_height="wrap_content"
@@ -40,33 +41,14 @@
         android:layout_below="@+id/title"
         android:layout_marginTop="15dp"
         android:hint="Enter Note" />
-
-    <TimePicker
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/timePicker"
-        android:layout_below="@+id/note"
-        android:layout_centerHorizontal="true"
-        android:timePickerMode="spinner"/>
-
-    <DatePicker
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/datePicker"
-        android:datePickerMode="spinner"
-        android:calendarViewShown="false"
-        android:layout_below="@id/timePicker"
-        android:layout_centerHorizontal="true"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Set Reminder"
-        android:id="@+id/enterbutton"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/datePicker"/>
     </RelativeLayout>
     </ScrollView>
+
+    <Switch
+        android:text=" Set Reminder"
+        android:textSize="17dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/add_todo_reminder_switch" />
 
 </LinearLayout>
