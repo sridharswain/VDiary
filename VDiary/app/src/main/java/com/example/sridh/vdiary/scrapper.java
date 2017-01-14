@@ -576,6 +576,7 @@ public class scrapper extends AppCompatActivity {
                             Notification_Holder nh = new Notification_Holder(c, sub.title + " " + sub.code, sub.room);
                             Gson j = new Gson();
                             in.putExtra("one", j.toJson(nh));
+                            in.putExtra("intent_chooser","one");
                             PendingIntent pintent = PendingIntent.getBroadcast(context, scrapper.n_id, in, 0);
                             vClass.timeTable.get(k).get(l).notif_id = n_id;
                             n_id++;
@@ -584,6 +585,9 @@ public class scrapper extends AppCompatActivity {
                     }
                 }
             }
+
+
+
             catch (Exception e){
                 showRetry();
                 status.setText("Slow Connection!");

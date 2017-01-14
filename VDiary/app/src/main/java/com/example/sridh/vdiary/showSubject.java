@@ -81,8 +81,28 @@ class Async_search extends AsyncTask<Void,Void,Void>
             List<subject> z=vClass.timeTable.get(i);
             for(int j=0;j<z.size();j++)
             {
+
                 if(z.get(j).title.equals(sub.title) && z.get(j).type.equals(sub.type))
-                    x=x+i+';';
+                {
+                    switch(i)
+                    {
+                        case 0:
+                            x=x+"Monday"+";";
+                            break;
+                        case 1:
+                            x=x+"Tuesday"+";";
+                            break;
+                        case 2:
+                            x=x+"Wednesday"+";";
+                            break;
+                        case 3:
+                            x=x+"Thursday;";
+                            break;
+                        case 4:
+                            x=x+"Friday;";
+                            break;
+                    }
+                }
             }
         }
         return null;
