@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.telecom.Call;
 import android.text.Editable;
@@ -120,6 +121,26 @@ public class workSpace extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.workspacetoptoolbar);
         toolbar.setTitle("Workspace");
         setSupportActionBar(toolbar);
+        final ImageButton more= (ImageButton)findViewById(R.id.workspace_more);
+        more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu menu = new PopupMenu(workSpace.this,more);
+                menu.getMenuInflater().inflate(R.menu.more,menu.getMenu());
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int id= item.getItemId();
+                        if(id==R.id.action_more_settings)
+                            startActivity(new Intent(workSpace.this,settings.class));
+                        else
+                            startActivity(new Intent(workSpace.this,About.class));
+                        return false;
+                    }
+                });
+                menu.show();
+            }
+        });
     }  //SET THE TOOLBARS FOR THE WORKSPACE CLASS
 
     @Override
@@ -164,11 +185,6 @@ public class workSpace extends AppCompatActivity {
 
         public PlaceholderFragment() {
         }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
@@ -241,7 +257,6 @@ public class workSpace extends AppCompatActivity {
                     rootView = inflater.inflate(R.layout.fragment_notes, container, false);
                     populateTaskGrid(rootView);
                     FloatingActionButton fb = (FloatingActionButton) rootView.findViewById(R.id.notes_add);
-                    //Enter each element of listview
                     fb.setOnClickListener(new View.OnClickListener() { //Floating action button onclick listener
                         @Override
                         public void onClick(View v) {
@@ -256,9 +271,8 @@ public class workSpace extends AppCompatActivity {
                                 @Override
                                 public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                                     if(checked) {
-                                        c=null;
+                                        c = null;
                                         showReminderSetter(reminderSwitch);
-                                        //reminder.set(deadLine.get(Calendar.YEAR), deadLine.get(Calendar.MONTH), deadLine.get(Calendar.DAY_OF_WEEK), deadLine.get(Calendar.HOUR_OF_DAY), deadLine.get(Calendar.MINUTE));
                                     }
                                     else {
                                         c = null;
@@ -270,8 +284,6 @@ public class workSpace extends AppCompatActivity {
                             bui.setView(root);
                             alert = bui.create();
                             alert.show();
-
-
                             addTaskToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem item) {
@@ -363,35 +375,43 @@ public class workSpace extends AppCompatActivity {
             final View alertCabinView = getActivity().getLayoutInflater().inflate(R.layout.floatingview_add_cabin, null);
             alertBuilder.setView(alertCabinView);
             final AlertDialog alert = alertBuilder.create();
-            alertCabinView.findViewById(R.id.alert_cabin_addButton).setOnClickListener(new View.OnClickListener() {
+            Toolbar addCabinToolbar =(Toolbar)alertCabinView.findViewById(R.id.alert_cabin_toolbar);
+            addCabinToolbar.inflateMenu(R.menu.menu_add_todo);
+            addCabinToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
-                public void onClick(View view) {
-                    String name = ((TextView) alertCabinView.findViewById(R.id.alert_cabin_teacherName)).getText().toString();
-                    String cabin = ((TextView) alertCabinView.findViewById(R.id.alert_cabin_cabinAddress)).getText().toString();
-                    String comment = ((TextView) alertCabinView.findViewById(R.id.alert_cabin_comment)).getText().toString();
-                    if (name.trim().equals("") || cabin.trim().equals("")) {
-                        Toast.makeText(context, "Invalid Data !", Toast.LENGTH_LONG).show();
-                    } else {
-
-                        for (int i = 0; i < vClass.cablist.size(); i++) {
-                            if (vClass.cablist.get(i).name.toLowerCase().equals(name.toLowerCase())) {
-                                vClass.cablist.get(i).cabin = cabin;
-                                vClass.cablist.get(i).others = comment;
-                                writeCabListToPrefs();
-                                cabinListAdapter.updatecontent(vClass.cablist);
-                                alert.cancel();
-                                return;
-                            }
+                public boolean onMenuItemClick(MenuItem item) {
+                    int id = item.getItemId();
+                    if(id==R.id.action_add_todo){
+                        String name = ((TextView) alertCabinView.findViewById(R.id.alert_cabin_teacherName)).getText().toString();
+                        String cabin = ((TextView) alertCabinView.findViewById(R.id.alert_cabin_cabinAddress)).getText().toString();
+                        String comment = ((TextView) alertCabinView.findViewById(R.id.alert_cabin_comment)).getText().toString();
+                        if (name.trim().equals("") || cabin.trim().equals("")) {
+                            Toast.makeText(context, "Invalid Data !", Toast.LENGTH_LONG).show();
                         }
-                        Cabin_Details c = new Cabin_Details();
-                        c.name = name;
-                        c.cabin = cabin;
-                        c.others = comment;
-                        vClass.cablist.add(c);
-                        writeCabListToPrefs();
-                        cabinListAdapter.updatecontent(vClass.cablist);
-                        alert.cancel();
+                        else {
+
+                            for (int i = 0; i < vClass.cablist.size(); i++) {
+                                if (vClass.cablist.get(i).name.toLowerCase().equals(name.toLowerCase())) {
+                                    vClass.cablist.get(i).cabin = cabin;
+                                    vClass.cablist.get(i).others = comment;
+                                    writeCabListToPrefs();
+                                    cabinListAdapter.updatecontent(vClass.cablist);
+                                    alert.cancel();
+                                    return true;
+                                }
+                            }
+                            Cabin_Details c = new Cabin_Details();
+                            c.name = name;
+                            c.cabin = cabin;
+                            c.others = comment;
+                            vClass.cablist.add(c);
+                            writeCabListToPrefs();
+                            cabinListAdapter.updatecontent(vClass.cablist);
+                            alert.cancel();
+                            return true;
+                        }
                     }
+                    return false;
                 }
             });
             alert.show();

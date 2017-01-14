@@ -12,7 +12,8 @@
         android:theme="?attr/actionBarTheme"
         android:minHeight="?attr/actionBarSize"
         app:title="Add To Do"
-        android:id="@+id/add_task_toolbar">
+        android:id="@+id/add_task_toolbar"
+        app:titleTextColor="@android:color/white">
     </android.support.v7.widget.Toolbar>
 <ScrollView
     android:layout_height="wrap_content"

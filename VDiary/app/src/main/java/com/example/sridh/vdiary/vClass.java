@@ -36,6 +36,7 @@ public class vClass {
     public static String FIREBASE_URL= "https://vdiary-a25b2.firebaseio.com/";
     //PARAMETERS FOR CHANGING THE LINKS
     public static String SEM = "WS";
+    public static String VERSION= "1.0";
 }
 class Note
 {

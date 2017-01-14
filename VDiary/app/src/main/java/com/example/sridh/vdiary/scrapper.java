@@ -55,11 +55,11 @@ public class scrapper extends AppCompatActivity {
 
     EditText regBox,passBox,captchaBox;
     WebView web,att;
-    ImageView captcha,login;
+    ImageView captcha;
     CheckBox cb;
     TextView status;
     RelativeLayout loginView,loadView;
-    FloatingActionButton reload;
+    FloatingActionButton reload,login;
     boolean gotAttendance=false;
     boolean gotSchedule=false;
     boolean attendanceStatus=true;
@@ -203,7 +203,7 @@ public class scrapper extends AppCompatActivity {
         passBox=(EditText)findViewById(R.id.passbox);
         captchaBox=(EditText)findViewById(R.id.captchaBox);
         cb=(CheckBox)findViewById(R.id.saveCreds);
-        login=(ImageButton)findViewById(R.id.login);
+        login=(FloatingActionButton)findViewById(R.id.login);
         reload=(FloatingActionButton)findViewById(R.id.refresh_FloatButton);
         reload.setOnClickListener(new View.OnClickListener() {
             @Override

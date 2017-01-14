@@ -4,19 +4,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:theme="@style/AppTheme.popupTheme"
     android:fadeScrollbars="false"
     android:fadingEdge="horizontal|vertical">
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        android:theme="?attr/actionBarTheme"
         android:minHeight="?attr/actionBarSize"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:id="@+id/alert_cabin_toolbar"
-        app:title="Add Teacher" />
+        app:title="Add Teacher"
+        app:titleTextColor="@android:color/white" />
     <EditText
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -42,16 +41,4 @@
         android:hint="Comment..."
         android:layout_below="@id/alert_cabin_cabinAddress"
         android:layout_centerHorizontal="true"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        app:fabSize="mini"
-        app:backgroundTint="@color/descent_orange"
-        app:srcCompat="@drawable/dual_1_right"
-        android:id="@+id/alert_cabin_addButton"
-        android:layout_marginTop="2dp"
-        android:layout_below="@+id/alert_cabin_comment"
-        android:layout_centerHorizontal="true" />
 </RelativeLayout>

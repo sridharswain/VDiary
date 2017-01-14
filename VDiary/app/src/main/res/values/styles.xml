@@ -23,7 +23,8 @@
         <item name="android:windowCloseOnTouchOutside">true</item>
         <item name="colorPrimary">@color/descent_orange</item>
         <item name="colorPrimaryDark">@color/descent_orange</item>
-        <item name="colorAccent">@color/descent_orange</item>
+        <item name="colorAccent">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
     </style>
 
     <style name="MyAppBar" parent="Theme.AppCompat.Light.DarkActionBar">

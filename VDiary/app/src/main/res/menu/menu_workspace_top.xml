@@ -12,7 +12,7 @@
     <item
         android:id="@+id/toSchedule"
         android:orderInCategory="200"
-        android:icon="@drawable/dual_1_right"
+        android:icon="@drawable/goright"
         android:title="Time Table"
         app:showAsAction="always"
         />
