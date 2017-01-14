@@ -20,10 +20,14 @@ public class NotifyService extends WakefulBroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Notification_Holder notifholder;
         Type t=new TypeToken<Notification_Holder>(){}.getType();
+        String z=intent.getStringExtra("intent_chooser");
+        if(z.equals("one")) {
+            Gson js = new Gson();
+            notifholder = js.fromJson(intent.getStringExtra("one"), t);
+            Notification_Creator notifcreator = new Notification_Creator(notifholder.title, notifholder.content, notifholder.cal, context);
+            notifcreator.create_notification();
+        }
 
-        Gson js=new Gson();
-        notifholder=js.fromJson(intent.getStringExtra("one"),t);
-        Notification_Creator notifcreator=new Notification_Creator(notifholder.title,notifholder.content,notifholder.cal,context);
-        notifcreator.create_notification();
+
     }
 }

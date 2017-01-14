@@ -18,10 +18,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
-import android.telecom.Call;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -326,6 +324,7 @@ public class workSpace extends AppCompatActivity {
                 Gson js = new Gson();
                 String f = js.toJson(n);
                 intent.putExtra("one", f);
+                intent.putExtra("intent_chooser","one");
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), id, intent, 0);
                 id++;
                 editor.putInt("identifier", id);

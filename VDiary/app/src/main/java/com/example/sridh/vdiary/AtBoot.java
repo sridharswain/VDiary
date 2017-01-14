@@ -84,6 +84,7 @@ public class AtBoot extends BroadcastReceiver {
                 Notification_Holder nh = new Notification_Holder(c, sub.title + " " + sub.code, sub.room);
                 Gson j = new Gson();
                 x.putExtra("one", j.toJson(nh));
+                x.putExtra("intent_chooser","one");
                 PendingIntent pintent = PendingIntent.getBroadcast(context, sub.notif_id, x, 0);
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() - 5 * 60 * 1000, 24 * 7 * 60 * 60 * 1000, pintent);
 
