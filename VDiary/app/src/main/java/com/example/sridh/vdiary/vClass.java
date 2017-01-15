@@ -1,12 +1,14 @@
 package com.example.sridh.vdiary;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.view.Window;
 import android.view.WindowManager;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +39,9 @@ public class vClass {
     //PARAMETERS FOR CHANGING THE LINKS
     public static String SEM = "WS";
     public static String VERSION= "1.0";
+
+    //HOLIDAYS
+    public static List<holiday> holidays= new ArrayList<>();
 }
 class Note
 {
@@ -91,6 +96,14 @@ class teacher{
     }
     public void setCabin(String cabin){
         this.cabin=cabin;
+    }
+}
+class holiday{
+    Calendar date;
+    String ocassion;
+    public holiday(Calendar calendar,String string){
+        date=calendar;
+        ocassion=string;
     }
 }
 

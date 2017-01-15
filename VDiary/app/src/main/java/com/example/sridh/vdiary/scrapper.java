@@ -37,7 +37,10 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class scrapper extends AppCompatActivity {
@@ -65,7 +68,7 @@ public class scrapper extends AppCompatActivity {
     boolean attendanceStatus=true;
     Gson jsonBuilder = new Gson();
     static boolean tryRefresh=false;
-    Firebase database;
+    static Firebase database;
     List<String> attList = new ArrayList<>();
     List<String> ctdList = new ArrayList<>();
 
@@ -627,6 +630,8 @@ public class scrapper extends AppCompatActivity {
         String taskJson= academicPrefs.getString("tasks",null);
         SharedPreferences teacherPrefs=getSharedPreferences("teacherPrefs",MODE_PRIVATE);
         String teachers =teacherPrefs.getString("teachers",null);
+        SharedPreferences holidayPrefs= getSharedPreferences("holidayPrefs",MODE_PRIVATE);
+        String holidays= holidayPrefs.getString("holidays",null);
         String customTeachers=teacherPrefs.getString("customTeachers",null);
         if(customTeachers!=null){
             vClass.cablist=jsonBuilder.fromJson(customTeachers,new TypeToken<List<Cabin_Details>>(){}.getType());
@@ -635,7 +640,9 @@ public class scrapper extends AppCompatActivity {
             vClass.teachers=jsonBuilder.fromJson(teachers,new TypeToken<List<teacher>>(){}.getType());
             new tryUpdateDatabase().execute();
         }
-
+        if(holidays!=null){
+            vClass.holidays=jsonBuilder.fromJson(holidays,new TypeToken<List<holiday>>(){}.getType());
+        }
         if(allSubJson!=null && scheduleJson!=null){
             vClass.subList=jsonBuilder.fromJson(allSubJson,new TypeToken<ArrayList<subject>>(){}.getType());
             vClass.timeTable=jsonBuilder.fromJson(scheduleJson, new TypeToken<ArrayList<ArrayList<subject>>>(){}.getType());
@@ -671,7 +678,6 @@ public class scrapper extends AppCompatActivity {
     String formattedTime(subject sub){
         String rawTime= sub.startTime;
         String meridian =rawTime.substring(6,8);
-        Log.d("meridian", meridian);
         int hour = Integer.parseInt(rawTime.substring(0,2));
         if(meridian.equals("PM") && hour<12){
             hour = hour+12;
@@ -717,7 +723,8 @@ public class scrapper extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 vClass.teachers.clear();
-                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                DataSnapshot teachers=dataSnapshot.child("teachers");
+                for(DataSnapshot snapshot:teachers.getChildren()){
                     try {
                         teacher newTeacher = snapshot.getValue(teacher.class);
                         vClass.teachers.add(newTeacher);
@@ -736,6 +743,7 @@ public class scrapper extends AppCompatActivity {
                 //DO NOTHING
             }
         });
+        getHolidays(database,getApplicationContext());
     }  //GET THE CABIN DETAILS OF TEACHERS FORM FIREBASE DATABASE
 
     class tryUpdateDatabase extends AsyncTask<Void,Void,Void> {
@@ -743,11 +751,12 @@ public class scrapper extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             int customListCount=vClass.cablist.size();
-            if(customListCount>0){
-                for(int i=0;i<customListCount;i++){
-                    database.child("custom").child(String.valueOf(i)).setValue(vClass.cablist.get(i));
+                if (customListCount > 0) {
+                    for (int i = 0; i < customListCount; i++) {
+                        Cabin_Details editedTeacher = vClass.cablist.get(i);
+                        database.child("custom").child(editedTeacher.name + "--" + editedTeacher.cabin).setValue(editedTeacher);
+                    }
                 }
-            }
             return null;
         }
     } //CREATE A REQUEST IN THE DATABASE TO UPDATE
@@ -763,5 +772,27 @@ public class scrapper extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         vClass.width=dm.widthPixels;
         vClass.height=dm.heightPixels;
+    }
+    static void getHolidays(Firebase database,final Context context){
+        database.child("Holidays").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    String dateString = snapshot.getValue().toString();
+                    Calendar c = Calendar.getInstance();
+                    c.set(Integer.parseInt(dateString.substring(6)),Integer.parseInt(dateString.substring(3,5)),Integer.parseInt(dateString.substring(0,2)));
+                    vClass.holidays.add(new holiday(c,snapshot.getKey()));
+                }
+                Gson serializer = new Gson();
+                SharedPreferences.Editor holidays= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE).edit();
+                holidays.putString("holidays",serializer.toJson(vClass.holidays));
+                holidays.apply();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 }

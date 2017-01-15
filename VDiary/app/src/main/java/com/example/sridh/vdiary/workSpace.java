@@ -406,6 +406,7 @@ public class workSpace extends AppCompatActivity {
                             vClass.cablist.add(c);
                             writeCabListToPrefs();
                             cabinListAdapter.updatecontent(vClass.cablist);
+                            new requestToDatabase().execute();
                             alert.cancel();
                             return true;
                         }
