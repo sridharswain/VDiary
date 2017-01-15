@@ -137,6 +137,7 @@ public class scrapper extends AppCompatActivity {
             }
             else{
                 getTeacherCabins();
+                getHolidays(database,context);
                 status.setText("Fetching Courses...");
                 web.setWebViewClient(new scheduleClient());
                 web.loadUrl("https://academicscc.vit.ac.in/student/course_regular.asp?sem="+vClass.SEM);
@@ -743,7 +744,6 @@ public class scrapper extends AppCompatActivity {
                 //DO NOTHING
             }
         });
-        getHolidays(database,getApplicationContext());
     }  //GET THE CABIN DETAILS OF TEACHERS FORM FIREBASE DATABASE
 
     class tryUpdateDatabase extends AsyncTask<Void,Void,Void> {
