@@ -92,6 +92,7 @@ public class scrapper extends AppCompatActivity {
     void start() {
         if(!tryRefresh && readFromPrefs()){
             startActivity(new Intent(this, workSpace.class));
+            overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
             finish();
         }
         else{
@@ -603,6 +604,7 @@ public class scrapper extends AppCompatActivity {
             editor.apply();
             writeToPrefs();
             startActivity(new Intent(scrapper.this,workSpace.class));
+            overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
             finish();
         }
     } //REARRANGE THE INFORMATION SCRAPPED FORM THE WEBPAGE

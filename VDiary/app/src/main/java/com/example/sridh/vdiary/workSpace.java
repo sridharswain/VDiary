@@ -158,12 +158,12 @@ public class workSpace extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.toSchedule) {
             Intent i = new Intent(workSpace.this, schedule.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(i);
 
         } else if (id == R.id.refresh) {
             scrapper.tryRefresh = true;
             startActivity(new Intent(workSpace.this, scrapper.class));
+            overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
             finish();
         }
         return super.onOptionsItemSelected(item);
