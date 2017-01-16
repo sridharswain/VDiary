@@ -30,6 +30,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -301,11 +302,13 @@ public class scrapper extends AppCompatActivity {
         if(isPasswordShown){
             //DONT SHOW PASSWORD
             passBox.setTransformationMethod(new PasswordTransformationMethod());
+            Glide.with(getApplicationContext()).load(R.drawable.ic_view_password).into(toogle_showPassword);
             isPasswordShown=false;
         }
         else{
             //SHOW PASSWORD
             passBox.setTransformationMethod(null);
+            Glide.with(getApplicationContext()).load(R.drawable.ic_unview_password).into(toogle_showPassword);
             isPasswordShown=true;
         }
     }
