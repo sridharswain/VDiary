@@ -79,7 +79,9 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".settings" />
+        <activity android:name=".settings"
+            android:theme="@style/MyAppBar">
+            </activity>
         <activity android:name=".About"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

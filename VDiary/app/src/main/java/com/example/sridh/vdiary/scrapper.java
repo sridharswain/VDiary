@@ -14,7 +14,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
@@ -22,7 +21,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,12 +33,10 @@ import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class scrapper extends AppCompatActivity {
@@ -79,6 +75,33 @@ public class scrapper extends AppCompatActivity {
         shared=context.getSharedPreferences("notiftimetable",Context.MODE_PRIVATE);
         editor=shared.edit();
         n_id=shared.getInt("id_time",0);
+
+        String x=shared.getString("settinglist","");
+        if(x.equals("") || x==null)
+        {
+            settings_list s1=new settings_list();
+            s1.title="Show attendance on Widget";
+            s1.checked=false;
+            vClass.setting_list.add(0,s1);
+
+            settings_list s2=new settings_list();
+            s2.title="Receive notification for classes";
+            s2.checked=true;
+            vClass.setting_list.add(1,s2);
+
+
+
+            editor.putString("settinglist",new Gson().toJson(vClass.setting_list));
+            editor.apply();
+        }
+        else
+        {
+            Gson serial=new Gson();
+            Type t=new TypeToken<List<settings_list>>(){}.getType();
+            vClass.setting_list=serial.fromJson(x,t);
+        }
+
+
         //FIREBASE INITIATION
         Firebase.setAndroidContext(this);
         database= new Firebase(vClass.FIREBASE_URL);
@@ -137,7 +160,7 @@ public class scrapper extends AppCompatActivity {
             }
             else{
                 getTeacherCabins();
-                getHolidays(database,context);
+                //getHolidays(database,context);
                 status.setText("Fetching Courses...");
                 web.setWebViewClient(new scheduleClient());
                 web.loadUrl("https://academicscc.vit.ac.in/student/course_regular.asp?sem="+vClass.SEM);
@@ -577,7 +600,7 @@ public class scrapper extends AppCompatActivity {
                             c.set(Calendar.SECOND, 0);
                             c.set(Calendar.DAY_OF_WEEK, k + 2);
                             c.set(Calendar.AM_PM, ampm);
-                            Notification_Holder nh = new Notification_Holder(c, sub.title + " " + sub.code, sub.room);
+                            Notification_Holder nh = new Notification_Holder(c,sub.title + " " + sub.code, sub.room);
                             Gson j = new Gson();
                             in.putExtra("one", j.toJson(nh));
                             in.putExtra("intent_chooser","one");
@@ -597,6 +620,10 @@ public class scrapper extends AppCompatActivity {
                 status.setText("Slow Connection!");
                 return;
             }
+
+
+
+
             Calendar calendar=Calendar.getInstance();
             String last_ref=calendar.get(Calendar.DATE)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ "  "+ calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
             editor.putString("last_ref",last_ref);

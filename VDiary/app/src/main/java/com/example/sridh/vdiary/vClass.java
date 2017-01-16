@@ -1,17 +1,14 @@
 package com.example.sridh.vdiary;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.view.Window;
 import android.view.WindowManager;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Sid on 8/28/2016.
@@ -42,6 +39,9 @@ public class vClass {
 
     //HOLIDAYS
     public static List<holiday> holidays= new ArrayList<>();
+
+    //Settings List
+    public static List<settings_list> setting_list=new ArrayList<>();
 }
 class Note
 {
@@ -101,9 +101,17 @@ class teacher{
 class holiday{
     Calendar date;
     String ocassion;
+    boolean done_notdone;
     public holiday(Calendar calendar,String string){
         date=calendar;
         ocassion=string;
+        done_notdone=false;
+    }
+
+    class settings_list
+    {
+        String title;
+        boolean checked;
     }
 }
 
