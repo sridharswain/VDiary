@@ -12,6 +12,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -21,7 +23,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,9 +66,12 @@ public class scrapper extends AppCompatActivity {
     boolean gotAttendance=false;
     boolean gotSchedule=false;
     boolean attendanceStatus=true;
+    boolean isPasswordShown=false;
     Gson jsonBuilder = new Gson();
     static boolean tryRefresh=false;
     static Firebase database;
+    ProgressBar pb_loading;
+    ImageButton toogle_showPassword;
     List<String> attList = new ArrayList<>();
     List<String> ctdList = new ArrayList<>();
 
@@ -138,7 +145,7 @@ public class scrapper extends AppCompatActivity {
                     finish();
                 }
                 else{
-                    status.setText("Connection Falied!");
+                    status.setText("Connection Failed!");
                     showRetry();
                 }
             }
@@ -148,6 +155,7 @@ public class scrapper extends AppCompatActivity {
                     public void onReceiveValue(String message) {
                         if (!message.equals("\"\"") & !message.equals("null")) {
                             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                            captchaBox.setText("");
                         }
                     }
                 });
@@ -233,6 +241,8 @@ public class scrapper extends AppCompatActivity {
         cb=(CheckBox)findViewById(R.id.saveCreds);
         login=(FloatingActionButton)findViewById(R.id.login);
         reload=(FloatingActionButton)findViewById(R.id.refresh_FloatButton);
+        pb_loading=(ProgressBar)findViewById(R.id.pb_login);
+        toogle_showPassword=(ImageButton)findViewById(R.id.toogle_showPassword);
         reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -240,6 +250,7 @@ public class scrapper extends AppCompatActivity {
                 web.loadUrl("https://academicscc.vit.ac.in/student/stud_login.asp");
                 status.setText("Building Captcha...");
                 reload.setVisibility(View.INVISIBLE);
+                pb_loading.setVisibility(View.VISIBLE);
             }
         });
         login.setOnClickListener(new View.OnClickListener() {
@@ -250,6 +261,12 @@ public class scrapper extends AppCompatActivity {
                 status.setText("Logging In...");
                 if(cb.isChecked()) saveCreds();
                 else delCreds();
+            }
+        });
+        toogle_showPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toogleShowPassword();
             }
         });
         load(true);
@@ -279,6 +296,19 @@ public class scrapper extends AppCompatActivity {
 
 
     } //SETS THE CREDENTIAL TO THE FORM AND SUBMITS IT
+
+    void toogleShowPassword(){
+        if(isPasswordShown){
+            //DONT SHOW PASSWORD
+            passBox.setTransformationMethod(new PasswordTransformationMethod());
+            isPasswordShown=false;
+        }
+        else{
+            //SHOW PASSWORD
+            passBox.setTransformationMethod(null);
+            isPasswordShown=true;
+        }
+    }
 
     private String trim(String str){
         str= str.substring(1);
@@ -793,8 +823,9 @@ public class scrapper extends AppCompatActivity {
 
     void showRetry(){
         load(true);
-        status.setText("Connection Failed");
+        status.setText("Connection Failed!");
         reload.setVisibility(View.VISIBLE);
+        pb_loading.setVisibility(View.GONE);
     } //SHOW THE RETRY VIEW
     void getDimensions(){
         DisplayMetrics dm = new DisplayMetrics();

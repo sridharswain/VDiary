@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/descent_orange</item>
-        <item name="colorPrimaryDark">@color/taskbar_orange</item>
-        <item name="colorAccent">@color/taskbar_orange</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimaryLight</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -27,10 +27,10 @@
         <item name="android:textColorSecondary">@android:color/white</item>
     </style>
 
-    <style name="MyAppBar" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/descent_orange</item>
+    <style name="MyAppBar" parent="AppTheme.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@android:color/white</item>
+        <item name="colorAccent">@color/colorPrimaryLight</item>
         <item name="android:textColorSecondary">@android:color/white</item>
     </style>
 

@@ -5,18 +5,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/taskbar_orange"
     tools:context="com.example.sridh.vdiary.scrapper">
 <RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:id="@+id/loginView"
     android:visibility="visible"
     android:layout_centerInParent="true">
+
     <ImageView
         android:layout_width="220dp"
         android:layout_height="220dp"
         android:id="@+id/imageView"
-        android:src="@drawable/logo"
+        android:src="@drawable/logo_1"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
     <EditText
@@ -27,7 +29,8 @@
         android:width="300dp"
         android:hint="Registration Number"
         android:layout_below="@+id/imageView"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/white"/>
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,7 +39,17 @@
         android:layout_alignStart="@+id/regBox"
         android:layout_alignEnd="@+id/regBox"
         android:layout_below="@+id/regBox"
-        android:hint="Password" />
+        android:hint="Password"
+        android:textColor="@android:color/white"/>
+    <ImageButton
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/ic_view_password"
+        android:background="@android:color/transparent"
+        android:layout_alignEnd="@id/passbox"
+        android:layout_alignTop="@id/passbox"
+        android:layout_marginEnd="10dp"
+        android:id="@+id/toogle_showPassword"/>
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,7 +58,8 @@
         android:layout_alignTop="@+id/captcha"
         android:layout_alignEnd="@+id/passbox"
         android:layout_toEndOf="@+id/captcha"
-        android:hint="Captcha" />
+        android:hint="Captcha"
+        android:textColor="@android:color/white"/>
     <ImageView
         android:layout_width="120dp"
         android:layout_height="40dp"
@@ -61,45 +75,59 @@
         android:layout_height="50dp"
         android:id="@+id/login"
         android:scaleType="fitXY"
-        android:src="@drawable/goright"
+        android:src="@drawable/done"
         android:padding="0dp"
         android:layout_below="@+id/saveCreds"
         android:layout_centerHorizontal="true"
-        app:backgroundTint="@color/windows_color"
+        app:backgroundTint="@color/colorPrimaryDark"
         />
 
     <CheckBox
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save Details"
+        android:text="Remember Me"
+        android:textSize="12sp"
         android:id="@+id/saveCreds"
         android:checked="true"
         android:layout_below="@id/captcha"
-        android:layout_alignStart="@+id/captcha" />
+        android:layout_alignEnd="@+id/captchaBox"
+        android:textColor="@android:color/white"/>
 
     <!--Loading content-->
 </RelativeLayout>
     <RelativeLayout
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
         android:id="@+id/loadView"
-        android:visibility="invisible">
+        android:visibility="invisible"
+        android:padding="16dp">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/Loadlogo"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/logo"
-            android:layout_marginBottom="150dp"
+            android:src="@drawable/logo_1"
+            android:layout_marginBottom="203dp"
             />
+         <!--android:layout_below="@id/status"-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/status"
             android:text="Fetching Courses..."
-            android:layout_alignBottom="@+id/Loadlogo"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:textColor="@android:color/white"
+            android:layout_alignBottom="@id/Loadlogo"
+            />
+        <ProgressBar
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/pb_login"
+            android:layout_below="@id/status"
+            android:layout_marginTop="30dp"
+            />
 
         <android.support.design.widget.FloatingActionButton
             android:layout_height="wrap_content"
@@ -109,6 +137,7 @@
             android:layout_marginTop="30dp"
             android:id="@+id/refresh_FloatButton"
             android:src="@drawable/refresh"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:backgroundTint="@color/colorPrimaryDark"/>
     </RelativeLayout>
 </RelativeLayout>
