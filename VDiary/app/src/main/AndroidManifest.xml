@@ -74,13 +74,16 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".settings" />
         <activity
             android:name=".About"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".TutorialActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".settings"
+            android:theme="@style/MyAppBar">
+            </activity>
     </application>
 
 </manifest>
