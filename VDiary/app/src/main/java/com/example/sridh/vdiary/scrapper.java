@@ -83,32 +83,6 @@ public class scrapper extends AppCompatActivity {
         editor=shared.edit();
         n_id=shared.getInt("id_time",0);
 
-        String x=shared.getString("settinglist","");
-        if(x.equals("") || x==null)
-        {
-            settings_list s1=new settings_list();
-            s1.title="Show attendance on Widget";
-            s1.checked=false;
-            vClass.setting_list.add(0,s1);
-
-            settings_list s2=new settings_list();
-            s2.title="Receive notification for classes";
-            s2.checked=true;
-            vClass.setting_list.add(1,s2);
-
-
-
-            editor.putString("settinglist",new Gson().toJson(vClass.setting_list));
-            editor.apply();
-        }
-        else
-        {
-            Gson serial=new Gson();
-            Type t=new TypeToken<List<settings_list>>(){}.getType();
-            vClass.setting_list=serial.fromJson(x,t);
-        }
-
-
         //FIREBASE INITIATION
         Firebase.setAndroidContext(this);
         database= new Firebase(vClass.FIREBASE_URL);

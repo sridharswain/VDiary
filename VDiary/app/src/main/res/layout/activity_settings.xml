@@ -3,27 +3,68 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".settings"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white">
+    <android.support.v7.widget.Toolbar
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="510dp"
-        android:orientation="vertical"
-        android:background="#ffffff"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:background="@color/colorPrimary"
+        app:title="Settings"
+        android:id="@+id/toolbar_settings"
+        app:titleTextColor="@android:color/white"/>
 
-        <ListView
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_below="@id/toolbar_settings"
+        android:padding="16dp"
+        android:orientation="vertical">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:background="#ffffff"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:id="@+id/setting_view"
-            android:stackFromBottom="false"
-            android:splitMotionEvents="false"
-            android:soundEffectsEnabled="false"
-            android:smoothScrollbar="true"
-            android:scrollingCache="true"
-            android:divider="#000000"
-            android:dividerHeight="5dp" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+    <Switch
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="Notify me before a class"
+        android:textSize="25sp"
+        android:id="@+id/toggle_showNotification"
+        android:buttonTint="@color/descent_orange"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Before 5 min notifies about room no. and course title of next class"
+            android:maxWidth="300dp"/>
+        </LinearLayout>
+        <SurfaceView
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:background="@color/colorPrimaryDark"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <Switch
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="Show attendance on widget"
+                android:textSize="25sp"
+                android:id="@+id/toggle_showAttendance"
+                android:buttonTint="@color/descent_orange"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shows attendance with rest content on the widget."
+                android:maxWidth="300dp"/>
+        </LinearLayout>
+        <SurfaceView
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:background="@color/colorPrimaryDark"/>
+
+        </LinearLayout>
     </RelativeLayout>

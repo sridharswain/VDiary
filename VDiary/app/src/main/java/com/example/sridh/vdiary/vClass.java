@@ -40,8 +40,7 @@ public class vClass {
     //HOLIDAYS
     public static List<holiday> holidays= new ArrayList<>();
 
-    //Settings List
-    public static List<settings_list> setting_list=new ArrayList<>();
+
 }
 class Note
 {

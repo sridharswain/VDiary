@@ -31,31 +31,11 @@ public class widget extends AppWidgetProvider {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
-            boolean setSchedule= true;
-            String ocassion ="";
-            RemoteViews views= new RemoteViews(context.getPackageName(),R.layout.widget);
-            SharedPreferences holidayPrefs= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE);
-            String holidayJson = holidayPrefs.getString("holidays",null);
             Calendar calendar= Calendar.getInstance();
-            if(holidayJson!=null){
-                List<holiday> holidays= (new Gson()).fromJson(holidayJson,new TypeToken<List<holiday>>(){}.getType());
-                for (holiday h :holidays){
-                    Calendar dateString =h.date;
-                    int day = dateString.get(Calendar.DAY_OF_MONTH);
-                    int month =dateString.get(Calendar.MONTH);
-                    int year =dateString.get(Calendar.YEAR);
-                    if(calendar.get(Calendar.DAY_OF_MONTH)==day && calendar.get(Calendar.MONTH)+1==month && calendar.get(Calendar.YEAR)==year){
-                        setSchedule=false;
-                        ocassion=h.ocassion;
-                        break;
-                    }
-                }
-            }
-            else{
-               ocassion="Login to Zchedule to see today's schedule";setSchedule=false;
-            }
+            RemoteViews views= new RemoteViews(context.getPackageName(),R.layout.widget);
+            String ocassion = readHolidayPrefs(context,calendar);
             //updateAppWidget(context, appWidgetManager, appWidgetId);
-            if(setSchedule) {
+            if((ocassion==null)) {
                 int today = calendar.get(Calendar.DAY_OF_WEEK);
                 if (today > 1 && today < 7) {
                     Intent intent = new Intent(context, widgetService.class);
@@ -82,6 +62,28 @@ public class widget extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+    String readHolidayPrefs(Context context,Calendar calendar){
+        SharedPreferences holidayPrefs= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE);
+        String holidayJson = holidayPrefs.getString("holidays",null);
+
+        if(holidayJson!=null){
+            List<holiday> holidays= (new Gson()).fromJson(holidayJson,new TypeToken<List<holiday>>(){}.getType());
+            for (holiday h :holidays){
+                Calendar dateString =h.date;
+                int day = dateString.get(Calendar.DAY_OF_MONTH);
+                int month =dateString.get(Calendar.MONTH);
+                int year =dateString.get(Calendar.YEAR);
+                if(calendar.get(Calendar.DAY_OF_MONTH)==day && calendar.get(Calendar.MONTH)+1==month && calendar.get(Calendar.YEAR)==year){
+                    return h.ocassion;
+                }
+            }
+        }
+        else{
+            return "Login to Zchedule to see today's schedule";
+        }
+        return null;
     }
 }
 
