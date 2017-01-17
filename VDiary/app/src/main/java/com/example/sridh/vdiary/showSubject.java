@@ -1,64 +1,85 @@
 package com.example.sridh.vdiary;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class showSubject extends AppCompatActivity {
-    Toolbar bar;
     subject clicked;
     int width=vClass.width;
     int height=vClass.height;
     static TextView test;
-    LinearLayout taskGridLeft;
-    LinearLayout taskGridRight;
-    int taskViewWidth;
+    static Context con;
+    static RadioButton mon,tue,wed,thur,fri;
     public static ListAdapter todoList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_subject);
+        con=this;
+        test=(TextView)findViewById(R.id.zzzz);
+        mon=(RadioButton)findViewById(R.id.monday);
+        tue=(RadioButton)findViewById(R.id.tuesday);
+        wed=(RadioButton)findViewById(R.id.wednesday);
+        thur=(RadioButton)findViewById(R.id.thursday);
+        fri=(RadioButton)findViewById(R.id.friday);
+
+
         int position=getIntent().getIntExtra("position",0);
-        clicked= vClass.subList.get(position);
-        test=(TextView)findViewById(R.id.testview);
-        Async_search a=new Async_search(position);
+        clicked= vClass.subList.get(position);Async_search a=new Async_search(position);
         a.execute();
         show(clicked);  //Initialize the popup activity to show the contents of the subject
     }
     void show(subject sub){
         getWindow().setLayout(width,((int)(0.6*height)));
-        bar=(Toolbar)findViewById(R.id.showToolbar);
-        bar.inflateMenu(R.menu.menu_show_subject);
-        initMenu();
         ((TextView)findViewById(R.id.subject_Title)).setText(sub.title);
         ((TextView)findViewById(R.id.subject_Teacher)).setText(sub.teacher);
 
     }
-    void initMenu(){
-        bar.setBackgroundColor(getResources().getColor(R.color.taskbar_orange));
-        bar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch(item.getItemId()){
-                    case R.id.action_addAssingment:
-                        //
-                        break;
-                }
-                return true;
+
+    static void extract_det(String z)
+    {
+        List<String> f=new ArrayList<String>();
+        int c=0;
+        String t="";
+        for(int i=0;i<z.length();i++)
+        {
+            if(z.charAt(i)==';')
+            {
+                f.add(c++,t);
+                t="";
             }
-        });
+            else
+                t=t+z.charAt(i);
+        }
+
+        setradiobuttons(f);
+
     }
 
-    static void setText(String j)
+    static void setradiobuttons(List<String> b)
     {
-        test.setText(j);
+        for(int i=0;i<b.size();i++)
+        {
+            String x=b.get(i);
+            if(x.equals("Monday"))
+                mon.setChecked(true);
+            else if(x.equals("Tuesday"))
+                tue.setChecked(true);
+            else if(x.equals("Wednesday"))
+                wed.setChecked(true);
+            else if(x.equals("Thursday"))
+                thur.setChecked(true);
+            else if(x.equals("Friday"))
+                fri.setChecked(true);
+        }
     }
 }
 
@@ -75,7 +96,7 @@ class Async_search extends AsyncTask<Void,Void,Void>
     @Override
     protected Void doInBackground(Void... params) {
         subject sub=vClass.subList.get(position);
-
+        
         for(int i=0;i<vClass.timeTable.size();i++)
         {
             List<subject> z=vClass.timeTable.get(i);
@@ -110,7 +131,7 @@ class Async_search extends AsyncTask<Void,Void,Void>
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        showSubject.setText(x);
+        showSubject.extract_det(x);
         super.onPostExecute(aVoid);
     }
 }
