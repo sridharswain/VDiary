@@ -37,7 +37,7 @@ public class widget extends AppWidgetProvider {
             SharedPreferences holidayPrefs= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE);
             String holidayJson = holidayPrefs.getString("holidays",null);
             Calendar calendar= Calendar.getInstance();
-            /*if(holidayJson!=null){
+            if(holidayJson!=null){
                 List<holiday> holidays= (new Gson()).fromJson(holidayJson,new TypeToken<List<holiday>>(){}.getType());
                 for (holiday h :holidays){
                     Calendar dateString =h.date;
@@ -53,7 +53,7 @@ public class widget extends AppWidgetProvider {
             }
             else{
                ocassion="Login to Zchedule to see today's schedule";setSchedule=false;
-            }*/
+            }
             //updateAppWidget(context, appWidgetManager, appWidgetId);
             if(setSchedule) {
                 int today = calendar.get(Calendar.DAY_OF_WEEK);
