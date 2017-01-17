@@ -19,6 +19,38 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:background="@color/taskbar_orange"/>
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/noleavedays"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/number"
+        android:inputType="number">
+        android:layout_marginTop="30dp"
+    </EditText>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/number"
+        android:id="@+id/okay"
+        android:text="Enter" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/displayatt"
+        android:layout_below="@+id/okay"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/friday"
+        android:layout_marginTop="10dp"
+        android:text="Number of days taken as leave"
+        android:id="@+id/noleavedays"
+        android:textSize="18sp" />
 
     <TextView
         android:text="Teacher"

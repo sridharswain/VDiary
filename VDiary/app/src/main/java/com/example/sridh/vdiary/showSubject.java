@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -15,30 +18,58 @@ public class showSubject extends AppCompatActivity {
     subject clicked;
     int width=vClass.width;
     int height=vClass.height;
-    static TextView test;
     static Context con;
     static RadioButton mon,tue,wed,thur,fri;
+    EditText number;
+    TextView displayatt;
+    Button okay;
     public static ListAdapter todoList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_subject);
         con=this;
-        test=(TextView)findViewById(R.id.zzzz);
+
+        int position=getIntent().getIntExtra("position",0);
+        clicked= vClass.subList.get(position);
+
+        number=(EditText)findViewById(R.id.number);
+        okay=(Button)findViewById(R.id.okay);
+        displayatt=(TextView)findViewById(R.id.displayatt);
+
+
+
         mon=(RadioButton)findViewById(R.id.monday);
         tue=(RadioButton)findViewById(R.id.tuesday);
         wed=(RadioButton)findViewById(R.id.wednesday);
         thur=(RadioButton)findViewById(R.id.thursday);
         fri=(RadioButton)findViewById(R.id.friday);
 
+        okay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int temp=Integer.parseInt(number.getText().toString());
+                int current_att=Integer.parseInt(clicked.attString.substring(0,clicked.attString.length()-1));
+                int noofdays=clicked.ctd;
+                double class_att=current_att*noofdays/100;
+                double att_final=class_att/(noofdays+temp)*100;
+                if(noofdays==0 && temp==0)
+                {
+                    displayatt.setText("0");
+                }
+                else
+                    displayatt.setText(att_final+"");
 
-        int position=getIntent().getIntExtra("position",0);
-        clicked= vClass.subList.get(position);Async_search a=new Async_search(position);
+            }
+        });
+
+
+
+        Async_search a=new Async_search(position);
         a.execute();
         show(clicked);  //Initialize the popup activity to show the contents of the subject
     }
     void show(subject sub){
-        getWindow().setLayout(width,((int)(0.6*height)));
         ((TextView)findViewById(R.id.subject_Title)).setText(sub.title);
         ((TextView)findViewById(R.id.subject_Teacher)).setText(sub.teacher);
 
