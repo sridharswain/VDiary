@@ -20,10 +20,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.Calendar;
 import java.util.List;
-
-import static com.example.sridh.vdiary.settings.con;
 
 public class settings extends AppCompatActivity {
 ListView listView;
@@ -67,6 +64,8 @@ ListView listView;
         }
         editor.putString("settinglist",new Gson().toJson(j));
         editor.apply();
+        editor.putString("set_unset","unset");
+        editor.apply();
 
 
     }
@@ -109,6 +108,8 @@ ListView listView;
             }
         }*/
         editor.putString("settinglist",new Gson().toJson(p));
+        editor.apply();
+        editor.putString("set_unset","set");
         editor.apply();
 
     }
@@ -192,7 +193,7 @@ class newthread extends AsyncTask<Void,Void,Void>
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        Toast.makeText(con, settings.o+"", Toast.LENGTH_SHORT).show();
+        Toast.makeText(settings.con, "Notifications will be shown after you refresh ", Toast.LENGTH_LONG).show();
         super.onPostExecute(aVoid);
     }
 }
@@ -207,7 +208,6 @@ class newthread2 extends AsyncTask<Void,Void,Void>{
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        Toast.makeText(con, settings.o+"", Toast.LENGTH_SHORT).show();
         super.onPostExecute(aVoid);
     }
 }

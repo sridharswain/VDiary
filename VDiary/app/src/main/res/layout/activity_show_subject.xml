@@ -1,57 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_show_subject"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.sridh.vdiary.showSubject"
     android:clipChildren="false">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/subject_Teacher"
-        android:id="@+id/show_subject_scoller"
-        android:layout_marginTop="2dp"
-        >
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:scrollbars="vertical"
-            android:id="@+id/task_grid_view">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:scrollbars="vertical"
-                android:id="@+id/task_grid_view_left"
-                android:layout_alignParentLeft="true"
-                android:showDividers="middle"
-                android:divider="@drawable/divider">
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:scrollbars="vertical"
-                android:id="@+id/task_grid_view_right"
-                android:layout_alignParentRight="true"
-                android:showDividers="middle"
-                android:divider="@drawable/divider">
-            </LinearLayout>
-        </RelativeLayout>
-    </ScrollView>
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/MyAppBar"
-        android:minHeight="?attr/actionBarSize"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/showToolbar"
-        android:elevation="0dp"/>
+
     <TextView
         android:text="Title"
         android:layout_width="wrap_content"
@@ -59,7 +16,6 @@
         android:id="@+id/subject_Title"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textSize="25sp"
-        android:layout_below="@+id/showToolbar"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:background="@color/taskbar_orange"/>
@@ -77,12 +33,87 @@
         android:background="@color/taskbar_orange"/>
 
     <TextView
-        android:text="TextView"
+        android:text="Your classes are on the following days :-"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:id="@+id/zzzz"
+        android:layout_below="@+id/subject_Teacher"
+        android:textSize="18sp" />
+
+    <RadioButton
+        android:text="Monday"
+        android:layout_width="wrap_content"
+        android:id="@+id/monday"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/zzzz"
+        app:buttonTint="@android:color/holo_green_light"
+        android:clickable="false" />
+    <RadioButton
+        android:text="Tuesday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/show_subject_scoller"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="118dp"
-        android:id="@+id/testview"
-        android:textColor="#000000" />
+        android:layout_centerVertical="true"
+        android:id="@+id/tuesday"
+        android:layout_below="@+id/monday"
+        app:buttonTint="@android:color/holo_green_light"
+        android:clickable="false" />
+    <RadioButton
+        android:text="Wednesday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:id="@+id/wednesday"
+        android:layout_below="@+id/tuesday"
+        app:buttonTint="@android:color/holo_green_light"
+        android:clickable="false" />
+
+    <RadioButton
+        android:text="Thursday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:id="@+id/thursday"
+        android:layout_below="@+id/wednesday"
+        app:buttonTint="@android:color/holo_green_light"
+        android:clickable="false" />
+    <RadioButton
+        android:text="Friday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:id="@+id/friday"
+        android:layout_below="@+id/thursday"
+        app:buttonTint="@android:color/holo_green_light"
+        android:clickable="false" />
+
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:scrollbars="vertical"
+        android:id="@+id/task_grid_view"
+        android:layout_width="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:scrollbars="vertical"
+            android:id="@+id/task_grid_view_left"
+            android:layout_alignParentLeft="true"
+            android:showDividers="middle"
+            android:divider="@drawable/divider">
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:scrollbars="vertical"
+            android:id="@+id/task_grid_view_right"
+            android:layout_alignParentRight="true"
+            android:showDividers="middle"
+            android:divider="@drawable/divider">
+        </LinearLayout>
+    </RelativeLayout>
+
 </RelativeLayout>

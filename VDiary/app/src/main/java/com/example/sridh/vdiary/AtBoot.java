@@ -56,38 +56,42 @@ public class AtBoot extends BroadcastReceiver {
         Gson jason=new Gson();
         Type type=new TypeToken<ArrayList<ArrayList<subject>>>(){}.getType();
         String timetab=sharedPreferences.getString("schedule",null);
-        if(timetab!=null)
-            vClass.timeTable=jason.fromJson(timetab,type);
+        SharedPreferences shared=context.getSharedPreferences("notiftimetable",Context.MODE_PRIVATE);
+        String k=shared.getString("set_unset","set");
+        if(k.equals("set")) {
+            if (timetab != null)
+                vClass.timeTable = jason.fromJson(timetab, type);
 
-        for(int s=0;s<vClass.timeTable.size();s++)
-        {
-            List<subject> subs=vClass.timeTable.get(s);
-            for(int t=0;t<vClass.timeTable.get(s).size();t++)
-            {
-                subject sub=subs.get(t);
-                x=new Intent(context,NotifyService.class);
-                Calendar c = Calendar.getInstance();
-                int st_hr, st_min, ampm;
-                st_hr = Integer.parseInt(sub.startTime.substring(0, 2));
-                st_min = Integer.parseInt(sub.startTime.substring(3, 5));
-                String kk = sub.startTime.substring(6);
-                if (kk.equals("AM"))
-                    ampm = 0;
-                else
-                    ampm = 1;
+            for (int s = 0; s < vClass.timeTable.size(); s++) {
+                List<subject> subs = vClass.timeTable.get(s);
+                for (int t = 0; t < vClass.timeTable.get(s).size(); t++) {
+                    subject sub = subs.get(t);
+                    x = new Intent(context, NotifyService.class);
+                    if (sub.type.equals("") != true) {
+                        Calendar c = Calendar.getInstance();
+                        int st_hr, st_min, ampm;
+                        st_hr = Integer.parseInt(sub.startTime.substring(0, 2));
+                        st_min = Integer.parseInt(sub.startTime.substring(3, 5));
+                        String kk = sub.startTime.substring(6);
+                        if (kk.equals("AM"))
+                            ampm = 0;
+                        else
+                            ampm = 1;
 
-                c.set(Calendar.HOUR, st_hr);
-                c.set(Calendar.MINUTE, st_min);
-                c.set(Calendar.SECOND, 0);
-                c.set(Calendar.DAY_OF_WEEK, s + 2);
-                c.set(Calendar.AM_PM, ampm);
-                Notification_Holder nh = new Notification_Holder(c,sub.title + " " + sub.code, sub.room);
-                Gson j = new Gson();
-                x.putExtra("one", j.toJson(nh));
-                x.putExtra("intent_chooser","one");
-                PendingIntent pintent = PendingIntent.getBroadcast(context, sub.notif_id, x, 0);
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() - 5 * 60 * 1000, 24 * 7 * 60 * 60 * 1000, pintent);
+                        c.set(Calendar.HOUR, st_hr);
+                        c.set(Calendar.MINUTE, st_min);
+                        c.set(Calendar.SECOND, 0);
+                        c.set(Calendar.DAY_OF_WEEK, s + 2);
+                        c.set(Calendar.AM_PM, ampm);
+                        Notification_Holder nh = new Notification_Holder(c, sub.title + " " + sub.code, sub.room);
+                        Gson j = new Gson();
+                        x.putExtra("one", j.toJson(nh));
+                        x.putExtra("intent_chooser", "one");
+                        PendingIntent pintent = PendingIntent.getBroadcast(context, sub.notif_id, x, 0);
+                        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() - 5 * 60 * 1000, 24 * 7 * 60 * 60 * 1000, pintent);
 
+                    }
+                }
 
             }
         }
