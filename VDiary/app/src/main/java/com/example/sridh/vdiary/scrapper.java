@@ -274,12 +274,14 @@ public class scrapper extends AppCompatActivity {
             passBox.setTransformationMethod(new PasswordTransformationMethod());
             Glide.with(getApplicationContext()).load(R.drawable.ic_view_password).into(toogle_showPassword);
             isPasswordShown=false;
+            passBox.setSelection(passBox.getText().length());
         }
         else{
             //SHOW PASSWORD
             passBox.setTransformationMethod(null);
             Glide.with(getApplicationContext()).load(R.drawable.ic_unview_password).into(toogle_showPassword);
             isPasswordShown=true;
+            passBox.setSelection(passBox.getText().length());
         }
     }
 
@@ -824,9 +826,7 @@ public class scrapper extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
+            public void onCancelled(FirebaseError firebaseError) {}
         });
     }
 }
