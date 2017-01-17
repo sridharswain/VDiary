@@ -56,9 +56,8 @@ public class AtBoot extends BroadcastReceiver {
         Gson jason=new Gson();
         Type type=new TypeToken<ArrayList<ArrayList<subject>>>(){}.getType();
         String timetab=sharedPreferences.getString("schedule",null);
-        SharedPreferences shared=context.getSharedPreferences("notiftimetable",Context.MODE_PRIVATE);
-        String k=shared.getString("set_unset","set");
-        if(k.equals("set")) {
+        SharedPreferences settingprefs=context.getSharedPreferences(settings.SETTING_PREFS_NAME,Context.MODE_PRIVATE);
+        if(settingprefs.getBoolean(settings.SHOW_NOTIF_KEY,true)) {
             if (timetab != null)
                 vClass.timeTable = jason.fromJson(timetab, type);
 

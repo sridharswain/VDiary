@@ -10,17 +10,9 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
-import android.widget.ListView;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -29,11 +21,11 @@ public class settings extends AppCompatActivity {
     static Context con;
     Switch toggle_showNotification;
     Switch toggle_showAttendance;
-    SharedPreferences settingPrefs;
-    SharedPreferences.Editor settingPrefsEditor;
-    String SETTING_PREFS_NAME= "settingPrefs";
-    String SHOW_ATT_KEY ="showAttendance";
-    String SHOW_NOTIF_KEY = "showNotification";
+    public static SharedPreferences settingPrefs;
+    public static SharedPreferences.Editor settingPrefsEditor;
+    public static String SETTING_PREFS_NAME= "settingPrefs";
+    public static String SHOW_ATT_KEY ="showAttendance";
+    public static String SHOW_NOTIF_KEY = "showNotification";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

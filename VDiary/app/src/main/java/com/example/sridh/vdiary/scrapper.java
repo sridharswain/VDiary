@@ -37,7 +37,6 @@ import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -579,9 +578,8 @@ public class scrapper extends AppCompatActivity {
                         }
                     }
                 }
-
-                String s = shared.getString("set_unset", "set");
-                if (s.equals("set")) {
+                SharedPreferences settingprefs=getSharedPreferences(settings.SETTING_PREFS_NAME,Context.MODE_PRIVATE);
+                if (settingprefs.getBoolean(settings.SHOW_NOTIF_KEY,true)) {
                     //Sparsha code starts from here to schedule notifications for the timetable class
                     for (int k = 0; k < vClass.timeTable.size(); k++) {
                         List<subject> f = vClass.timeTable.get(k);
