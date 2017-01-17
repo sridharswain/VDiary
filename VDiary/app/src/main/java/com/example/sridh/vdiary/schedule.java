@@ -59,7 +59,7 @@ public class schedule extends AppCompatActivity {
         if(todayIndex>1 && todayIndex<7){
             mViewPager.setCurrentItem(todayIndex-2,true);
         }
-        vClass.setStatusBar(getWindow(),getApplicationContext());
+        vClass.setStatusBar(getWindow(),getApplicationContext(),R.color.colorPrimaryDark);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);

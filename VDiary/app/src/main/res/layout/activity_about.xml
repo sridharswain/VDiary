@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".About"
-    android:theme="@style/AppTheme.NoActionBar">
+    android:theme="@style/AppTheme.NoActionBar"
+    android:background="@color/colorPrimary">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,7 +19,7 @@
         <ImageView
             android:layout_height="250dp"
             android:layout_width="250dp"
-            android:src="@drawable/logo"
+            android:src="@drawable/logo_1"
             android:layout_centerHorizontal="true"
             android:id="@+id/about_logo"
             android:scaleType="fitCenter"
@@ -28,7 +29,8 @@
             android:layout_width="wrap_content"
             android:layout_alignBottom="@id/about_logo"
             android:id="@+id/about_name_and_version"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:textColor="@android:color/white"/>
 
         <TextView
             android:layout_height="wrap_content"
@@ -36,25 +38,28 @@
             android:text="Core Developers:"
             android:id="@+id/about_core_developers"
             android:layout_below="@id/about_logo"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="30dp"
+            android:textColor="@android:color/white"/>
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:id="@+id/thanks_view"
             android:layout_below="@id/about_core_developers"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="30dp"
+            android:textColor="@android:color/white"/>
         </RelativeLayout>
     </ScrollView>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/Slight_white_orange"
+        android:background="@color/colorPrimaryDark"
         android:layout_alignParentBottom="true">
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:text="Fourth State Labs"
             android:textAlignment="center"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true"
+            android:textColor="@android:color/white"/>
         </RelativeLayout>
 </RelativeLayout>

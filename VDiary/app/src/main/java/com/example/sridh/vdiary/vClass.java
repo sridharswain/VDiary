@@ -23,11 +23,11 @@ public class vClass {
     public static int width;
     public static int  height;
     public static List<Notification_Holder> notes=new ArrayList<>();
-    public static void setStatusBar(Window window, Context context) {
+    public static void setStatusBar(Window window, Context context,int color) {
         if(Build.VERSION.SDK_INT>=21){
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(ContextCompat.getColor(context,R.color.taskbar_orange));
+            window.setStatusBarColor(ContextCompat.getColor(context,color));
         }
     }  //CHANGE THE COLOR OF THE STATUS BAR
     public static List<teacher> teachers= new ArrayList<>();
@@ -35,7 +35,7 @@ public class vClass {
     public static String FIREBASE_URL= "https://vdiary-a25b2.firebaseio.com/";
     //PARAMETERS FOR CHANGING THE LINKS
     public static String SEM = "WS";
-    public static String VERSION= "1.0";
+    public static String VERSION= "2.0";
 
     //HOLIDAYS
     public static List<holiday> holidays= new ArrayList<>();

@@ -33,10 +33,11 @@ public class widget extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             boolean setSchedule= true;
             String ocassion ="";
+            RemoteViews views= new RemoteViews(context.getPackageName(),R.layout.widget);
             SharedPreferences holidayPrefs= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE);
             String holidayJson = holidayPrefs.getString("holidays",null);
             Calendar calendar= Calendar.getInstance();
-            if(holidayJson!=null){
+            /*if(holidayJson!=null){
                 List<holiday> holidays= (new Gson()).fromJson(holidayJson,new TypeToken<List<holiday>>(){}.getType());
                 for (holiday h :holidays){
                     Calendar dateString =h.date;
@@ -50,8 +51,10 @@ public class widget extends AppWidgetProvider {
                     }
                 }
             }
+            else{
+               ocassion="Login to Zchedule to see today's schedule";setSchedule=false;
+            }*/
             //updateAppWidget(context, appWidgetManager, appWidgetId);
-            RemoteViews views= new RemoteViews(context.getPackageName(),R.layout.widget);
             if(setSchedule) {
                 int today = calendar.get(Calendar.DAY_OF_WEEK);
                 if (today > 1 && today < 7) {

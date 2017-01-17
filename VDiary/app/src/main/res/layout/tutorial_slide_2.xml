@@ -3,6 +3,35 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_screen2">
+    android:background="@color/bg_screen2"
+    android:padding="16dp">
+
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Attendance Tracking"
+        android:id="@+id/tv_tutorial_head"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
+        android:layout_marginTop="20dp"/>
+    <ImageView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/iv_tutorial"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="100dp"
+        android:layout_below="@id/tv_tutorial_head"/>
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="No more maths to bunk a class"
+        android:textColor="@android:color/white"
+        android:id="@+id/tv_tutorial_comment"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"/>
 
 </RelativeLayout>

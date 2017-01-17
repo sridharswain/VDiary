@@ -12,7 +12,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.util.DisplayMetrics;
@@ -113,9 +112,7 @@ public class scrapper extends AppCompatActivity {
         //FIREBASE INITIATION
         Firebase.setAndroidContext(this);
         database= new Firebase(vClass.FIREBASE_URL);
-
-        setContentView(R.layout.splash_screen);
-        vClass.setStatusBar(getWindow(),getApplicationContext());
+        vClass.setStatusBar(getWindow(),getApplicationContext(),R.color.taskbar_orange);
         getDimensions();
         start();
     }
@@ -129,7 +126,6 @@ public class scrapper extends AppCompatActivity {
         else{
             initWebViews();
             setUp();
-            vClass.setStatusBar(getWindow(),getApplicationContext());
             new compileInf().execute();
         }
     } //STARTS THE PROCESSING
@@ -826,8 +822,7 @@ public class scrapper extends AppCompatActivity {
 
     void showRetry(){
         load(true);
-        status.setText("Connection Failed!");
-        reload.setVisibility(View.VISIBLE);
+        status.setText("Connection Failed!");reload.setVisibility(View.VISIBLE);
         pb_loading.setVisibility(View.GONE);
     } //SHOW THE RETRY VIEW
     void getDimensions(){

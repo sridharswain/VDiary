@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#F44336</color>
-    <color name="colorPrimaryDark">#D32F2F</color>
+    <color name="colorPrimaryDark">#d32f2f</color>
     <color name="colorPrimaryLight">#FFCDD2</color>
     <color name="colorAccent">#448AFF</color>
     <color name="primary_text">#212121</color>
@@ -52,23 +52,23 @@
         <color name="bg_screen3">#3395ff</color>
         <color name="bg_screen4">#c873f4</color>
         <color name="bg_screen5">#e74c3c</color> <!--alizerin-->
-        <color name="bg_screen6">#f1c40f</color>
+        <color name="bg_screen6">#ffba08</color>
 
         <!-- dots inactive colors -->
         <color name="dot_dark_screen1">#d1395c</color>
         <color name="dot_dark_screen2">#14a895</color>
         <color name="dot_dark_screen3">#2278d4</color>
         <color name="dot_dark_screen4">#a854d4</color>
-        <color name="dot_dark_screen5">#9f3126</color>
-        <color name="dot_dark_screen6">#b08e02</color>
+        <color name="dot_dark_screen5">#b08e02</color>
+        <color name="dot_dark_screen6">#9f3126</color>
 
         <!-- dots active colors -->
         <color name="dot_light_screen1">#f98da5</color>
         <color name="dot_light_screen2">#8cf9eb</color>
         <color name="dot_light_screen3">#93c6fd</color>
         <color name="dot_light_screen4">#e4b5fc</color>
-        <color name="dot_light_screen5">#e57165</color>
-        <color name="dot_light_screen6">#eed262</color>
+        <color name="dot_light_screen5">#eed262</color>
+        <color name="dot_light_screen6">#e57165</color>
 
 
     <array name="array_dot_active">

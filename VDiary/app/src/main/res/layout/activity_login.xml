@@ -129,6 +129,7 @@
             android:layout_marginTop="30dp"
             />
 
+
         <android.support.design.widget.FloatingActionButton
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
@@ -138,6 +139,7 @@
             android:id="@+id/refresh_FloatButton"
             android:src="@drawable/refresh"
             android:visibility="invisible"
-            android:backgroundTint="@color/colorPrimaryDark"/>
+            app:backgroundTint="@color/colorPrimaryDark" />
+
     </RelativeLayout>
 </RelativeLayout>

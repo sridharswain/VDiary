@@ -14,18 +14,19 @@ public class splashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
+        vClass.setStatusBar(getWindow(),getApplicationContext(),R.color.colorPrimaryDark);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                //if(isFirstLaunch()){
+                if(isFirstLaunch()){
                     startActivity(new Intent(splashScreen.this,TutorialActivity.class));
-                //}
-                /*else {
+                }
+                else {
                     startActivity(new Intent(splashScreen.this, scrapper.class));
                     overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
-                }*/
+                }
             }
-        },700);
+        },1000);
     }
 
     boolean isFirstLaunch(){

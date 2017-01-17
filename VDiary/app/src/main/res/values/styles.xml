@@ -34,6 +34,13 @@
         <item name="android:textColorSecondary">@android:color/white</item>
     </style>
 
+    <style name="MyAppBar.Workspace" parent="AppTheme.NoActionBar">
+        <item name="colorPrimary">@color/descent_orange</item>
+        <item name="colorPrimaryDark">@color/taskbar_orange</item>
+        <item name="colorAccent">@color/colorPrimaryLight</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+    </style>
+
 
 
 

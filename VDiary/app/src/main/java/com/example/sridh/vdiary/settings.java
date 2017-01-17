@@ -39,7 +39,7 @@ ListView listView;
         shared=getSharedPreferences("notiftimetable",Context.MODE_PRIVATE);
         editor=shared.edit();
         listView=(ListView)findViewById(R.id.setting_view);
-        vClass.setStatusBar(getWindow(),getApplicationContext());
+        vClass.setStatusBar(getWindow(),getApplicationContext(),R.color.colorPrimaryDark);
         SettingsAdapter setadap=new SettingsAdapter(this,vClass.setting_list);
         listView.setAdapter(setadap);
 

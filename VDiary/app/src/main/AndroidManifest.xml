@@ -22,10 +22,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".schedule"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/MyAppBar.Workspace" />
         <activity
             android:name=".workSpace"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:theme="@style/MyAppBar.Workspace" />
 
         <receiver android:name=".widget">
             <intent-filter>

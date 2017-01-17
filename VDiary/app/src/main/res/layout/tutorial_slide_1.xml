@@ -2,6 +2,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_screen1">
-    
+    android:background="@color/bg_screen1"
+    android:padding="26dp">
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Daily Schedule"
+        android:id="@+id/tv_tutorial_head"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
+        android:layout_marginTop="20dp"/>
+    <ImageView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/iv_tutorial"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:layout_below="@id/tv_tutorial_head" />
+    <!--android:src="@drawable/schedule"-->
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Get your time table at your finger tips"
+        android:textColor="@android:color/white"
+        android:id="@+id/tv_tutorial_comment"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"/>
 </RelativeLayout>

@@ -3,6 +3,7 @@ package com.example.sridh.vdiary;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -13,8 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import static com.example.sridh.vdiary.splashScreen.*;
 
@@ -27,6 +31,7 @@ public class TutorialActivity extends AppCompatActivity {
     private TextView[] dots;
     private int[] layouts;
     private Button btnSkip, btnNext;
+    Typeface chewy,oswald;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +58,15 @@ public class TutorialActivity extends AppCompatActivity {
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
         btnSkip = (Button) findViewById(R.id.btn_skip);
         btnNext = (Button) findViewById(R.id.btn_next);
-
+        chewy = Typeface.createFromAsset(getAssets(),"fonts/Chewy.ttf");
+        oswald = Typeface.createFromAsset(getAssets(),"fonts/Oswald-Regular.ttf");
         layouts = new int[]{
                 R.layout.tutorial_slide_1,
                 R.layout.tutorial_slide_2,
                 R.layout.tutorial_slide_3,
                 R.layout.tutorial_slide_4,
                 R.layout.tutorial_slide_5,
-                R.layout.tutorial_slide_6};
+                R.layout.tutorial_slide_6,};
         addBottomDots(0);
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,6 +160,31 @@ public class TutorialActivity extends AppCompatActivity {
             layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             View view = layoutInflater.inflate(layouts[position], container, false);
+            ImageView iv_tutorial =(ImageView)view.findViewById(R.id.iv_tutorial);
+            int image=0;
+            switch (position){
+                case 0:
+                    image=R.drawable.schedule;
+                    break;
+                case 1:
+                    image=R.drawable.attendance;
+                    break;
+                case 2:
+                    image=R.drawable.search_teacher;
+                    break;
+                case 3:
+                    image=R.drawable.notified;
+                    break;
+                case 4:
+                    image=R.drawable.widget_ic;
+                    break;
+                case 5:
+                    image=R.drawable.tasks;
+                    break;
+            }
+            Glide.with(getApplicationContext()).load(image).into(iv_tutorial);
+            ((TextView)view.findViewById(R.id.tv_tutorial_head)).setTypeface(oswald);
+            ((TextView)view.findViewById(R.id.tv_tutorial_comment)).setTypeface(chewy);
             container.addView(view);
 
             return view;
