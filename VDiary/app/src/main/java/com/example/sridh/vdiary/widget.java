@@ -6,20 +6,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.util.Log;
+
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.RemoteViews;
-import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Implementation of App Widget functionality.
@@ -34,7 +30,7 @@ public class widget extends AppWidgetProvider {
             Calendar calendar= Calendar.getInstance();
             RemoteViews views= new RemoteViews(context.getPackageName(),R.layout.widget);
             String ocassion = readHolidayPrefs(context,calendar);
-            //updateAppWidget(context, appWidgetManager, appWidgetId);
+            //updateAppWidget(context, appWidgetManager, apwidget_screenShotpWidgetId);
             if((ocassion==null)) {
                 int today = calendar.get(Calendar.DAY_OF_WEEK);
                 if (today > 1 && today < 7) {
