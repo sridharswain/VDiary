@@ -82,7 +82,7 @@ public class AtBoot extends BroadcastReceiver {
                         c.set(Calendar.SECOND, 0);
                         c.set(Calendar.DAY_OF_WEEK, s + 2);
                         c.set(Calendar.AM_PM, ampm);
-                        Notification_Holder nh = new Notification_Holder(c, sub.title + " " + sub.code, sub.room);
+                        Notification_Holder nh = new Notification_Holder(c, sub.title + " " + sub.code, sub.room,"Upcoming class in 5 minutes");
                         Gson j = new Gson();
                         x.putExtra("one", j.toJson(nh));
                         x.putExtra("intent_chooser", "one");

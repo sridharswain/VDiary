@@ -14,13 +14,15 @@ import android.support.v4.app.NotificationCompat;
 public class Notification_Creator {
     String title;
     String name_and_teachersname;
+    String ticker;
     Context context;
     public static PendingIntent pintent;
 
-    public Notification_Creator(String titl, String cont, Context x) {
+    public Notification_Creator(String titl, String cont, String ticker,Context x) {
         title=titl;
         name_and_teachersname=cont;
         context=x;
+        this.ticker=ticker;
     }
 
     public void create_notification() {
@@ -28,7 +30,7 @@ public class Notification_Creator {
         notibuilder.setContentTitle(title);
         notibuilder.setContentText(name_and_teachersname);
         notibuilder.setSmallIcon(R.drawable.logo);
-        notibuilder.setTicker("You have a deadline to meet");
+        notibuilder.setTicker(ticker);
         Intent newIntent=new Intent(context,scrapper.class);
         pintent= PendingIntent.getActivity(context, (int) System.currentTimeMillis(),newIntent,PendingIntent.FLAG_UPDATE_CURRENT);
         notibuilder.setContentIntent(pintent);
