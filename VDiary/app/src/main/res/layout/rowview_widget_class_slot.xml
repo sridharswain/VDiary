@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/widget_title"
-        android:maxWidth="300dp"
+        android:maxWidth="270dp"
         android:text="SOFTWARE ENGINEERING AND DISCREETE AND MATHEMATICS FS"
         android:layout_toRightOf="@id/widget_type"
         android:textSize="17sp"

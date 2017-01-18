@@ -22,11 +22,13 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".schedule"
-            android:theme="@style/MyAppBar.Workspace" />
+            android:theme="@style/MyAppBar.Workspace"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".workSpace"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            android:theme="@style/MyAppBar.Workspace" />
+            android:theme="@style/MyAppBar.Workspace"
+            android:screenOrientation="portrait"/>
 
         <receiver android:name=".widget">
             <intent-filter>
@@ -51,7 +53,9 @@
 
         <activity
             android:name=".showSubject"
-            android:theme="@style/AppTheme.popupTheme" />
+            android:theme="@style/AppTheme.popupTheme"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".splashScreen"
             android:noHistory="true"
@@ -77,13 +81,16 @@
 
         <activity
             android:name=".About"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".TutorialActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".settings"
-            android:theme="@style/MyAppBar">
+            android:theme="@style/MyAppBar"
+            android:screenOrientation="portrait">
             </activity>
     </application>
 

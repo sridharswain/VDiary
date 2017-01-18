@@ -1,151 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_show_subject"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context="com.example.sridh.vdiary.showSubject"
-    android:clipChildren="false">
+    android:clipChildren="false"
+    android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rv_title"
+        android:background="@color/taskbar_orange"
+        android:padding="14dp">
 
     <TextView
         android:text="Title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/subject_Title"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textSize="25sp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:background="@color/taskbar_orange"/>
-    <EditText
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/noleavedays"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/number"
-        android:inputType="number">
-        android:layout_marginTop="30dp"
-    </EditText>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/number"
-        android:id="@+id/okay"
-        android:text="Enter" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/displayatt"
-        android:layout_below="@+id/okay"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/friday"
-        android:layout_marginTop="10dp"
-        android:text="Number of days taken as leave"
-        android:id="@+id/noleavedays"
-        android:textSize="18sp" />
+        android:textColor="@android:color/white"/>
 
     <TextView
         android:text="Teacher"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/subject_Teacher"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textSize="17sp"
         android:layout_below="@+id/subject_Title"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:background="@color/taskbar_orange"/>
+        android:textColor="@android:color/white"/>
+        </RelativeLayout>
+<RelativeLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:padding="14dp"
+    android:background="@color/descent_orange">
+    <TextView
+        android:text="Class occurs on :-"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_class_occurence"
+        android:textSize="25sp"
+        android:textColor="@android:color/white"/>
+    <TextView
+        android:layout_width="45dp"
+        android:textAlignment="center"
+        android:layout_height="30dp"
+        android:text="Tue"
+        android:layout_below="@id/tv_class_occurence"
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/opac_transparent"
+        android:id="@+id/tv_tue"/>
 
     <TextView
-        android:text="Your classes are on the following days :-"
-        android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:id="@+id/zzzz"
-        android:layout_below="@+id/subject_Teacher"
-        android:textSize="18sp" />
+        android:layout_width="45dp"
+        android:textAlignment="center"
+        android:layout_height="30dp"
+        android:text="Mon"
+        android:layout_below="@id/tv_class_occurence"
+        android:layout_marginTop="30dp"
+        android:layout_toStartOf="@id/tv_tue"
+        android:layout_marginEnd="85dp"
+        android:id="@+id/tv_mon"
+        android:textSize="20sp"
+        android:textColor="@color/opac_transparent"/>
 
-    <RadioButton
-        android:text="Monday"
-        android:layout_width="wrap_content"
-        android:id="@+id/monday"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/zzzz"
-        app:buttonTint="@android:color/holo_green_light"
-        android:clickable="false" />
-    <RadioButton
-        android:text="Tuesday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:id="@+id/tuesday"
-        android:layout_below="@+id/monday"
-        app:buttonTint="@android:color/holo_green_light"
-        android:clickable="false" />
-    <RadioButton
-        android:text="Wednesday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:id="@+id/wednesday"
-        android:layout_below="@+id/tuesday"
-        app:buttonTint="@android:color/holo_green_light"
-        android:clickable="false" />
 
-    <RadioButton
-        android:text="Thursday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:id="@+id/thursday"
-        android:layout_below="@+id/wednesday"
-        app:buttonTint="@android:color/holo_green_light"
-        android:clickable="false" />
-    <RadioButton
-        android:text="Friday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:id="@+id/friday"
-        android:layout_below="@+id/thursday"
-        app:buttonTint="@android:color/holo_green_light"
-        android:clickable="false" />
 
-    <RelativeLayout
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:scrollbars="vertical"
-        android:id="@+id/task_grid_view"
-        android:layout_width="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:scrollbars="vertical"
-            android:id="@+id/task_grid_view_left"
-            android:layout_alignParentLeft="true"
-            android:showDividers="middle"
-            android:divider="@drawable/divider">
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:scrollbars="vertical"
-            android:id="@+id/task_grid_view_right"
-            android:layout_alignParentRight="true"
-            android:showDividers="middle"
-            android:divider="@drawable/divider">
-        </LinearLayout>
+    <TextView
+        android:layout_width="45dp"
+        android:textAlignment="center"
+        android:layout_height="30dp"
+        android:text="Wed"
+        android:layout_below="@id/tv_class_occurence"
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"
+        android:layout_toEndOf="@id/tv_tue"
+        android:layout_marginStart="85dp"
+        android:id="@+id/tv_wed"
+        android:textColor="@color/opac_transparent"/>
+
+    <TextView
+        android:layout_width="45dp"
+        android:textAlignment="center"
+        android:layout_height="30dp"
+        android:text="Thu"
+        android:layout_below="@id/tv_mon"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:layout_toStartOf="@id/tv_tue"
+        android:layout_marginEnd="20dp"
+        android:id="@+id/tv_thu"
+        android:textColor="@color/opac_transparent"/>
+
+    <TextView
+        android:layout_width="45dp"
+        android:textAlignment="center"
+        android:layout_height="30dp"
+        android:text="Fri"
+        android:layout_below="@id/tv_mon"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:layout_toEndOf="@id/tv_tue"
+        android:layout_marginStart="20dp"
+        android:id="@+id/tv_fri"
+        android:textColor="@color/opac_transparent"/>
     </RelativeLayout>
-
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_height="2dp"
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimaryLight" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/descent_orange"
+        android:padding="14dp">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="60dp"
+            android:id="@+id/tv_newAtt"
+            android:textColor="@android:color/white"
+            android:text="0%"
+            android:textSize="22sp"/>
+            <NumberPicker
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="100dp"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/leave_picker"/>
+        </RelativeLayout>
+</LinearLayout>

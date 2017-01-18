@@ -46,8 +46,6 @@ public class scrapper extends AppCompatActivity {
 
     //for Notifications
     public static String title;
-    public static String name_and_teachersname;
-    public static Calendar timings;
     public static Context context;
     public static PendingIntent pintent;
     public static SharedPreferences shared;
