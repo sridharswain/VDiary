@@ -25,8 +25,5 @@ public class NotifyService extends WakefulBroadcastReceiver {
             notifholder = js.fromJson(intent.getStringExtra("one"), t);
             Notification_Creator notifcreator = new Notification_Creator(notifholder.title, notifholder.content,notifholder.ticker,context);
             notifcreator.create_notification();
-
-
-
     }
 }

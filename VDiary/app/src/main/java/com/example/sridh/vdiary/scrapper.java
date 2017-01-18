@@ -677,10 +677,6 @@ public class scrapper extends AppCompatActivity {
         if(customTeachers!=null){
             vClass.cablist=jsonBuilder.fromJson(customTeachers,new TypeToken<List<Cabin_Details>>(){}.getType());
         }
-        if(teachers!=null){
-            vClass.teachers=jsonBuilder.fromJson(teachers,new TypeToken<List<teacher>>(){}.getType());
-            new tryUpdateDatabase().execute();
-        }
         if(holidays!=null){
             vClass.holidays=jsonBuilder.fromJson(holidays,new TypeToken<List<holiday>>(){}.getType());
         }
@@ -788,27 +784,6 @@ public class scrapper extends AppCompatActivity {
         });
     }  //GET THE CABIN DETAILS OF TEACHERS FORM FIREBASE DATABASE
 
-    class tryUpdateDatabase extends AsyncTask<Void,Void,Void> {
-        Firebase database;
-        @Override
-        protected void onPreExecute() {
-            Firebase.setAndroidContext(context);
-           database= new Firebase(vClass.FIREBASE_URL);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            int customListCount=vClass.cablist.size();
-                if (customListCount > 0) {
-                    for (int i = 0; i < customListCount; i++) {
-                        Cabin_Details editedTeacher = vClass.cablist.get(i);
-                        database.child("custom").child(editedTeacher.name + "--" + editedTeacher.cabin).setValue(editedTeacher);
-                    }
-                }
-            return null;
-        }
-    } //CREATE A REQUEST IN THE DATABASE TO UPDATE
 
 
     void showRetry(){
@@ -821,27 +796,5 @@ public class scrapper extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         vClass.width=dm.widthPixels;
         vClass.height=dm.heightPixels;
-    }
-    static void getHolidays(final Context context){
-        Firebase.setAndroidContext(context);
-        final Firebase database= new Firebase(vClass.FIREBASE_URL);
-        database.child("Holidays").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    String dateString = snapshot.getValue().toString();
-                    Calendar c = Calendar.getInstance();
-                    c.set(Integer.parseInt(dateString.substring(6)),Integer.parseInt(dateString.substring(3,5)),Integer.parseInt(dateString.substring(0,2)));
-                    vClass.holidays.add(new holiday(c,snapshot.getKey()));
-                }
-                Gson serializer = new Gson();
-                SharedPreferences.Editor holidays= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE).edit();
-                holidays.putString("holidays",serializer.toJson(vClass.holidays));
-                holidays.apply();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {}
-        });
     }
 }
