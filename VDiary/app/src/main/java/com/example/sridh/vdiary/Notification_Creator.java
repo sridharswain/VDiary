@@ -4,6 +4,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 
@@ -26,11 +28,12 @@ public class Notification_Creator {
     }
 
     public void create_notification() {
-        NotificationCompat.Builder notibuilder=new NotificationCompat.Builder(context);
-        notibuilder.setContentTitle(title);
-        notibuilder.setContentText(name_and_teachersname);
-        notibuilder.setSmallIcon(R.drawable.logo);
-        notibuilder.setTicker(ticker);
+        NotificationCompat.Builder notibuilder=new NotificationCompat.Builder(context)
+                .setContentTitle(title)
+                .setContentText(name_and_teachersname)
+                .setSmallIcon(R.drawable.logo)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.drawable.notification_logo))
+                .setTicker(ticker);
         Intent newIntent=new Intent(context,scrapper.class);
         pintent= PendingIntent.getActivity(context, (int) System.currentTimeMillis(),newIntent,PendingIntent.FLAG_UPDATE_CURRENT);
         notibuilder.setContentIntent(pintent);
