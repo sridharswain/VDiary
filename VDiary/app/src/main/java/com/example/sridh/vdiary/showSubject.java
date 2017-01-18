@@ -121,14 +121,15 @@ public class showSubject extends AppCompatActivity {
     }
 
     class calculateAttendanceAsync extends AsyncTask<Void,Void,Void>{
-        int newAttendance,leave;
+        double newAttendance;
+        int leave;
         calculateAttendanceAsync(int leave){
             this.leave=leave;
         }
         @Override
         protected Void doInBackground(Void... voids) {
-            double class_att=att*noofdays/100;
-            double att_final=class_att/(noofdays+leave)*100;
+            double class_att=att*noofdays/100.0;
+            double att_final=(class_att/(noofdays+leave))*100.0;
             newAttendance =((int)(att_final));
             return null;
         }

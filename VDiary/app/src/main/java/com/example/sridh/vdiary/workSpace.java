@@ -89,7 +89,7 @@ public class workSpace extends AppCompatActivity {
         w = this;
         SharedPreferences s = getSharedPreferences("notiftimetable", Context.MODE_PRIVATE);
         String z = s.getString("last_ref", "");
-        if (z.equals("") != true)
+        if (!z.equals(""))
             Toast.makeText(w, "Last refreshed on " + z, Toast.LENGTH_LONG).show();
         shared = getSharedPreferences("todoshared", MODE_PRIVATE);
         //Get vClass.notes list from shared preferences
