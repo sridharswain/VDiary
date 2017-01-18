@@ -628,7 +628,18 @@ public class scrapper extends AppCompatActivity {
 
 
             Calendar calendar=Calendar.getInstance();
-            String last_ref=calendar.get(Calendar.DATE)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ "  "+ calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
+            String hr,min;
+            if(calendar.get(Calendar.HOUR_OF_DAY)<10)
+                hr="0"+calendar.get(Calendar.HOUR_OF_DAY);
+            else
+                hr=calendar.get(Calendar.HOUR_OF_DAY)+"";
+
+            if(calendar.get(Calendar.MINUTE)<10)
+                min="0"+calendar.get(Calendar.MINUTE);
+            else
+                min=calendar.get(Calendar.MINUTE)+"";
+
+            String last_ref=calendar.get(Calendar.DATE)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ "  "+ hr+":"+min;
             editor.putString("last_ref",last_ref);
             editor.apply();
             writeToPrefs();

@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
+
 import java.util.List;
 
 /**
@@ -123,13 +125,16 @@ public class listAdapter_searchTeacher extends BaseAdapter {
         });
         alertDialog.show();
     }
-}
-class requestToDatabase extends AsyncTask<Void,Void,Void>{
-    @Override
-    protected Void doInBackground(Void... voids) {
-        int index=vClass.cablist.size()-1;
-        Cabin_Details edited = vClass.cablist.get(index);
-        scrapper.database.child("custom").child(edited.name+"--"+edited.cabin).setValue(edited);
-        return null;
+    class requestToDatabase extends AsyncTask<Void,Void,Void>{
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Firebase.setAndroidContext(context);
+            Firebase database=new Firebase(vClass.FIREBASE_URL);
+            int index=vClass.cablist.size()-1;
+            Cabin_Details edited = vClass.cablist.get(index);
+           database.child("custom").child(edited.name+"--"+edited.cabin).setValue(edited);
+            return null;
+        }
     }
 }
+

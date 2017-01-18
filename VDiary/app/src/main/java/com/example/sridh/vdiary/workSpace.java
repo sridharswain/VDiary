@@ -90,7 +90,7 @@ public class workSpace extends AppCompatActivity {
         SharedPreferences s = getSharedPreferences("notiftimetable", Context.MODE_PRIVATE);
         String z = s.getString("last_ref", "");
         if (z.equals("") != true)
-            Toast.makeText(w, "Content was last refreshed on " + z, Toast.LENGTH_LONG).show();
+            Toast.makeText(w, "Last refreshed on " + z, Toast.LENGTH_LONG).show();
         shared = getSharedPreferences("todoshared", MODE_PRIVATE);
         //Get vClass.notes list from shared preferences
         String get_list = shared.getString("todolist", null);
@@ -406,7 +406,7 @@ public class workSpace extends AppCompatActivity {
                             vClass.cablist.add(c);
                             writeCabListToPrefs();
                             cabinListAdapter.updatecontent(vClass.cablist);
-                            new requestToDatabase().execute();
+
                             alert.cancel();
                             return true;
                         }

@@ -14,6 +14,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     Firebase database;
     @Override
     public void onReceive(final Context context, Intent intent) {
+
         Firebase.setAndroidContext(context);
         database= new Firebase(vClass.FIREBASE_URL);
         scrapper.getHolidays(context);
