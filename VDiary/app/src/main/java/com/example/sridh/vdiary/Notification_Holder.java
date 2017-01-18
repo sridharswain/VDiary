@@ -21,12 +21,12 @@ public class Notification_Holder {
     int id;
     //long mills;
 
-    public Notification_Holder(Calendar i,String title,String content)
+    public Notification_Holder(Calendar i,String title,String content,String ticker)
     {
         cal=i;
         this.title=title;
         this.content=content;
-        this.ticker=title;
+        this.ticker=ticker;
         scheduled=false;
         //mills=cal.getTimeInMillis();
     }

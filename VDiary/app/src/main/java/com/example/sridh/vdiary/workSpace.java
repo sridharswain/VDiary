@@ -90,7 +90,7 @@ public class workSpace extends AppCompatActivity {
         SharedPreferences s = getSharedPreferences("notiftimetable", Context.MODE_PRIVATE);
         String z = s.getString("last_ref", "");
         if (z.equals("") != true)
-            Toast.makeText(w, "Content was last refreshed on " + z, Toast.LENGTH_LONG).show();
+            Toast.makeText(w, "Last refreshed on " + z, Toast.LENGTH_LONG).show();
         shared = getSharedPreferences("todoshared", MODE_PRIVATE);
         //Get vClass.notes list from shared preferences
         String get_list = shared.getString("todolist", null);
@@ -290,11 +290,11 @@ public class workSpace extends AppCompatActivity {
                                         if (title.getText().toString() != null && title.getText().toString().equals("") != true & other.getText().toString() != null && other.getText().toString().equals("") != true) {
                                             Notification_Holder n;
                                             if(c!=null) {
-                                                n = new Notification_Holder(c, title.getText().toString(), other.getText().toString());
+                                                n = new Notification_Holder(c, title.getText().toString(), other.getText().toString(),"You have a deadline to meet");
                                                 schedule_todo_notification(n);
                                             }
                                             else
-                                                n = new Notification_Holder(Calendar.getInstance(), title.getText().toString(), other.getText().toString());
+                                                n = new Notification_Holder(Calendar.getInstance(), title.getText().toString(), other.getText().toString(),"You have a deadline to meet");
                                             n.id = id - 1;
                                             vClass.notes.add(n);
                                             updateTaskGrid(vClass.notes.size() - 1);
@@ -406,7 +406,7 @@ public class workSpace extends AppCompatActivity {
                             vClass.cablist.add(c);
                             writeCabListToPrefs();
                             cabinListAdapter.updatecontent(vClass.cablist);
-                            new requestToDatabase().execute();
+
                             alert.cancel();
                             return true;
                         }

@@ -66,7 +66,6 @@ public class scrapper extends AppCompatActivity {
     boolean isPasswordShown=false;
     Gson jsonBuilder = new Gson();
     static boolean tryRefresh=false;
-    static Firebase database;
     ProgressBar pb_loading;
     ImageButton toogle_showPassword;
     List<String> attList = new ArrayList<>();
@@ -81,8 +80,6 @@ public class scrapper extends AppCompatActivity {
         n_id=shared.getInt("id_time",0);
 
         //FIREBASE INITIATION
-        Firebase.setAndroidContext(this);
-        database= new Firebase(vClass.FIREBASE_URL);
         vClass.setStatusBar(getWindow(),getApplicationContext(),R.color.taskbar_orange);
         getDimensions();
         start();
@@ -603,7 +600,7 @@ public class scrapper extends AppCompatActivity {
                                 c.set(Calendar.SECOND, 0);
                                 c.set(Calendar.DAY_OF_WEEK, k + 2);
                                 c.set(Calendar.AM_PM, ampm);
-                                Notification_Holder nh = new Notification_Holder(c, sub.title + " " + sub.code, sub.room);
+                                Notification_Holder nh = new Notification_Holder(c, sub.title + " " + sub.code, sub.room,"Upcoming class in 5 minutes");
                                 Gson j = new Gson();
                                 in.putExtra("one", j.toJson(nh));
                                 in.putExtra("intent_chooser", "one");
@@ -629,7 +626,18 @@ public class scrapper extends AppCompatActivity {
 
 
             Calendar calendar=Calendar.getInstance();
-            String last_ref=calendar.get(Calendar.DATE)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ "  "+ calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
+            String hr,min;
+            if(calendar.get(Calendar.HOUR_OF_DAY)<10)
+                hr="0"+calendar.get(Calendar.HOUR_OF_DAY);
+            else
+                hr=calendar.get(Calendar.HOUR_OF_DAY)+"";
+
+            if(calendar.get(Calendar.MINUTE)<10)
+                min="0"+calendar.get(Calendar.MINUTE);
+            else
+                min=calendar.get(Calendar.MINUTE)+"";
+
+            String last_ref=calendar.get(Calendar.DATE)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ "  "+ hr+":"+min;
             editor.putString("last_ref",last_ref);
             editor.apply();
             writeToPrefs();
@@ -752,6 +760,8 @@ public class scrapper extends AppCompatActivity {
     }   //SWITCH BETWEEN LOADING SCREEN AND LOGIN SCREEN
 
     void getTeacherCabins(){
+        Firebase.setAndroidContext(this);
+        Firebase database= new Firebase(vClass.FIREBASE_URL);
         database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -779,6 +789,13 @@ public class scrapper extends AppCompatActivity {
     }  //GET THE CABIN DETAILS OF TEACHERS FORM FIREBASE DATABASE
 
     class tryUpdateDatabase extends AsyncTask<Void,Void,Void> {
+        Firebase database;
+        @Override
+        protected void onPreExecute() {
+            Firebase.setAndroidContext(context);
+           database= new Firebase(vClass.FIREBASE_URL);
+            super.onPreExecute();
+        }
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -805,7 +822,9 @@ public class scrapper extends AppCompatActivity {
         vClass.width=dm.widthPixels;
         vClass.height=dm.heightPixels;
     }
-    static void getHolidays(Firebase database,final Context context){
+    static void getHolidays(final Context context){
+        Firebase.setAndroidContext(context);
+        final Firebase database= new Firebase(vClass.FIREBASE_URL);
         database.child("Holidays").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
