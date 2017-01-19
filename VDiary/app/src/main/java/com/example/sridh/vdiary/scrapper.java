@@ -614,9 +614,6 @@ public class scrapper extends AppCompatActivity {
                     }
                 }
             }
-
-
-
             catch (Exception e){
                 showRetry();
                 status.setText("Slow Connection!");
