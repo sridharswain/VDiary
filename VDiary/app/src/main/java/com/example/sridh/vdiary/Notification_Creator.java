@@ -4,7 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
@@ -28,6 +28,7 @@ public class Notification_Creator {
     }
 
     public void create_notification() {
+
         NotificationCompat.Builder notibuilder=new NotificationCompat.Builder(context)
                 .setContentTitle(title)
                 .setContentText(name_and_teachersname)
@@ -43,7 +44,7 @@ public class Notification_Creator {
 
         Vibrator vib=(Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
         if(vib.hasVibrator()) {
-            vib.vibrate(2000);
+            vib.vibrate(1200);
         }
     }
 }

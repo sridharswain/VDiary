@@ -1,20 +1,16 @@
 package com.example.sridh.vdiary;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.Toast;
 
-import java.util.List;
+import static com.example.sridh.vdiary.settings.con;
 
 public class settings extends AppCompatActivity {
 
@@ -73,7 +69,7 @@ public class settings extends AppCompatActivity {
     }
     public static void ShutDownNotifications()
     {
-        Intent intent=new Intent(con,NotifyService.class);
+        /*Intent intent=new Intent(con,NotifyService.class);
         PendingIntent pendingintent;
         AlarmManager alarm=(AlarmManager)con.getSystemService(Context.ALARM_SERVICE);
         for (int k = 0; k < vClass.timeTable.size(); k++) {
@@ -86,7 +82,11 @@ public class settings extends AppCompatActivity {
 
                 }
             }
-        }
+        }*/
+        SharedPreferences shared=con.getSharedPreferences("cancelnotif",Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit=shared.edit();
+        edit.putBoolean("cancel_reset",false);
+        edit.apply();
     }
 
     public static void TurnOnNotification()
@@ -149,7 +149,10 @@ class turnOnNotifications extends AsyncTask<Void,Void,Void>
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        Toast.makeText(settings.con, "Notifications will be shown after you refresh ", Toast.LENGTH_LONG).show();
+        SharedPreferences shared=con.getSharedPreferences("cancelnotif",Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit=shared.edit();
+        edit.putBoolean("cancel_reset",true);
+        edit.apply();
         super.onPostExecute(aVoid);
     }
 }
