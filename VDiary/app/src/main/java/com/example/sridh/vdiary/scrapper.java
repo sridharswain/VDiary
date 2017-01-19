@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
@@ -92,8 +93,8 @@ public class scrapper extends AppCompatActivity {
             finish();
         }
         else{
+            setUp();// shift it after initWebViews
             initWebViews();
-            setUp();
             new compileInf().execute();
         }
     } //STARTS THE PROCESSING
@@ -103,7 +104,7 @@ public class scrapper extends AppCompatActivity {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view,url);
             String webTitle =web.getTitle();
-            if(webTitle.equals("") || webTitle.equals("Webpage not available")){
+            if(webTitle.equals("") || webTitle.equals("Webpage not available") || webTitle.equals("Web page not available")){
                 if(tryRefresh){
                     Toast.makeText(getApplicationContext(),"Connection Failed!",Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(scrapper.this,workSpace.class));
@@ -240,12 +241,12 @@ public class scrapper extends AppCompatActivity {
     } //SETS RELATIVE LAYOUT OF THE MAIN PAGE
 
     void initWebViews(){
-        web= new WebView(this);
+        web= (WebView)findViewById(R.id.web); //new WebView(this);
         web.getSettings().setDomStorageEnabled(true);
         web.getSettings().setJavaScriptEnabled(true);
         web.setWebViewClient(new loginClient());
         web.loadUrl("https://academicscc.vit.ac.in/student/stud_login.asp");
-        att= new WebView(this);
+        att= (WebView)findViewById(R.id.att); //new WebView(this);
         att.getSettings().setDomStorageEnabled(true);
         att.getSettings().setJavaScriptEnabled(true);
     } //INITIALIZE THE WEBVIEWS AND LAST LOADING THE LOGIN PAGE
@@ -486,7 +487,7 @@ public class scrapper extends AppCompatActivity {
                                         @Override
                                         public void onReceiveValue(String value) {
                                             vClass.fat = trim(value);
-                                            att.loadUrl("https://academicscc.vit.ac.in/student/attn_report.asp?sem=FS" + "&fmdt=" + vClass.semStart + "&todt=" + vClass.fat);
+                                            att.loadUrl("https://academicscc.vit.ac.in/student/attn_report.asp?sem="+vClass.SEM+"&fmdt=" + vClass.semStart + "&todt=" + vClass.fat);
                                         }
                                     });
                                 }
@@ -496,7 +497,7 @@ public class scrapper extends AppCompatActivity {
                 }
             });
         }
-        else if(att.getUrl().equals("https://academicscc.vit.ac.in/student/attn_report.asp?sem="+vClass.SEM + "&fmdt=" + vClass.semStart + "&todt=" + vClass.fat)){
+        else if(att.getUrl().toLowerCase().equals(("https://academicscc.vit.ac.in/student/attn_report.asp?sem="+vClass.SEM + "&fmdt=" + vClass.semStart + "&todt=" + vClass.fat).toLowerCase())){
             att.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows.length"), new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String value) {
@@ -790,7 +791,8 @@ public class scrapper extends AppCompatActivity {
 
     void showRetry(){
         load(true);
-        status.setText("Connection Failed!");reload.setVisibility(View.VISIBLE);
+        status.setText("Connection Failed!");
+        reload.setVisibility(View.VISIBLE);
         pb_loading.setVisibility(View.GONE);
     } //SHOW THE RETRY VIEW
     void getDimensions(){

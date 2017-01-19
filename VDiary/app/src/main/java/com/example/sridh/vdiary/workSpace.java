@@ -117,7 +117,7 @@ public class workSpace extends AppCompatActivity {
 
     void setToolbars() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.workspacetoptoolbar);
-        toolbar.setTitle("Workspace");
+        toolbar.setTitle("Zchedule");
         setSupportActionBar(toolbar);
         final ImageButton more= (ImageButton)findViewById(R.id.workspace_more);
         more.setOnClickListener(new View.OnClickListener() {

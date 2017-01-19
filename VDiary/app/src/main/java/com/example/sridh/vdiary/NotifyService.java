@@ -26,7 +26,8 @@ public class NotifyService extends WakefulBroadcastReceiver {
         String z=intent.getStringExtra("intent_chooser");
             Gson js = new Gson();
             notifholder = js.fromJson(intent.getStringExtra("one"), t);
-        if(notifholder.cal.compareTo(calendar)==0) {
+        Calendar notiCalendar= notifholder.cal;
+       if((notiCalendar.get(Calendar.DAY_OF_WEEK)==calendar.get(Calendar.DAY_OF_WEEK) && notiCalendar.get(Calendar.HOUR)== calendar.get(Calendar.HOUR))) {
             Notification_Creator notifcreator = new Notification_Creator(notifholder.title, notifholder.content, notifholder.ticker, context);
             Log.d("Notification", notifholder.title);
             notifcreator.create_notification();
