@@ -93,8 +93,8 @@ public class scrapper extends AppCompatActivity {
             finish();
         }
         else{
-            setUp();// shift it after initWebViews
             initWebViews();
+            setUp();
             new compileInf().execute();
         }
     } //STARTS THE PROCESSING
@@ -241,12 +241,12 @@ public class scrapper extends AppCompatActivity {
     } //SETS RELATIVE LAYOUT OF THE MAIN PAGE
 
     void initWebViews(){
-        web= (WebView)findViewById(R.id.web); //new WebView(this);
+        web=new WebView(this);
         web.getSettings().setDomStorageEnabled(true);
         web.getSettings().setJavaScriptEnabled(true);
         web.setWebViewClient(new loginClient());
         web.loadUrl("https://academicscc.vit.ac.in/student/stud_login.asp");
-        att= (WebView)findViewById(R.id.att); //new WebView(this);
+        att= new WebView(this);
         att.getSettings().setDomStorageEnabled(true);
         att.getSettings().setJavaScriptEnabled(true);
     } //INITIALIZE THE WEBVIEWS AND LAST LOADING THE LOGIN PAGE
