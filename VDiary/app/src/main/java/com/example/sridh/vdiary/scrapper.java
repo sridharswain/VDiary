@@ -71,7 +71,6 @@ public class scrapper extends AppCompatActivity {
     ImageButton toogle_showPassword;
     List<String> attList = new ArrayList<>();
     List<String> ctdList = new ArrayList<>();
-    String result=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -683,10 +682,12 @@ public class scrapper extends AppCompatActivity {
     } //SEARCH SUBJECT IN SUBJECT LIST
 
     void writeToPrefs(){
-
         SharedPreferences.Editor editor = getSharedPreferences("academicPrefs",MODE_PRIVATE).edit();
         editor.putString("allSub",jsonBuilder.toJson(vClass.subList));
         editor.putString("schedule",jsonBuilder.toJson(vClass.timeTable));
+        editor.commit();
+        editor =getSharedPreferences("isLoggedInPrefs",MODE_PRIVATE).edit();
+        editor.putBoolean("isLoggedIn",true);
         editor.commit();
     } //WRITE ACADEMIC CONTENT TO SHARED PREFERENCES
 

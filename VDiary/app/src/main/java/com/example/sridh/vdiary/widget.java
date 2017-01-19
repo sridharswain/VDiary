@@ -27,24 +27,28 @@ public class widget extends AppWidgetProvider {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
-            Calendar calendar= Calendar.getInstance();
-            RemoteViews views= new RemoteViews(context.getPackageName(),R.layout.widget);
-            String ocassion = readHolidayPrefs(context,calendar);
-            //updateAppWidget(context, appWidgetManager, apwidget_screenShotpWidgetId);
-            if((ocassion==null)) {
-                int today = calendar.get(Calendar.DAY_OF_WEEK);
-                if (today > 1 && today < 7) {
-                    Intent intent = new Intent(context, widgetService.class);
-                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-                    intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-                    views.setRemoteAdapter(R.id.widget_today, intent);
-                    views.setViewVisibility(R.id.widget_status, View.INVISIBLE);
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
+            if(isLoggedIn(context)) {
+                Calendar calendar = Calendar.getInstance();
+                String ocassion = readHolidayPrefs(context, calendar);
+                //updateAppWidget(context, appWidgetManager, apwidget_screenShotpWidgetId);
+                if ((ocassion == null)) {
+                    int today = calendar.get(Calendar.DAY_OF_WEEK);
+                    if (today > 1 && today < 7) {
+                        Intent intent = new Intent(context, widgetService.class);
+                        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+                        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+                        views.setRemoteAdapter(R.id.widget_today, intent);
+                        views.setViewVisibility(R.id.widget_status, View.INVISIBLE);
+                    } else {
+                        views.setTextViewText(R.id.widget_status, "No Classes Today :)");
+                    }
                 } else {
-                    views.setTextViewText(R.id.widget_status, "No Classes Today :)");
+                    views.setTextViewText(R.id.widget_status, ocassion);
                 }
             }
             else{
-                views.setTextViewText(R.id.widget_status,ocassion);
+                views.setTextViewText(R.id.widget_status, "Login to Zchedule to view today's schedule");
             }
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
@@ -76,10 +80,12 @@ public class widget extends AppWidgetProvider {
                 }
             }
         }
-        else{
-            return "Login to Zchedule to see today's schedule";
-        }
         return null;
+    }
+
+    boolean isLoggedIn(Context context){
+        SharedPreferences isLoggedIn = context.getSharedPreferences("isLoggedInPrefs",Context.MODE_PRIVATE);
+        return isLoggedIn.getBoolean("isLoggedIn",false);
     }
 }
 
