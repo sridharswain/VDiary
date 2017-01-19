@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/border_rowview_teacher">
+    android:padding="9dp"
+    android:background="@drawable/divider">
 
     <TextView
         android:layout_width="wrap_content"
@@ -11,15 +12,20 @@
         android:text="name"
         android:id="@+id/newname"
         android:textStyle="bold" />
-
+    <ImageButton
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/trash"
+        android:background="@android:color/transparent"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/del_teacher"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Cabin"
         android:id="@+id/newcabin"
-        android:layout_below="@+id/newname"
-        android:textStyle="bold" />
+        android:layout_below="@+id/newname"/>
 
     <TextView
         android:layout_width="wrap_content"

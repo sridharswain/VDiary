@@ -30,7 +30,7 @@ public class TutorialActivity extends AppCompatActivity {
     private LinearLayout dotsLayout;
     private TextView[] dots;
     private int[] layouts;
-    private Button btnSkip, btnNext;
+    private Button btnNext;
     Typeface chewy,oswald;
 
     @Override
@@ -56,7 +56,6 @@ public class TutorialActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tutorial);
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
-        btnSkip = (Button) findViewById(R.id.btn_skip);
         btnNext = (Button) findViewById(R.id.btn_next);
         chewy = Typeface.createFromAsset(getAssets(),"fonts/Chewy.ttf");
         oswald = Typeface.createFromAsset(getAssets(),"fonts/Oswald-Regular.ttf");
@@ -68,12 +67,6 @@ public class TutorialActivity extends AppCompatActivity {
                 R.layout.tutorial_slide_5,
                 R.layout.tutorial_slide_6,};
         addBottomDots(0);
-        btnSkip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                launchScrapper();
-            }
-        });
 
 
         btnNext.setOnClickListener(new View.OnClickListener() {
@@ -105,10 +98,8 @@ public class TutorialActivity extends AppCompatActivity {
 
                 if (position == layouts.length - 1) {
                     btnNext.setText(getString(R.string.start));
-                    btnSkip.setVisibility(View.GONE);
                 } else {
                     btnNext.setText(getString(R.string.next));
-                    btnSkip.setVisibility(View.VISIBLE);
                 }
             }
 

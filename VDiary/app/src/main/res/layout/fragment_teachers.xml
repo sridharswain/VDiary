@@ -24,7 +24,6 @@
         android:drawSelectorOnTop="true"
         android:stackFromBottom="false"
         android:contextClickable="false"
-        android:dividerHeight="1dp"
         android:choiceMode="singleChoice"
         android:background="@android:color/white"/>
     <android.support.design.widget.FloatingActionButton

@@ -211,31 +211,6 @@ public class workSpace extends AppCompatActivity {
                             showCabinAlertDialog(mad);
                         }
                     });
-                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                            final AlertDialog.Builder build = new AlertDialog.Builder(context);
-                            final AlertDialog aler;
-                            final LinearLayout lin = new LinearLayout(context);
-                            lin.setOrientation(LinearLayout.HORIZONTAL);
-                            final Button delete = new Button(context);
-                            delete.setText("Delete");
-                            lin.addView(delete);
-                            build.setView(lin);
-                            aler = build.create();
-                            aler.show();
-                            delete.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    vClass.cablist.remove(position);
-                                    mad.updatecontent(vClass.cablist);
-                                    aler.cancel();
-                                    writeCabListToPrefs();
-
-                                }
-                            });
-                        }
-                    });
                     break;
                 case 0:
                     rootView = inflater.inflate(R.layout.fragment_courses, container, false);
@@ -479,7 +454,7 @@ public class workSpace extends AppCompatActivity {
             }
         }
 
-        int[] colors = new int[]{R.color.tufts_blue,R.color.sunflower, R.color.nephritis, R.color.belize, R.color.green_cyan, R.color.amethyst, R.color.pomegranate};
+        int[] colors = new int[]{R.color.tufts_blue,R.color.sunflower, R.color.nephritis, R.color.green_cyan, R.color.amethyst, R.color.pomegranate};
 
         View getTaskView(final int index) {
             final Notification_Holder cTask = vClass.notes.get(index);

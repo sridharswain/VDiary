@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -49,7 +50,7 @@ class listAdapter_teachers extends BaseAdapter// LIST ADAPTER FOR CABIN VIEW
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         view=inflater.inflate(R.layout.rowview_cabin,null);
         Holder holder=new Holder();
         //Initializing
@@ -60,7 +61,14 @@ class listAdapter_teachers extends BaseAdapter// LIST ADAPTER FOR CABIN VIEW
         holder.name.setText(cab.get(position).name);
         holder.cabin.setText(cab.get(position).cabin);
         holder.others.setText(cab.get(position).others);
-
+        ((ImageView)view.findViewById(R.id.del_teacher)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                vClass.cablist.remove(position);
+                updatecontent(vClass.cablist);
+                workSpace.writeCabListToPrefs();
+            }
+        });
         return view;
     }
 

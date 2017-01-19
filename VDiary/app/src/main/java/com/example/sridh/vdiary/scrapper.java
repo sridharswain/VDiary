@@ -668,7 +668,6 @@ public class scrapper extends AppCompatActivity {
         SharedPreferences academicPrefs= getSharedPreferences("academicPrefs",MODE_PRIVATE);
         String allSubJson=academicPrefs.getString("allSub",null);
         String scheduleJson =academicPrefs.getString("schedule",null);
-        String taskJson= academicPrefs.getString("tasks",null);
         SharedPreferences teacherPrefs=getSharedPreferences("teacherPrefs",MODE_PRIVATE);
         String teachers =teacherPrefs.getString("teachers",null);
         SharedPreferences holidayPrefs= getSharedPreferences("holidayPrefs",MODE_PRIVATE);
@@ -676,6 +675,9 @@ public class scrapper extends AppCompatActivity {
         String customTeachers=teacherPrefs.getString("customTeachers",null);
         if(customTeachers!=null){
             vClass.cablist=jsonBuilder.fromJson(customTeachers,new TypeToken<List<Cabin_Details>>(){}.getType());
+        }
+        if(teachers!=null){
+            vClass.teachers = jsonBuilder.fromJson(teachers,new TypeToken<List<teacher>>(){}.getType());
         }
         if(holidays!=null){
             vClass.holidays=jsonBuilder.fromJson(holidays,new TypeToken<List<holiday>>(){}.getType());
