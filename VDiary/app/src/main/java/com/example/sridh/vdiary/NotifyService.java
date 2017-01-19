@@ -24,42 +24,50 @@ public class NotifyService extends WakefulBroadcastReceiver {
         SharedPreferences shared=context.getSharedPreferences("cancelnotif",Context.MODE_PRIVATE);
         boolean yes_no=shared.getBoolean("cancel_reset",true);
         boolean holiday=shared.getBoolean("holiday",false);
+        String fuck="false";
 
-        SharedPreferences sharedPreferences=context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE);
-        String cocky=sharedPreferences.getString("holidays","");
-        if(cocky.equals("")==false) {
-            Gson jesson = new Gson();
-            Type type = new TypeToken<List<holiday>>() {
-            }.getType();
-            vClass.holidays = jesson.fromJson(cocky, type);
-        }
 
-        Calendar today=Calendar.getInstance();
-        for(int i=0;i<vClass.holidays.size();i++)
-        {
-            holiday h=vClass.holidays.get(i);
-            if(h.date.get(Calendar.DAY_OF_MONTH)==today.get(Calendar.DAY_OF_MONTH) && h.date.get(Calendar.MONTH)==today.get(Calendar.MONTH) && h.date.get(Calendar.YEAR)==today.get(Calendar.YEAR))
-            {
-                holiday=true;
-                SharedPreferences.Editor editor=shared.edit();
-                editor.putBoolean("holiday",true);
-                editor.apply();
-                break;
+
+
+
+        Calendar calendar=Calendar.getInstance();
+        SharedPreferences holidayPrefs= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE);
+        String holidayJson = holidayPrefs.getString("holidays",null);
+
+
+
+        if(holidayJson!=null){
+            List<holiday> holidays= (new Gson()).fromJson(holidayJson,new TypeToken<List<holiday>>(){}.getType());
+            for (holiday h :holidays){
+                Calendar dateString =h.date;
+                int day = dateString.get(Calendar.DAY_OF_MONTH);
+                int month =dateString.get(Calendar.MONTH);
+                int year =dateString.get(Calendar.YEAR);
+                if(calendar.get(Calendar.DAY_OF_MONTH)==day && calendar.get(Calendar.MONTH)+1==month && calendar.get(Calendar.YEAR)==year){
+                    holiday=true;
+                    SharedPreferences.Editor edit=shared.edit();
+                    edit.putBoolean("holiday",true);
+                    edit.apply();
+                    fuck="true";
+                    break;
+                }
             }
         }
 
+        Log.d("tagthemotherfucker",fuck);
 
 
 
 
-        Calendar calendar = Calendar.getInstance();
+
+        Calendar cal = Calendar.getInstance();
         Notification_Holder notifholder;
         Type t=new TypeToken<Notification_Holder>(){}.getType();
         String z=intent.getStringExtra("intent_chooser");
             Gson js = new Gson();
             notifholder = js.fromJson(intent.getStringExtra("one"), t);
         Calendar notiCalendar= notifholder.cal;
-       if((notiCalendar.get(Calendar.DAY_OF_WEEK)==calendar.get(Calendar.DAY_OF_WEEK) && notiCalendar.get(Calendar.HOUR_OF_DAY)>= calendar.get(Calendar.HOUR_OF_DAY) && yes_no && holiday)) {
+       if((notiCalendar.get(Calendar.DAY_OF_WEEK)==cal.get(Calendar.DAY_OF_WEEK) && notiCalendar.get(Calendar.HOUR_OF_DAY)>= cal.get(Calendar.HOUR_OF_DAY) && yes_no && !holiday)) {
             Notification_Creator notifcreator = new Notification_Creator(notifholder.title, notifholder.content, notifholder.ticker, context);
             notifcreator.create_notification();
         }
