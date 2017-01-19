@@ -54,7 +54,6 @@ public class NotifyService extends WakefulBroadcastReceiver {
             }
         }
 
-        Log.d("tagthemotherfucker",fuck);
 
 
 
@@ -66,9 +65,10 @@ public class NotifyService extends WakefulBroadcastReceiver {
         String z=intent.getStringExtra("intent_chooser");
             Gson js = new Gson();
             notifholder = js.fromJson(intent.getStringExtra("one"), t);
+        Log.d("tagthem1",notifholder.title+"   "+notifholder.cal.get(Calendar.HOUR)+"    "+notifholder.id);
         Calendar notiCalendar= notifholder.cal;
-       if((notiCalendar.get(Calendar.DAY_OF_WEEK)==cal.get(Calendar.DAY_OF_WEEK) && notiCalendar.get(Calendar.HOUR_OF_DAY)>= cal.get(Calendar.HOUR_OF_DAY) && yes_no && !holiday)) {
-            Notification_Creator notifcreator = new Notification_Creator(notifholder.title, notifholder.content, notifholder.ticker, context);
+       if((notiCalendar.get(Calendar.DAY_OF_WEEK)==cal.get(Calendar.DAY_OF_WEEK) && notiCalendar.get(Calendar.HOUR_OF_DAY)>= cal.get(Calendar.HOUR_OF_DAY) && yes_no /*&& !holiday*/)) {
+           Notification_Creator notifcreator = new Notification_Creator(notifholder.title, notifholder.content, notifholder.ticker, context);
             notifcreator.create_notification();
         }
     }
