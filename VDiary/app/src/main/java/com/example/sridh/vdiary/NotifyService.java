@@ -29,7 +29,6 @@ public class NotifyService extends WakefulBroadcastReceiver {
         Calendar notiCalendar= notifholder.cal;
        if((notiCalendar.get(Calendar.DAY_OF_WEEK)==calendar.get(Calendar.DAY_OF_WEEK) && notiCalendar.get(Calendar.HOUR)== calendar.get(Calendar.HOUR))) {
             Notification_Creator notifcreator = new Notification_Creator(notifholder.title, notifholder.content, notifholder.ticker, context);
-            Log.d("Notification", notifholder.title);
             notifcreator.create_notification();
         }
     }

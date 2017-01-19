@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
@@ -43,6 +42,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+
+
 public class scrapper extends AppCompatActivity {
 
     //for Notifications
@@ -55,22 +56,22 @@ public class scrapper extends AppCompatActivity {
     //END
 
     EditText regBox,passBox,captchaBox;
-    WebView web,att;
+    WebView loginWebView,att,schedule;
     ImageView captcha;
     CheckBox cb;
     TextView status;
     RelativeLayout loginView,loadView;
     FloatingActionButton reload,login;
-    boolean gotAttendance=false;
-    boolean gotSchedule=false;
     boolean attendanceStatus=true;
     boolean isPasswordShown=false;
+    boolean loggedIn=false;
     Gson jsonBuilder = new Gson();
     static boolean tryRefresh=false;
     ProgressBar pb_loading;
     ImageButton toogle_showPassword;
     List<String> attList = new ArrayList<>();
     List<String> ctdList = new ArrayList<>();
+    String result=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,53 +95,47 @@ public class scrapper extends AppCompatActivity {
         }
         else{
             initWebViews();
-            setUp();
-            new compileInf().execute();
+            setUp(); //after intwebview
+            //new compileInf().execute();
+            //new checkBooleans().execute();
         }
     } //STARTS THE PROCESSING
 
     private class loginClient extends WebViewClient{
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            if(url.equals("https://academicscc.vit.ac.in/student/home.asp")){
+                loggedIn=true;
+                new waitForLogIn().execute();
+                loginWebView.stopLoading();
+            }
+        }
+
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view,url);
-            String webTitle =web.getTitle();
-            if(webTitle.equals("") || webTitle.equals("Webpage not available") || webTitle.equals("Web page not available")){
-                if(tryRefresh){
-                    Toast.makeText(getApplicationContext(),"Connection Failed!",Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(scrapper.this,workSpace.class));
-                    finish();
-                }
-                else{
-                    status.setText("Connection Failed!");
-                    showRetry();
-                }
-            }
-            else if(web.getUrl().equals("https://academicscc.vit.ac.in/student/stud_login.asp")) {
-                web.evaluateJavascript(getcmd("return document.getElementsByName(\"message\")[0].value"), new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String message) {
-                        if (!message.equals("\"\"") & !message.equals("null")) {
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                            captchaBox.setText("");
+            if(!loggedIn) {
+                if (webNotConnected(loginWebView.getTitle())) {
+                } else if (loginWebView.getUrl().equals("https://academicscc.vit.ac.in/student/stud_login.asp")) {
+                    loginWebView.evaluateJavascript(getcmd("return document.getElementsByName(\"message\")[0].value"), new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String message) {
+                            if (!message.equals("\"\"") & !message.equals("null")) {
+                                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                                captchaBox.setText("");
+                            }
                         }
-                    }
-                });
-                String getCaptcha = getcmd("var img= document.getElementById('imgCaptcha'); var canvas = document.createElement('canvas'); canvas.width = img.naturalWidth; canvas.height = img.naturalHeight; canvas.getContext('2d').drawImage(img, 0, 0); return canvas.toDataURL('image/png').replace(/^data:image\\/(png|jpg);base64,/, '');");
-                web.evaluateJavascript(getCaptcha, new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String captchaString) {
-                        setCaptcha(captchaString);
-                    }
-                });
-            }
-            else{
-                getTeacherCabins();
-                //getHolidays(database,context);
-                status.setText("Fetching Courses...");
-                web.setWebViewClient(new scheduleClient());
-                web.loadUrl("https://academicscc.vit.ac.in/student/course_regular.asp?sem="+vClass.SEM);
-                att.setWebViewClient(new attendanceClient());
-                att.loadUrl("https://academicscc.vit.ac.in/student/attn_report.asp?sem="+vClass.SEM);
+                    });
+                    String getCaptcha = getcmd("var img= document.getElementById('imgCaptcha'); var canvas = document.createElement('canvas'); canvas.width = img.naturalWidth; canvas.height = img.naturalHeight; canvas.getContext('2d').drawImage(img, 0, 0); return canvas.toDataURL('image/png').replace(/^data:image\\/(png|jpg);base64,/, '');");
+                    loginWebView.evaluateJavascript(getCaptcha, new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String captchaString) {
+                            setCaptcha(captchaString);
+                        }
+                    });
+                }
             }
         }
 
@@ -152,13 +147,33 @@ public class scrapper extends AppCompatActivity {
 
     } // WEBVIEWCLIENT TO CONTROL LOGIN PAGE
 
+    boolean webNotConnected(String webTitle) {
+        if (webTitle.equals("") || webTitle.equals("Webpage not available") || webTitle.equals("Web page not available")) {
+            if (tryRefresh) {
+                Toast.makeText(getApplicationContext(), "Connection Failed!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(scrapper.this, workSpace.class));
+                finish();
+            } else {
+                status.setText("Connection Failed!");
+                showRetry();
+            }
+            return true;
+        }
+        return false;
+    }
+
     private class scheduleClient extends WebViewClient{
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             vClass.subList.clear();
             vClass.timeTable.clear();
-            getFormTable1();
+            try{
+                getFormTable1();
+            }
+            catch (Exception e){
+                new waitForLogIn().execute();
+            }
         }
 
         @Override
@@ -212,11 +227,12 @@ public class scrapper extends AppCompatActivity {
         reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                web.setWebViewClient(new loginClient());
-                web.loadUrl("https://academicscc.vit.ac.in/student/stud_login.asp");
+                loginWebView.setWebViewClient(new loginClient());
+                loginWebView.loadUrl("https://academicscc.vit.ac.in/student/stud_login.asp");
                 status.setText("Building Captcha...");
                 reload.setVisibility(View.INVISIBLE);
                 pb_loading.setVisibility(View.VISIBLE);
+                loggedIn=false;
             }
         });
         login.setOnClickListener(new View.OnClickListener() {
@@ -224,6 +240,7 @@ public class scrapper extends AppCompatActivity {
             public void onClick(View view) {
                 placeCreds();
                 load(true);
+
                 status.setText("Logging In...");
                 if(cb.isChecked()) saveCreds();
                 else delCreds();
@@ -241,19 +258,22 @@ public class scrapper extends AppCompatActivity {
     } //SETS RELATIVE LAYOUT OF THE MAIN PAGE
 
     void initWebViews(){
-        web=new WebView(this);
-        web.getSettings().setDomStorageEnabled(true);
-        web.getSettings().setJavaScriptEnabled(true);
-        web.setWebViewClient(new loginClient());
-        web.loadUrl("https://academicscc.vit.ac.in/student/stud_login.asp");
-        att= new WebView(this);
+        loginWebView =new WebView(this);
+        schedule=new WebView(this);//new WebView(this);
+        schedule.getSettings().setDomStorageEnabled(true);
+        schedule.getSettings().setJavaScriptEnabled(true);
+        loginWebView.getSettings().setDomStorageEnabled(true);
+        loginWebView.getSettings().setJavaScriptEnabled(true);
+        loginWebView.setWebViewClient(new loginClient());
+        loginWebView.loadUrl("https://academicscc.vit.ac.in/student/stud_login.asp");
+        att= new WebView(this);//new WebView(this);
         att.getSettings().setDomStorageEnabled(true);
         att.getSettings().setJavaScriptEnabled(true);
     } //INITIALIZE THE WEBVIEWS AND LAST LOADING THE LOGIN PAGE
 
     private void placeCreds(){
                 String input="document.getElementsByName(\"regno\")[0].value=\""+regBox.getText().toString()+"\"; document.getElementsByName(\"passwd\")[0].value=\""+passBox.getText()+"\"; document.getElementsByName(\"vrfcd\")[0].value=\""+captchaBox.getText()+"\"; document.forms[0].submit();";
-                web.evaluateJavascript(getcmd(input), new ValueCallback<String>() {
+                loginWebView.evaluateJavascript(getcmd(input), new ValueCallback<String>() {
                     @Override
                     public void onReceiveValue(String value) {
                         //CREDENTIALS ARE PLACED ON THEIR RESPECTIVE PLACES AND THE FORM IS SUBMITTED
@@ -285,115 +305,120 @@ public class scrapper extends AppCompatActivity {
         return str.substring(0,str.indexOf("\""));
     } //TRIMS THE GIVEN RESULT FROM JAVASCRIPT TO REMOVE QUOTES
 
-    private void getFormTable1(){
-        web.evaluateJavascript(getcmd("var rows=document.getElementsByTagName('table')[1].rows;var c;for(c=0;c<rows.length;c++){if(rows[c].cells.length==15){rows[c].deleteCell(0)}}"), new ValueCallback<String>() {
-            @Override
-            public void onReceiveValue(String value) {
-                web.evaluateJavascript("var rows=document.getElementsByTagName('table')[1].rows;var c;for(c=0;c<rows.length;c++){if(rows[c].cells.length==14){rows[c].deleteCell(0)}}", new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String value) {
-                        web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows.length.toString()"), new ValueCallback<String>() {
-                            @Override
-                            public void onReceiveValue(String value) {
-                                int rows=Integer.parseInt(trim(value));
-                                for(int row=1;row<rows-2;row++){
-                                    final int rowa=row;
-                                    web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + row + "].cells[8].innerText.toString()"), new ValueCallback<String>() {
-                                        @Override
-                                        public void onReceiveValue(String value) {
-                                            final String room=trim(value);
-                                            if(!room.equals("NIL")){
-                                                final subject sub= new subject();
-                                                //ROOM
-                                                sub.room=room;
-                                                //CODE
-                                                web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[1].innerText.toString()"), new ValueCallback<String>() {
-                                                    @Override
-                                                    public void onReceiveValue(String code) {
-                                                        sub.code=trim(code);
-                                                    }
-                                                });
-                                                //NAME
-                                                web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[2].innerText.toString()"), new ValueCallback<String>() {
-                                                    @Override
-                                                    public void onReceiveValue(String name) {
-                                                        sub.title=trim(name);
-                                                    }
-                                                });
-                                                //TEACHER
-                                                web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[9].innerText.toString()"), new ValueCallback<String>() {
-                                                    @Override
-                                                    public void onReceiveValue(String teacher) {
-                                                        String rawTeacher= trim(teacher).split("-")[0];
-                                                        sub.teacher=rawTeacher.substring(0,rawTeacher.length()-1);
-                                                    }
-                                                });
-                                                //TYPE
-                                                web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[3].innerText.toString()"), new ValueCallback<String>() {
-                                                    @Override
-                                                    public void onReceiveValue(String rawtype) {
-                                                        String type=trim(rawtype);
-                                                        switch (type)
-                                                        {
-                                                            case "Embedded Theory":
-                                                                sub.type = "ETH";
-                                                                break;
-                                                            case "Theory Only":
-                                                                sub.type = "TH";
-                                                                break;
-                                                            case "Lab Only":
-                                                                sub.type = "LO";
-                                                                break;
-                                                            case "Embedded Lab":
-                                                                sub.type = "ELA";
-                                                                break;
-                                                            case "Soft Skill":
-                                                                sub.type = "SS";
-                                                                break;
+    private void getFormTable1() throws Exception{
+        if(schedule.getUrl().equals("https://academicscc.vit.ac.in/student/course_regular.asp?sem="+vClass.SEM)) {
+            schedule.evaluateJavascript(getcmd("var rows=document.getElementsByTagName('table')[1].rows;var c;for(c=0;c<rows.length;c++){if(rows[c].cells.length==15){rows[c].deleteCell(0)}}"), new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String value) {
+                    schedule.evaluateJavascript("var rows=document.getElementsByTagName('table')[1].rows;var c;for(c=0;c<rows.length;c++){if(rows[c].cells.length==14){rows[c].deleteCell(0)}}", new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String value) {
+                            schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows.length.toString()"), new ValueCallback<String>() {
+                                @Override
+                                public void onReceiveValue(String value) {
+                                    int rows = Integer.parseInt(trim(value));
+                                    for (int row = 1; row < rows - 2; row++) {
+                                        final int rowa = row;
+                                        schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + row + "].cells[8].innerText.toString()"), new ValueCallback<String>() {
+                                            @Override
+                                            public void onReceiveValue(String value) {
+                                                final String room = trim(value);
+                                                if (!room.equals("NIL")) {
+                                                    final subject sub = new subject();
+                                                    //ROOM
+                                                    sub.room = room;
+                                                    //CODE
+                                                    schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[1].innerText.toString()"), new ValueCallback<String>() {
+                                                        @Override
+                                                        public void onReceiveValue(String code) {
+                                                            sub.code = trim(code);
                                                         }
-                                                    }
-                                                });
-                                                vClass.subList.add(sub);
+                                                    });
+                                                    //NAME
+                                                    schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[2].innerText.toString()"), new ValueCallback<String>() {
+                                                        @Override
+                                                        public void onReceiveValue(String name) {
+                                                            sub.title = trim(name);
+                                                        }
+                                                    });
+                                                    //TEACHER
+                                                    schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[9].innerText.toString()"), new ValueCallback<String>() {
+                                                        @Override
+                                                        public void onReceiveValue(String teacher) {
+                                                            String rawTeacher = trim(teacher).split("-")[0];
+                                                            sub.teacher = rawTeacher.substring(0, rawTeacher.length() - 1);
+                                                        }
+                                                    });
+                                                    //TYPE
+                                                    schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[3].innerText.toString()"), new ValueCallback<String>() {
+                                                        @Override
+                                                        public void onReceiveValue(String rawtype) {
+                                                            String type = trim(rawtype);
+                                                            switch (type) {
+                                                                case "Embedded Theory":
+                                                                    sub.type = "ETH";
+                                                                    break;
+                                                                case "Theory Only":
+                                                                    sub.type = "TH";
+                                                                    break;
+                                                                case "Lab Only":
+                                                                    sub.type = "LO";
+                                                                    break;
+                                                                case "Embedded Lab":
+                                                                    sub.type = "ELA";
+                                                                    break;
+                                                                case "Soft Skill":
+                                                                    sub.type = "SS";
+                                                                    break;
+                                                            }
+                                                        }
+                                                    });
+                                                    vClass.subList.add(sub);
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+                                    }
                                 }
-                            }
-                        });
-                    }
-                });
-            }
-        });
-        getFromTable2();
+                            });
+                        }
+                    });
+                }
+            });
+            getFromTable2();
+        }
+        else {
+            new waitForLogIn().execute();
+        }
     } //GET DATA FROM ALL COURSES
 
     private void getFromTable2(){
-        web.evaluateJavascript(getcmd("document.getElementsByTagName('table')[2].rows[0].deleteCell(7);"), new ValueCallback<String>() {
+        schedule.evaluateJavascript(getcmd("document.getElementsByTagName('table')[2].rows[0].deleteCell(7);"), new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
                 //LUNCH DELETED
                 for(int rowa=2;rowa<=6;rowa++){
                     final int row=rowa;
                     final List<subject> today= new ArrayList<subject>();
-                    web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[" + row + "].cells.length.toString()"), new ValueCallback<String>() {
+                    schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[" + row + "].cells.length.toString()"), new ValueCallback<String>() {
                         @Override
                         public void onReceiveValue(String rawCols) {
+                            //Toast.makeText(scrapper.this, rawCols, Toast.LENGTH_SHORT).show();
                             final int cols=Integer.parseInt(trim(rawCols));
                             final AtomicReference extraTime = new AtomicReference(0);
                             for(int col=1;col<cols;col++){
                                 final int cell=col;
-                                web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[" + row + "].cells[" + cell + "].colSpan.toString()"), new ValueCallback<String>() {
+                                schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[" + row + "].cells[" + cell + "].colSpan.toString()"), new ValueCallback<String>() {
                                     @Override
                                     public void onReceiveValue(String value) {
                                         int rawcolSpan=Integer.parseInt(trim(value));
                                         if(rawcolSpan>1) {
                                             extraTime.set(rawcolSpan - 1);
                                         }
-                                        web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[" + row + "].cells['" + cell + "'].bgColor"), new ValueCallback<String>() {
+                                        schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[" + row + "].cells['" + cell + "'].bgColor"), new ValueCallback<String>() {
                                             @Override
                                             public void onReceiveValue(String color) {
                                                 final String cellColor = trim(color);
-                                                web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[" + row + "].cells[" + cell + "].innerText.toString()"), new ValueCallback<String>() {
+                                                schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[" + row + "].cells[" + cell + "].innerText.toString()"), new ValueCallback<String>() {
                                                     @Override
                                                     public void onReceiveValue(String value) {
                                                         String text= trim(value);
@@ -405,7 +430,7 @@ public class scrapper extends AppCompatActivity {
                                                             sub.type = type;
                                                             //TIME
                                                             if (type.equals("ETH") || type.equals("SS") || type.equals("TH")) {
-                                                                web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[0].cells[" + (cell + Integer.parseInt(String.valueOf(extraTime.get()))) + "].innerText.toString()"), new ValueCallback<String>() {
+                                                                schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[0].cells[" + (cell + Integer.parseInt(String.valueOf(extraTime.get()))) + "].innerText.toString()"), new ValueCallback<String>() {
                                                                     @Override
                                                                     public void onReceiveValue(String value) {
                                                                         String time = trim(value);
@@ -416,13 +441,13 @@ public class scrapper extends AppCompatActivity {
                                                                 });
                                                             }
                                                             else {
-                                                                web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[1].cells[" + (cell + Integer.parseInt(String.valueOf(extraTime.get()))) + "].innerText.toString()"), new ValueCallback<String>() {
+                                                                schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[1].cells[" + (cell + Integer.parseInt(String.valueOf(extraTime.get()))) + "].innerText.toString()"), new ValueCallback<String>() {
                                                                     @Override
                                                                     public void onReceiveValue(String value) {
                                                                         String rawstime = trim(value);
                                                                         String sTime = rawstime.substring(0, 8);
                                                                         final AtomicReference<String> time = new AtomicReference<String>(sTime);
-                                                                        web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[1].cells[" + (cell + 1 + Integer.parseInt(String.valueOf(extraTime.get()))) + "].innerText.toString()"), new ValueCallback<String>() {
+                                                                        schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[1].cells[" + (cell + 1 + Integer.parseInt(String.valueOf(extraTime.get()))) + "].innerText.toString()"), new ValueCallback<String>() {
                                                                             @Override
                                                                             public void onReceiveValue(String value) {
                                                                                 String rawetime = trim(value);
@@ -441,7 +466,7 @@ public class scrapper extends AppCompatActivity {
                                                             sub.title=text;
                                                             sub.type="";
                                                             sub.room="";
-                                                            web.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[1].cells[" + (cell + Integer.parseInt(String.valueOf(extraTime.get()))) +"].innerText.toString()"), new ValueCallback<String>() {
+                                                            schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[1].cells[" + (cell + Integer.parseInt(String.valueOf(extraTime.get()))) +"].innerText.toString()"), new ValueCallback<String>() {
                                                                 @Override
                                                                 public void onReceiveValue(String value) {
                                                                     String time=trim(value);
@@ -454,7 +479,8 @@ public class scrapper extends AppCompatActivity {
                                                     }
                                                 });
                                                 if(row==6 && cell==cols-1){
-                                                    gotSchedule=true;
+                                                    att.setWebViewClient(new attendanceClient());
+                                                    att.loadUrl("https://academicscc.vit.ac.in/student/attn_report.asp?sem="+vClass.SEM);
                                                 }
                                             }
                                         });
@@ -513,8 +539,7 @@ public class scrapper extends AppCompatActivity {
                                     public void onReceiveValue(String value) {
                                         ctdList.add(trim(value));
                                         if (j == rows - 1) {
-                                            status.setText("Merging Attendance...");
-                                            gotAttendance = true;
+                                            new compileInf().execute();
                                         }
                                     }
                                 });
@@ -531,22 +556,14 @@ public class scrapper extends AppCompatActivity {
 
     class compileInf extends AsyncTask<Void,Void,Void>{
         @Override
-        protected Void doInBackground(Void... params) {
-            while(!gotAttendance && !gotSchedule){}
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            //SCRAPING COMPLETE
-            return null;
+        protected void onPreExecute() {
+            status.setText("Summarizing Views...");
+            super.onPreExecute();
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            try {
-                status.setText("Summarizing Views...");
+        protected Void doInBackground(Void... params) {
+            try{
                 if (attendanceStatus) {
                     for (int i = 0; i < vClass.subList.size(); i++) {
                         vClass.subList.get(i).ctd = Integer.parseInt(ctdList.get(i));
@@ -570,10 +587,21 @@ public class scrapper extends AppCompatActivity {
                                 i.remove(count + 1);
                                 placeCorrectly(i.get(count), i);
                             }
-                            //Log.d("Subject",i.get(count).code+" "+" "+ i.get(count).title+" "+i.get(count).teacher+" "+i.get(count).attString+" "+i.get(count).time);
                         }
                     }
                 }
+                writeToPrefs();
+            }
+            catch (Exception e){
+                showRetry();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            try {
                 SharedPreferences settingprefs=getSharedPreferences(settings.SETTING_PREFS_NAME,Context.MODE_PRIVATE);
                 if (settingprefs.getBoolean(settings.SHOW_NOTIF_KEY,true)) {
                     //Sparsha code starts from here to schedule notifications for the timetable class
@@ -615,6 +643,7 @@ public class scrapper extends AppCompatActivity {
                 }
             }
             catch (Exception e){
+                e.printStackTrace();
                 showRetry();
                 status.setText("Slow Connection!");
                 return;
@@ -638,7 +667,6 @@ public class scrapper extends AppCompatActivity {
             String last_ref=calendar.get(Calendar.DATE)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ "  "+ hr+":"+min;
             editor.putString("last_ref",last_ref);
             editor.apply();
-            writeToPrefs();
             startActivity(new Intent(scrapper.this,workSpace.class));
             overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
             finish();
@@ -791,11 +819,34 @@ public class scrapper extends AppCompatActivity {
         status.setText("Connection Failed!");
         reload.setVisibility(View.VISIBLE);
         pb_loading.setVisibility(View.GONE);
+        captchaBox.setText("");
     } //SHOW THE RETRY VIEW
     void getDimensions(){
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         vClass.width=dm.widthPixels;
         vClass.height=dm.heightPixels;
+    }
+
+    class waitForLogIn extends AsyncTask<Void,Void,Void>{
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            status.setText("Fetching Courses...");
+            schedule.setWebViewClient(new scheduleClient());
+            schedule.loadUrl("https://academicscc.vit.ac.in/student/course_regular.asp?sem="+vClass.SEM);
+            getTeacherCabins();
+            //Toast.makeText(scrapper.this, "waitForLogin", Toast.LENGTH_SHORT).show();
+            super.onPostExecute(aVoid);
+        }
     }
 }

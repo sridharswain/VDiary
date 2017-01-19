@@ -140,6 +140,5 @@
             android:src="@drawable/refresh"
             android:visibility="invisible"
             app:backgroundTint="@color/colorPrimaryDark" />
-
     </RelativeLayout>
 </RelativeLayout>
