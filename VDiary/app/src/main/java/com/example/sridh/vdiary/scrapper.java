@@ -620,10 +620,9 @@ public class scrapper extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
-            SharedPreferences so=context.getSharedPreferences("cancelprefs",Context.MODE_PRIVATE);
+            /*SharedPreferences so=context.getSharedPreferences("cancelprefs",Context.MODE_PRIVATE);
             if(so.getBoolean("log",false)) {
-                List<List<subject>> temp=new Gson().fromJson(getSharedPreferences("academicPrefs",Context.MODE_PRIVATE).getString("schedule",""),new TypeToken<List<List<subject>>>(){}.getType());
+                List<List<subject>> temp=vClass.timeTable;//new Gson().fromJson(getSharedPreferences("academicPrefs",Context.MODE_PRIVATE).getString("schedule",""),new TypeToken<List<List<subject>>>(){}.getType());
                 Intent intent = new Intent(context, NotifyService.class);
                 PendingIntent pendingintent;
                 AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -645,13 +644,6 @@ public class scrapper extends AppCompatActivity {
             ef.putBoolean("log",true);
             ef.apply();
 
-
-
-
-
-
-
-            try {
                 SharedPreferences settingprefs=getSharedPreferences(settings.SETTING_PREFS_NAME,Context.MODE_PRIVATE);
                 if (settingprefs.getBoolean(settings.SHOW_NOTIF_KEY,true)) {
                     //Sparsha code starts from here to schedule notifications for the timetable class
@@ -692,18 +684,11 @@ public class scrapper extends AppCompatActivity {
                         }
                     }
                 }
-                n_id=0;
-            }
-            catch (Exception e){
-                e.printStackTrace();
-                showRetry();
-                status.setText("Slow Connection!");
-                return;
-            }
+                n_id=0;*/
 
 
 
-
+            createNotification();
             Calendar calendar=Calendar.getInstance();
             String hr,min;
             if(calendar.get(Calendar.HOUR_OF_DAY)<10)
@@ -724,6 +709,42 @@ public class scrapper extends AppCompatActivity {
             finish();
         }
     } //REARRANGE THE INFORMATION SCRAPPED FORM THE WEBPAGE
+
+    void createNotification(){
+        SharedPreferences noticationPrefs= getSharedPreferences("notificationPrefs",MODE_PRIVATE);
+        SharedPreferences.Editor notificationPrefsEditor= noticationPrefs.edit();
+        int day=2;
+        int notificationCode=0;
+        for(List<subject> today: vClass.timeTable){
+            for (subject sub : today){
+                if(!sub.type.equals("")){
+                    AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                    Intent toNotifyService = new Intent(scrapper.this,NotifyService.class);
+                    Calendar calendar = Calendar.getInstance();
+                    int startHour,startMin,AMPM;
+                    startHour=Integer.parseInt(sub.startTime.substring(0, 2));
+                    startMin=Integer.parseInt(sub.startTime.substring(3, 5));
+                    String meridian = sub.startTime.substring(6);
+
+                    if (meridian.equals("AM")) AMPM = 0;
+                    else AMPM = 1;
+
+                    calendar.set(Calendar.HOUR,startHour);
+                    calendar.set(Calendar.MINUTE,startMin);
+                    calendar.set(Calendar.AM_PM,AMPM);
+                    calendar.set(Calendar.DAY_OF_WEEK,day);
+
+                    Notification_Holder newNotification =  new Notification_Holder(calendar,sub.title,sub.room,"Upcoming class in 5 minutes");
+                    toNotifyService.putExtra("notificationContent",(new Gson()).toJson(newNotification));
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),notificationCode,toNotifyService,0);
+                    notificationCode++;
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() - 5 * 60 * 1000, 24 * 7 * 60 * 60 * 1000, pendingIntent);
+                    Log.d("alarm set", newNotification.title);
+                }
+            }
+            day++;
+        }
+    }
 
     private subject getSubject(String code,String type){
         for(subject i:vClass.subList){
@@ -806,6 +827,7 @@ public class scrapper extends AppCompatActivity {
         }
         return rawTime;
     } //GET THE 24-HOUR FORMAT OF THE TIME OF THE SUBJECT
+
 
     void placeCorrectly(subject sub,List<subject> i){
         i.remove(sub);

@@ -22,54 +22,42 @@ public class NotifyService extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        SharedPreferences shared=context.getSharedPreferences("cancelnotif",Context.MODE_PRIVATE);
-        boolean yes_no=shared.getBoolean("cancel_reset",true);
-        boolean holiday=shared.getBoolean("holiday",false);
-        String fuck="false";
 
+        //TAKE THIS CODE INTO THE IF CONDITION
+        Notification_Holder notificationHolder= (new Gson()).fromJson(intent.getStringExtra("notificationContent"),new TypeToken<Notification_Holder>(){}.getType());
+        if(!isHolidayToday(context) && isNotificationOn(context)){
+            Calendar cal = Calendar.getInstance();
 
-
-
-
-        Calendar calendar=Calendar.getInstance();
+            Calendar notiCalendar= notificationHolder.cal;
+            Log.d("Created but cannotshow", notificationHolder.title);
+           if((notiCalendar.get(Calendar.DAY_OF_WEEK)==cal.get(Calendar.DAY_OF_WEEK) && notiCalendar.get(Calendar.HOUR)>= cal.get(Calendar.HOUR))) {
+               Log.d("hhug",notiCalendar.get(Calendar.HOUR)+"    "+cal.get(Calendar.HOUR));
+               Notification_Creator notifcreator = new Notification_Creator(notificationHolder.title, notificationHolder.content, notificationHolder.ticker, context);
+               notifcreator.create_notification();
+               Log.d("Will be shown", notificationHolder.title);
+            }
+        }
+        Log.d("is holiday", notificationHolder.title);
+    }
+    boolean isHolidayToday(Context context){
         SharedPreferences holidayPrefs= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE);
         String holidayJson = holidayPrefs.getString("holidays",null);
-
-
-
+        Calendar today = Calendar.getInstance();
         if(holidayJson!=null){
-            List<holiday> holidays= (new Gson()).fromJson(holidayJson,new TypeToken<List<holiday>>(){}.getType());
-            for (holiday h :holidays){
-                Calendar dateString =h.date;
-                int day = dateString.get(Calendar.DAY_OF_MONTH);
-                int month =dateString.get(Calendar.MONTH);
-                int year =dateString.get(Calendar.YEAR);
-                if(calendar.get(Calendar.DAY_OF_MONTH)==day && calendar.get(Calendar.MONTH)+1==month && calendar.get(Calendar.YEAR)==year){
-                    holiday=true;
-                    SharedPreferences.Editor edit=shared.edit();
-                    edit.putBoolean("holiday",true);
-                    edit.apply();
-                    fuck="true";
-                    break;
+            List<holiday> holidays = (new Gson()).fromJson(holidayJson,new TypeToken<List<holiday>>(){}.getType());
+            for(holiday occasion : holidays){
+                Calendar calendar = occasion.date;
+                if(today.get(Calendar.DAY_OF_MONTH)==calendar.get(Calendar.DAY_OF_MONTH) && today.get(Calendar.MONTH)==calendar.get(Calendar.MONTH) && today.get(Calendar.YEAR)==calendar.get(Calendar.YEAR)){
+                    return true;
                 }
             }
         }
-
-
-
-
-
-        Calendar cal = Calendar.getInstance();
-        Notification_Holder notifholder;
-        Type t=new TypeToken<Notification_Holder>(){}.getType();
-        String z=intent.getStringExtra("intent_chooser");
-            Gson js = new Gson();
-            notifholder = js.fromJson(intent.getStringExtra("one"), t);
-        Log.d("tagthem1",notifholder.title+"   "+notifholder.cal.get(Calendar.HOUR)+"    "+notifholder.id);
-        Calendar notiCalendar= notifholder.cal;
-       if((notiCalendar.get(Calendar.DAY_OF_WEEK)==cal.get(Calendar.DAY_OF_WEEK) && notiCalendar.get(Calendar.HOUR_OF_DAY)>= cal.get(Calendar.HOUR_OF_DAY) && yes_no /*&& !holiday*/)) {
-           Notification_Creator notifcreator = new Notification_Creator(notifholder.title, notifholder.content, notifholder.ticker, context);
-            notifcreator.create_notification();
-        }
+        return false;
     }
+
+    boolean isNotificationOn(Context context){
+        SharedPreferences settings = context.getSharedPreferences("settingPrefs",Context.MODE_PRIVATE);
+        return settings.getBoolean("showNotification",true);
+    }
+
 }

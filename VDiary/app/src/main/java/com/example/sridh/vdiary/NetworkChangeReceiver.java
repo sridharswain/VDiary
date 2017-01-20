@@ -40,7 +40,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     String dateString = snapshot.getValue().toString();
                     Calendar c = Calendar.getInstance();
-                    c.set(Integer.parseInt(dateString.substring(6)),Integer.parseInt(dateString.substring(3,5)),Integer.parseInt(dateString.substring(0,2)));
+                    c.set(Integer.parseInt(dateString.substring(6)),Integer.parseInt(dateString.substring(3,5))-1,Integer.parseInt(dateString.substring(0,2)));
                     vClass.holidays.add(new holiday(c,snapshot.getKey()));
                 }
                 Gson serializer = new Gson();

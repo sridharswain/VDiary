@@ -1,7 +1,6 @@
 package com.example.sridh.vdiary;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +55,6 @@ public class listAdapter_schedule extends BaseAdapter {
             type.setText(course.type);
             Time.setText(course.startTime+" - "+course.endTime);
             room.setText(course.room);
-            Log.d("course",course.title);
 
         }
         else{

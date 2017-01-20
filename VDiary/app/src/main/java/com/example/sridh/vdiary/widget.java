@@ -75,7 +75,7 @@ public class widget extends AppWidgetProvider {
                 int day = dateString.get(Calendar.DAY_OF_MONTH);
                 int month =dateString.get(Calendar.MONTH);
                 int year =dateString.get(Calendar.YEAR);
-                if(calendar.get(Calendar.DAY_OF_MONTH)==day && calendar.get(Calendar.MONTH)+1==month && calendar.get(Calendar.YEAR)==year){
+                if(calendar.get(Calendar.DAY_OF_MONTH)==day && calendar.get(Calendar.MONTH)==month && calendar.get(Calendar.YEAR)==year){
                     return h.ocassion;
                 }
             }
