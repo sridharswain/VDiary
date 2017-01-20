@@ -714,7 +714,7 @@ public class scrapper extends AppCompatActivity {
         SharedPreferences noticationPrefs= getSharedPreferences("notificationPrefs",MODE_PRIVATE);
         SharedPreferences.Editor notificationPrefsEditor= noticationPrefs.edit();
         int day=2;
-        int notificationCode=0;
+        int notificationCode=1;
         for(List<subject> today: vClass.timeTable){
             for (subject sub : today){
                 if(!sub.type.equals("")){

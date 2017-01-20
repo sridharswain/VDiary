@@ -17,26 +17,15 @@ import java.util.Calendar;
 import java.util.List;
 
 public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
-    Context ctxt=null;
+    Context context=null;
     int today;
     List<subject> todaySchedule;
     List<List<subject>> timeTable;
     boolean shouldShowAttendance;
     String SETTING_PREFS_NAME= "settingPrefs";
     String SHOW_ATT_KEY ="showAttendance";
-    boolean isCreated=false;
     public widgetListFactory(Context c, Intent intent){
-        ctxt=c;
-        //appWidgetId=intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        today=Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        SharedPreferences prefs=ctxt.getSharedPreferences("academicPrefs",Context.MODE_PRIVATE);
-        String scheduleJson=prefs.getString("schedule",null);
-        if(scheduleJson!=null){
-            Gson g= new Gson();
-            timeTable=g.fromJson(scheduleJson,new TypeToken<ArrayList<List<subject>>>() {}.getType());
-            todaySchedule=timeTable.get(today-2);
-        }
-        shouldShowAttendance= ctxt.getSharedPreferences(SETTING_PREFS_NAME,Context.MODE_PRIVATE).getBoolean(SHOW_ATT_KEY,false);
+        this.context=c;
     }
     @Override
     public void onCreate() {
@@ -45,12 +34,18 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
 
     @Override
     public void onDataSetChanged() {
-        //Toast.makeText(ctxt,"updating widget",Toast.LENGTH_LONG).show();
-        if(isCreated)
-            shouldShowAttendance=!shouldShowAttendance;
-        else
-            isCreated=true;
+        today=Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        SharedPreferences prefs=context.getSharedPreferences("academicPrefs",Context.MODE_PRIVATE);
+        String scheduleJson=prefs.getString("schedule",null);
+        if(scheduleJson!=null){
+            Gson g= new Gson();
+            timeTable=g.fromJson(scheduleJson,new TypeToken<ArrayList<List<subject>>>() {}.getType());
+            todaySchedule=timeTable.get(today-2);
+        }
+        else{
 
+        }
+        shouldShowAttendance= context.getSharedPreferences(SETTING_PREFS_NAME,Context.MODE_PRIVATE).getBoolean(SHOW_ATT_KEY,false);
     }
 
     @Override
@@ -66,19 +61,18 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
     @Override
     public RemoteViews getViewAt(int position) {
         RemoteViews row;
-        //row.removeAllViews(); //CODE TO BE TESTED
         subject session=todaySchedule.get(position);
         if(session.type.equals("")){
-            row = new RemoteViews(ctxt.getPackageName(),R.layout.rowview_widget_free_slot);
+            row = new RemoteViews(context.getPackageName(),R.layout.rowview_widget_free_slot);
             row.setTextViewText(R.id.widget_free_slot_title,session.title);
         }
         else{
             if (shouldShowAttendance) {
-                row = new RemoteViews(ctxt.getPackageName(), R.layout.rowview_widget_with_attendance);
+                row = new RemoteViews(context.getPackageName(), R.layout.rowview_widget_with_attendance);
                 row.setTextViewText(R.id.widget_attendance,session.attString);
             }
             else
-                row = new RemoteViews(ctxt.getPackageName(),R.layout.rowview_widget_class_slot);
+                row = new RemoteViews(context.getPackageName(),R.layout.rowview_widget_class_slot);
             row.setTextViewText(R.id.widget_title,session.title);
             row.setTextViewText(R.id.widget_Time,session.startTime.toLowerCase());
             row.setTextViewText(R.id.widget_type,session.type);
@@ -107,4 +101,5 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
     public boolean hasStableIds() {
         return true;
     }
+
 }
