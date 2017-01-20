@@ -2,6 +2,8 @@ package com.example.sridh.vdiary;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
@@ -65,12 +68,15 @@ public class scrapper extends AppCompatActivity {
     boolean attendanceStatus=true;
     boolean isPasswordShown=false;
     boolean loggedIn=false;
+    boolean isLoaded = true;
     Gson jsonBuilder = new Gson();
     static boolean tryRefresh=false;
     ProgressBar pb_loading;
     ImageButton toogle_showPassword;
     List<String> attList = new ArrayList<>();
     List<String> ctdList = new ArrayList<>();
+    List<subject> courses = new ArrayList<>();
+    List<List<subject>> scheduleList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,8 +122,8 @@ public class scrapper extends AppCompatActivity {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view,url);
             if(!loggedIn) {
-                if (webNotConnected(loginWebView.getTitle())) {
-                } else if (loginWebView.getUrl().equals("https://academicscc.vit.ac.in/student/stud_login.asp")) {
+                if (webNotConnected(loginWebView.getTitle())) {}
+                else if (loginWebView.getUrl().equals("https://academicscc.vit.ac.in/student/stud_login.asp")) {
                     loginWebView.evaluateJavascript(getcmd("return document.getElementsByName(\"message\")[0].value"), new ValueCallback<String>() {
                         @Override
                         public void onReceiveValue(String message) {
@@ -165,15 +171,15 @@ public class scrapper extends AppCompatActivity {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            vClass.subList.clear();
-            vClass.timeTable.clear();
-            try{
-                getFormTable1();
+                courses.clear();
+                scheduleList.clear();
+                if (schedule.getUrl().equals("https://academicscc.vit.ac.in/student/course_regular.asp?sem=" + vClass.SEM)) {
+                    getFormTable1();
+                    getFromTable2();
+                } else {
+                    new waitForLogIn().execute();
+                }
             }
-            catch (Exception e){
-                new waitForLogIn().execute();
-            }
-        }
 
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
@@ -203,10 +209,14 @@ public class scrapper extends AppCompatActivity {
     } //RETURN THE FUNCTION FORMAT OF THE GIVEN COMMAND
 
     private void setCaptcha(String imgString){
-        byte[] decodedString = Base64.decode(imgString,0);
-        Bitmap capImg= BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        captcha.setImageBitmap(capImg);
-        load(false);
+        if(!imgString.equals("null")) {
+            byte[] decodedString = Base64.decode(imgString, 0);
+            Bitmap capImg = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            captcha.setImageBitmap(capImg);
+            load(false);
+        }else {
+            showRetry();
+        }
     } //CONVERTS THE BASE-64 STRING TO BITMAP IMAGE AND SETS TO CAPTCHA IMAGEVIEW
 
     private void setUp(){
@@ -226,12 +236,15 @@ public class scrapper extends AppCompatActivity {
         reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loginWebView.setWebViewClient(new loginClient());
-                loginWebView.loadUrl("https://academicscc.vit.ac.in/student/stud_login.asp");
-                status.setText("Building Captcha...");
-                reload.setVisibility(View.INVISIBLE);
-                pb_loading.setVisibility(View.VISIBLE);
-                loggedIn=false;
+                    new waitForLogIn().execute(); //NEEDS HIGHER LEVEL OF TESTING
+                    loginWebView.setWebViewClient(new loginClient());
+                    loginWebView.loadUrl("https://academicscc.vit.ac.in/student/stud_login.asp");
+                    status.setText("Building Captcha...");
+                    reload.setVisibility(View.INVISIBLE);
+                    pb_loading.setVisibility(View.VISIBLE);
+                    loggedIn = false;
+                    schedule.stopLoading();
+                    att.stopLoading();
             }
         });
         login.setOnClickListener(new View.OnClickListener() {
@@ -299,95 +312,100 @@ public class scrapper extends AppCompatActivity {
         }
     }
 
-    private String trim(String str){
-        str= str.substring(1);
-        return str.substring(0,str.indexOf("\""));
+    private String trim(String str) throws StringIndexOutOfBoundsException{
+        try {
+            str = str.substring(1);
+            str = str.substring(0, str.indexOf("\""));
+            isLoaded=true;
+            return str;
+        }
+        catch (Exception e){
+            isLoaded=false;
+            new waitForLogIn().execute();
+            return "0";
+        }
     } //TRIMS THE GIVEN RESULT FROM JAVASCRIPT TO REMOVE QUOTES
 
-    private void getFormTable1() throws Exception{
-        if(schedule.getUrl().equals("https://academicscc.vit.ac.in/student/course_regular.asp?sem="+vClass.SEM)) {
+    private void getFormTable1(){
             schedule.evaluateJavascript(getcmd("var rows=document.getElementsByTagName('table')[1].rows;var c;for(c=0;c<rows.length;c++){if(rows[c].cells.length==15){rows[c].deleteCell(0)}}"), new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String value) {
-                    schedule.evaluateJavascript("var rows=document.getElementsByTagName('table')[1].rows;var c;for(c=0;c<rows.length;c++){if(rows[c].cells.length==14){rows[c].deleteCell(0)}}", new ValueCallback<String>() {
-                        @Override
-                        public void onReceiveValue(String value) {
-                            schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows.length.toString()"), new ValueCallback<String>() {
-                                @Override
-                                public void onReceiveValue(String value) {
-                                    int rows = Integer.parseInt(trim(value));
-                                    for (int row = 1; row < rows - 2; row++) {
-                                        final int rowa = row;
-                                        schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + row + "].cells[8].innerText.toString()"), new ValueCallback<String>() {
-                                            @Override
-                                            public void onReceiveValue(String value) {
-                                                final String room = trim(value);
-                                                if (!room.equals("NIL")) {
-                                                    final subject sub = new subject();
-                                                    //ROOM
-                                                    sub.room = room;
-                                                    //CODE
-                                                    schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[1].innerText.toString()"), new ValueCallback<String>() {
-                                                        @Override
-                                                        public void onReceiveValue(String code) {
-                                                            sub.code = trim(code);
-                                                        }
-                                                    });
-                                                    //NAME
-                                                    schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[2].innerText.toString()"), new ValueCallback<String>() {
-                                                        @Override
-                                                        public void onReceiveValue(String name) {
-                                                            sub.title = trim(name);
-                                                        }
-                                                    });
-                                                    //TEACHER
-                                                    schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[9].innerText.toString()"), new ValueCallback<String>() {
-                                                        @Override
-                                                        public void onReceiveValue(String teacher) {
-                                                            String rawTeacher = trim(teacher).split("-")[0];
-                                                            sub.teacher = rawTeacher.substring(0, rawTeacher.length() - 1);
-                                                        }
-                                                    });
-                                                    //TYPE
-                                                    schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[3].innerText.toString()"), new ValueCallback<String>() {
-                                                        @Override
-                                                        public void onReceiveValue(String rawtype) {
-                                                            String type = trim(rawtype);
-                                                            switch (type) {
-                                                                case "Embedded Theory":
-                                                                    sub.type = "ETH";
-                                                                    break;
-                                                                case "Theory Only":
-                                                                    sub.type = "TH";
-                                                                    break;
-                                                                case "Lab Only":
-                                                                    sub.type = "LO";
-                                                                    break;
-                                                                case "Embedded Lab":
-                                                                    sub.type = "ELA";
-                                                                    break;
-                                                                case "Soft Skill":
-                                                                    sub.type = "SS";
-                                                                    break;
+                    if(isLoaded) {
+                        schedule.evaluateJavascript("var rows=document.getElementsByTagName('table')[1].rows;var c;for(c=0;c<rows.length;c++){if(rows[c].cells.length==14){rows[c].deleteCell(0)}}", new ValueCallback<String>() {
+                            @Override
+                            public void onReceiveValue(String value) {
+                                schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows.length.toString()"), new ValueCallback<String>() {
+                                    @Override
+                                    public void onReceiveValue(String value) {
+                                        int rows = Integer.parseInt(trim(value));
+                                        for (int row = 1; row < rows - 2; row++) {
+                                            final int rowa = row;
+                                            schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + row + "].cells[8].innerText.toString()"), new ValueCallback<String>() {
+                                                @Override
+                                                public void onReceiveValue(String value) {
+                                                    final String room = trim(value);
+                                                    if (!room.equals("NIL")) {
+                                                        final subject sub = new subject();
+                                                        //ROOM
+                                                        sub.room = room;
+                                                        //CODE
+                                                        schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[1].innerText.toString()"), new ValueCallback<String>() {
+                                                            @Override
+                                                            public void onReceiveValue(String code) {
+                                                                sub.code = trim(code);
                                                             }
-                                                        }
-                                                    });
-                                                    vClass.subList.add(sub);
+                                                        });
+                                                        //NAME
+                                                        schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[2].innerText.toString()"), new ValueCallback<String>() {
+                                                            @Override
+                                                            public void onReceiveValue(String name) {
+                                                                sub.title = trim(name);
+                                                            }
+                                                        });
+                                                        //TEACHER
+                                                        schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[9].innerText.toString()"), new ValueCallback<String>() {
+                                                            @Override
+                                                            public void onReceiveValue(String teacher) {
+                                                                String rawTeacher = trim(teacher).split("-")[0];
+                                                                sub.teacher = rawTeacher.substring(0, rawTeacher.length() - 1);
+                                                            }
+                                                        });
+                                                        //TYPE
+                                                        schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[3].innerText.toString()"), new ValueCallback<String>() {
+                                                            @Override
+                                                            public void onReceiveValue(String rawtype) {
+                                                                String type = trim(rawtype);
+                                                                switch (type) {
+                                                                    case "Embedded Theory":
+                                                                        sub.type = "ETH";
+                                                                        break;
+                                                                    case "Theory Only":
+                                                                        sub.type = "TH";
+                                                                        break;
+                                                                    case "Lab Only":
+                                                                        sub.type = "LO";
+                                                                        break;
+                                                                    case "Embedded Lab":
+                                                                        sub.type = "ELA";
+                                                                        break;
+                                                                    case "Soft Skill":
+                                                                        sub.type = "SS";
+                                                                        break;
+                                                                }
+                                                            }
+                                                        });
+                                                        courses.add(sub);
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
+                                        }
                                     }
-                                }
-                            });
-                        }
-                    });
+                                });
+                            }
+                        });
+                    }
                 }
             });
-            getFromTable2();
-        }
-        else {
-            new waitForLogIn().execute();
-        }
     } //GET DATA FROM ALL COURSES
 
     private void getFromTable2(){
@@ -395,100 +413,100 @@ public class scrapper extends AppCompatActivity {
             @Override
             public void onReceiveValue(String value) {
                 //LUNCH DELETED
-                for(int rowa=2;rowa<=6;rowa++){
-                    final int row=rowa;
-                    final List<subject> today= new ArrayList<subject>();
-                    schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[" + row + "].cells.length.toString()"), new ValueCallback<String>() {
-                        @Override
-                        public void onReceiveValue(String rawCols) {
-                            //Toast.makeText(scrapper.this, rawCols, Toast.LENGTH_SHORT).show();
-                            final int cols=Integer.parseInt(trim(rawCols));
-                            final AtomicReference extraTime = new AtomicReference(0);
-                            for(int col=1;col<cols;col++){
-                                final int cell=col;
-                                schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[" + row + "].cells[" + cell + "].colSpan.toString()"), new ValueCallback<String>() {
-                                    @Override
-                                    public void onReceiveValue(String value) {
-                                        int rawcolSpan=Integer.parseInt(trim(value));
-                                        if(rawcolSpan>1) {
-                                            extraTime.set(rawcolSpan - 1);
-                                        }
-                                        schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[" + row + "].cells['" + cell + "'].bgColor"), new ValueCallback<String>() {
-                                            @Override
-                                            public void onReceiveValue(String color) {
-                                                final String cellColor = trim(color);
-                                                schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[" + row + "].cells[" + cell + "].innerText.toString()"), new ValueCallback<String>() {
-                                                    @Override
-                                                    public void onReceiveValue(String value) {
-                                                        String text= trim(value);
-                                                        final subject sub = new subject();
-                                                        if(cellColor.equals("#CCFF33")) {
-                                                            sub.code = text.substring(0, 7); //CODE
-                                                            String rawType = text.split("-")[1];
-                                                            String type = rawType.substring(1, rawType.length() - 1); //TYPE
-                                                            sub.type = type;
-                                                            //TIME
-                                                            if (type.equals("ETH") || type.equals("SS") || type.equals("TH")) {
-                                                                schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[0].cells[" + (cell + Integer.parseInt(String.valueOf(extraTime.get()))) + "].innerText.toString()"), new ValueCallback<String>() {
+                if(isLoaded) {
+                    for (int rowa = 2; rowa <= 6; rowa++) {
+                        final int row = rowa;
+                        final List<subject> today = new ArrayList<subject>();
+                        schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[" + row + "].cells.length.toString()"), new ValueCallback<String>() {
+                            @Override
+                            public void onReceiveValue(String rawCols) {
+                                //Toast.makeText(scrapper.this, rawCols, Toast.LENGTH_SHORT).show();
+                                final int cols = Integer.parseInt(trim(rawCols));
+                                final AtomicReference extraTime = new AtomicReference(0);
+                                for (int col = 1; col < cols; col++) {
+                                    final int cell = col;
+                                    schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[" + row + "].cells[" + cell + "].colSpan.toString()"), new ValueCallback<String>() {
+                                        @Override
+                                        public void onReceiveValue(String value) {
+                                            int rawcolSpan = Integer.parseInt(trim(value));
+                                            if (rawcolSpan > 1) {
+                                                extraTime.set(rawcolSpan - 1);
+                                            }
+                                            schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[" + row + "].cells['" + cell + "'].bgColor"), new ValueCallback<String>() {
+                                                @Override
+                                                public void onReceiveValue(String color) {
+                                                    final String cellColor = trim(color);
+                                                    schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[" + row + "].cells[" + cell + "].innerText.toString()"), new ValueCallback<String>() {
+                                                        @Override
+                                                        public void onReceiveValue(String value) {
+                                                            String text = trim(value);
+                                                            final subject sub = new subject();
+                                                            if (cellColor.equals("#CCFF33")) {
+                                                                sub.code = text.substring(0, 7); //CODE
+                                                                String rawType = text.split("-")[1];
+                                                                String type = rawType.substring(1, rawType.length() - 1); //TYPE
+                                                                sub.type = type;
+                                                                //TIME
+                                                                if (type.equals("ETH") || type.equals("SS") || type.equals("TH")) {
+                                                                    schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[0].cells[" + (cell + Integer.parseInt(String.valueOf(extraTime.get()))) + "].innerText.toString()"), new ValueCallback<String>() {
+                                                                        @Override
+                                                                        public void onReceiveValue(String value) {
+                                                                            String time = trim(value);
+                                                                            sub.startTime = time.substring(0, 8);
+                                                                            sub.endTime = time.substring(14, time.length());
+                                                                            today.add(sub);
+                                                                        }
+                                                                    });
+                                                                } else {
+                                                                    schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[1].cells[" + (cell + Integer.parseInt(String.valueOf(extraTime.get()))) + "].innerText.toString()"), new ValueCallback<String>() {
+                                                                        @Override
+                                                                        public void onReceiveValue(String value) {
+                                                                            String rawstime = trim(value);
+                                                                            String sTime = rawstime.substring(0, 8);
+                                                                            final AtomicReference<String> time = new AtomicReference<String>(sTime);
+                                                                            schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[1].cells[" + (cell + 1 + Integer.parseInt(String.valueOf(extraTime.get()))) + "].innerText.toString()"), new ValueCallback<String>() {
+                                                                                @Override
+                                                                                public void onReceiveValue(String value) {
+                                                                                    String rawetime = trim(value);
+                                                                                    String etime = rawetime.substring(14, rawetime.length());
+                                                                                    sub.startTime = time.get();
+                                                                                    sub.endTime = etime;
+                                                                                    today.add(sub);
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                }
+                                                            } else {
+                                                                sub.code = "";
+                                                                sub.title = text;
+                                                                sub.type = "";
+                                                                sub.room = "";
+                                                                schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[1].cells[" + (cell + Integer.parseInt(String.valueOf(extraTime.get()))) + "].innerText.toString()"), new ValueCallback<String>() {
                                                                     @Override
                                                                     public void onReceiveValue(String value) {
                                                                         String time = trim(value);
-                                                                        sub.startTime=time.substring(0, 8);
-                                                                        sub.endTime=time.substring(14, time.length());
+                                                                        sub.startTime = time.substring(0, 8);
+                                                                        sub.endTime = time.substring(14, time.length());
                                                                         today.add(sub);
                                                                     }
                                                                 });
                                                             }
-                                                            else {
-                                                                schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[1].cells[" + (cell + Integer.parseInt(String.valueOf(extraTime.get()))) + "].innerText.toString()"), new ValueCallback<String>() {
-                                                                    @Override
-                                                                    public void onReceiveValue(String value) {
-                                                                        String rawstime = trim(value);
-                                                                        String sTime = rawstime.substring(0, 8);
-                                                                        final AtomicReference<String> time = new AtomicReference<String>(sTime);
-                                                                        schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[1].cells[" + (cell + 1 + Integer.parseInt(String.valueOf(extraTime.get()))) + "].innerText.toString()"), new ValueCallback<String>() {
-                                                                            @Override
-                                                                            public void onReceiveValue(String value) {
-                                                                                String rawetime = trim(value);
-                                                                                String etime = rawetime.substring(14, rawetime.length());
-                                                                                sub.startTime=time.get();
-                                                                                sub.endTime=etime;
-                                                                                today.add(sub);
-                                                                            }
-                                                                        });
-                                                                    }
-                                                                });
-                                                            }
                                                         }
-                                                        else{
-                                                            sub.code="";
-                                                            sub.title=text;
-                                                            sub.type="";
-                                                            sub.room="";
-                                                            schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[1].cells[" + (cell + Integer.parseInt(String.valueOf(extraTime.get()))) +"].innerText.toString()"), new ValueCallback<String>() {
-                                                                @Override
-                                                                public void onReceiveValue(String value) {
-                                                                    String time=trim(value);
-                                                                    sub.startTime=time.substring(0, 8);
-                                                                    sub.endTime=time.substring(14, time.length());
-                                                                    today.add(sub);
-                                                                }
-                                                            });
-                                                        }
+                                                    });
+                                                    if (row == 6 && cell == cols - 1) {
+                                                        att.setWebViewClient(new attendanceClient());
+                                                        att.loadUrl("https://academicscc.vit.ac.in/student/attn_report.asp?sem=" + vClass.SEM);
                                                     }
-                                                });
-                                                if(row==6 && cell==cols-1){
-                                                    att.setWebViewClient(new attendanceClient());
-                                                    att.loadUrl("https://academicscc.vit.ac.in/student/attn_report.asp?sem="+vClass.SEM);
                                                 }
-                                            }
-                                        });
-                                    }
-                                });
+                                            });
+                                        }
+                                    });
+                                }
                             }
-                        }
-                    });
-                    vClass.timeTable.add(today);
+                        });
+                        scheduleList.add(today);
+                    }
                 }
             }
         });
@@ -563,6 +581,8 @@ public class scrapper extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             try{
+                vClass.subList=courses;
+                vClass.timeTable=scheduleList;
                 if (attendanceStatus) {
                     for (int i = 0; i < vClass.subList.size(); i++) {
                         vClass.subList.get(i).ctd = Integer.parseInt(ctdList.get(i));
@@ -689,6 +709,7 @@ public class scrapper extends AppCompatActivity {
         editor =getSharedPreferences("isLoggedInPrefs",MODE_PRIVATE).edit();
         editor.putBoolean("isLoggedIn",true);
         editor.commit();
+        updateWidget();
     } //WRITE ACADEMIC CONTENT TO SHARED PREFERENCES
 
     boolean readFromPrefs(){
@@ -846,8 +867,15 @@ public class scrapper extends AppCompatActivity {
             schedule.setWebViewClient(new scheduleClient());
             schedule.loadUrl("https://academicscc.vit.ac.in/student/course_regular.asp?sem="+vClass.SEM);
             getTeacherCabins();
-            //Toast.makeText(scrapper.this, "waitForLogin", Toast.LENGTH_SHORT).show();
             super.onPostExecute(aVoid);
         }
+    }
+
+    void updateWidget(){
+        Context context = getApplicationContext();
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName thisWidget = new ComponentName(context, widget.class);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_today);
     }
 }

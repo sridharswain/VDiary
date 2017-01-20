@@ -53,8 +53,7 @@ public class NotifyService extends WakefulBroadcastReceiver {
                 }
             }
         }
-
-        Log.d("tagthemotherfucker",fuck);
+        
 
 
 
