@@ -620,6 +620,37 @@ public class scrapper extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+
+            SharedPreferences so=context.getSharedPreferences("cancelprefs",Context.MODE_PRIVATE);
+            if(so.getBoolean("log",false)) {
+                List<List<subject>> temp=new Gson().fromJson(getSharedPreferences("academicPrefs",Context.MODE_PRIVATE).getString("schedule",""),new TypeToken<List<List<subject>>>(){}.getType());
+                Intent intent = new Intent(context, NotifyService.class);
+                PendingIntent pendingintent;
+                AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                for (int k = 0; k < temp.size(); k++) {
+                    List<subject> f = temp.get(k);
+                    for (int l = 0; l < f.size(); l++) {
+                        subject sub = f.get(l);
+                        if (!sub.type.equals("")) {
+                            pendingintent = PendingIntent.getBroadcast(context, sub.notif_id, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                            alarm.cancel(pendingintent);
+
+                        }
+                    }
+                }
+
+            }
+            Toast.makeText(scrapper.this, "All alarms cancelled", Toast.LENGTH_SHORT).show();
+            SharedPreferences.Editor ef=so.edit();
+            ef.putBoolean("log",true);
+            ef.apply();
+
+
+
+
+
+
+
             try {
                 SharedPreferences settingprefs=getSharedPreferences(settings.SETTING_PREFS_NAME,Context.MODE_PRIVATE);
                 if (settingprefs.getBoolean(settings.SHOW_NOTIF_KEY,true)) {
@@ -655,11 +686,13 @@ public class scrapper extends AppCompatActivity {
                                 PendingIntent pintent = PendingIntent.getBroadcast(context, scrapper.n_id, in, 0);
                                 vClass.timeTable.get(k).get(l).notif_id = n_id;
                                 n_id++;
+                                Log.d("tagthem2",nh.title+"    "+nh.cal.get(Calendar.HOUR));
                                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() - 5 * 60 * 1000, 24 * 7 * 60 * 60 * 1000, pintent);
                             }
                         }
                     }
                 }
+                n_id=0;
             }
             catch (Exception e){
                 e.printStackTrace();
