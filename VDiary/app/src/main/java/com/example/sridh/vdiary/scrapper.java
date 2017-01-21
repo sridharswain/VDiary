@@ -688,7 +688,7 @@ public class scrapper extends AppCompatActivity {
 
 
 
-            createNotification();
+            createNotification(context);
             Calendar calendar=Calendar.getInstance();
             String hr,min;
             if(calendar.get(Calendar.HOUR_OF_DAY)<10)
@@ -710,8 +710,8 @@ public class scrapper extends AppCompatActivity {
         }
     } //REARRANGE THE INFORMATION SCRAPPED FORM THE WEBPAGE
 
-    void createNotification(){
-        SharedPreferences noticationPrefs= getSharedPreferences("notificationPrefs",MODE_PRIVATE);
+    public static void createNotification(Context con){
+        SharedPreferences noticationPrefs= con.getSharedPreferences("notificationPrefs",MODE_PRIVATE);
         SharedPreferences.Editor notificationPrefsEditor= noticationPrefs.edit();
         int day=2;
         int notificationCode=1;
@@ -719,7 +719,7 @@ public class scrapper extends AppCompatActivity {
             for (subject sub : today){
                 if(!sub.type.equals("")){
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                    Intent toNotifyService = new Intent(scrapper.this,NotifyService.class);
+                    Intent toNotifyService = new Intent(con,NotifyService.class);
                     Calendar calendar = Calendar.getInstance();
                     int startHour,startMin,AMPM;
                     startHour=Integer.parseInt(sub.startTime.substring(0, 2));
@@ -736,7 +736,7 @@ public class scrapper extends AppCompatActivity {
 
                     Notification_Holder newNotification =  new Notification_Holder(calendar,sub.title,sub.room,"Upcoming class in 5 minutes");
                     toNotifyService.putExtra("notificationContent",(new Gson()).toJson(newNotification));
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),notificationCode,toNotifyService,0);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(con,notificationCode,toNotifyService,0);
                     notificationCode++;
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() - 5 * 60 * 1000, 24 * 7 * 60 * 60 * 1000, pendingIntent);
                     Log.d("alarm set", newNotification.title);
