@@ -9,7 +9,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class NotifyService extends WakefulBroadcastReceiver {
                notifcreator.create_notification();
                Log.d("Will be shown", notificationHolder.title);
             }
-        }
+}
         Log.d("is holiday", notificationHolder.title);
     }
     boolean isHolidayToday(Context context){

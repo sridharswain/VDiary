@@ -8,12 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -52,7 +46,7 @@ public class AtBoot extends BroadcastReceiver {
 
 
         //Daily timetable re-schedule
-        sharedPreferences=context.getSharedPreferences("academicPrefs",MODE_PRIVATE);
+       /* sharedPreferences=context.getSharedPreferences("academicPrefs",MODE_PRIVATE);
         Gson jason=new Gson();
         Type type=new TypeToken<ArrayList<ArrayList<subject>>>(){}.getType();
         String timetab=sharedPreferences.getString("schedule",null);
@@ -60,7 +54,7 @@ public class AtBoot extends BroadcastReceiver {
         if(settingprefs.getBoolean(settings.SHOW_NOTIF_KEY,true)) {
             if (timetab != null)
                 vClass.timeTable = jason.fromJson(timetab, type);
-
+            int n_id=1;
             for (int s = 0; s < vClass.timeTable.size(); s++) {
                 List<subject> subs = vClass.timeTable.get(s);
                 for (int t = 0; t < vClass.timeTable.get(s).size(); t++) {
@@ -86,14 +80,16 @@ public class AtBoot extends BroadcastReceiver {
                         Gson j = new Gson();
                         x.putExtra("one", j.toJson(nh));
                         x.putExtra("intent_chooser", "one");
-                        PendingIntent pintent = PendingIntent.getBroadcast(context, sub.notif_id, x, 0);
+                        PendingIntent pintent = PendingIntent.getBroadcast(context, n_id++, x, 0);
                         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() - 5 * 60 * 1000, 24 * 7 * 60 * 60 * 1000, pintent);
 
                     }
                 }
 
             }
-        }
+        }*/
+
+        scrapper.createNotification(context);
         //Daily timetable reschedule end
     }
 }
