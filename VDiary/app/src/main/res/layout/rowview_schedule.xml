@@ -17,7 +17,7 @@
         android:width="25dp"
         android:textAlignment="center"
         android:gravity="center_vertical"
-        android:background="@color/taskbar_orange"
+        android:background="@drawable/background_type"
         android:textColor="@android:color/white"
         android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"

@@ -1,0 +1,15 @@
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid
+        android:color="@color/taskbar_orange" >
+    </solid>
+
+
+    <corners
+        android:topRightRadius="6dp"
+        android:bottomRightRadius="6dp">
+    </corners>
+
+</shape>

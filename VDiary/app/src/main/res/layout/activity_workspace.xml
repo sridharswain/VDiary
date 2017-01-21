@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.sridh.vdiary.workSpace">
+    tools:context="com.example.sridh.vdiary.workSpace"
+    android:background="@android:color/white">
 <android.support.design.widget.CoordinatorLayout
     android:layout_height="match_parent"
     android:layout_width="match_parent">
@@ -16,14 +17,15 @@
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:paddingTop="@dimen/appbar_padding_top"
-        android:theme="@style/MyAppBar">
+        android:theme="@style/MyAppBar"
+        android:background="@drawable/background_toolbar"
+        app:elevation="0dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/workspacetoptoolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:background="@android:color/transparent"
             app:titleTextColor="@android:color/white">
 
         </android.support.v7.widget.Toolbar>
@@ -32,8 +34,11 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabTextColor="@color/Slight_white_green"
-            app:tabSelectedTextColor="@android:color/white" />
+            app:tabTextColor="@color/opac_transparent"
+            app:tabSelectedTextColor="@android:color/white"
+            android:background="@drawable/background_toolbar"
+            app:tabIndicatorColor="@android:color/white"
+            app:tabIndicatorHeight="2dp"/>
 
     </android.support.design.widget.AppBarLayout>
 

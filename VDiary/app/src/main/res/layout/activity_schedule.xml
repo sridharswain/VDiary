@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@android:color/white"
     tools:context="com.example.sridh.vdiary.schedule">
 
     <android.support.design.widget.AppBarLayout
@@ -13,7 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="92dp"
         android:paddingTop="@dimen/appbar_padding_top"
-        android:theme="@style/MyAppBar">
+        android:theme="@style/MyAppBar"
+        app:elevation="0dp"
+        android:background="@drawable/background_toolbar">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -30,8 +33,10 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabTextColor="@color/Slight_white_green"
-            app:tabSelectedTextColor="@android:color/white" />
+            app:tabTextColor="@color/opac_transparent"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabIndicatorHeight="2dp"
+            app:tabIndicatorColor="@android:color/white"/>
 
     </android.support.design.widget.AppBarLayout>
 
