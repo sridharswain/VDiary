@@ -18,17 +18,29 @@ public class showSubject extends AppCompatActivity {
     Context con;
     int att,noofdays;
     NumberPicker leave;
+    String array[]=new String[101];
 
     TextView mon,tue,wed,thu,fri,newAtt;
     public static ListAdapter todoList;
+    int c=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_subject);
         con=this;
-
+        for(int i=-50;i<=50;i++)
+        {
+            array[c++]=Integer.toString(i);
+        }
+        c=0;
         int position=getIntent().getIntExtra("position",0);
         clicked= vClass.subList.get(position);
+        leave=(NumberPicker)findViewById(R.id.leave_picker);
+        leave.setDisplayedValues(array);
+
+        leave.setMaxValue(100);
+        leave.setMinValue(0);
+        leave.setValue(50);
 
         new Async_search(position).execute();
         show(clicked); //Initialize the popup activity to show the contents of the subject
@@ -38,18 +50,32 @@ public class showSubject extends AppCompatActivity {
         ((TextView)findViewById(R.id.subject_Title)).setText(sub.title);
         ((TextView)findViewById(R.id.subject_Teacher)).setText(sub.teacher);
         newAtt=(TextView)findViewById(R.id.tv_newAtt);
-        leave=(NumberPicker)findViewById(R.id.leave_picker);
         String attString = clicked.attString;
         att = Integer.parseInt(attString.substring(0,attString.length()-1));
         noofdays=clicked.ctd;
-        leave.setMaxValue(75);
-        leave.setWrapSelectorWheel(false);
         newAtt.setText(attString);
         if(noofdays!=0) {
             leave.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                 @Override
                 public void onValueChange(NumberPicker numberPicker, int old, int next) {
-                    new calculateAttendanceAsync(next).execute();
+                    double newAttendance=0.0;
+                    int leave=next;
+                    leave=leave-50;
+                    if(leave<0) {
+                        leave=leave*-1;
+                        double class_att = att * noofdays / 100.0;
+                        double att_final = (class_att / (noofdays + leave)) * 100.0;
+                        newAttendance = ((int) (att_final));
+                        leave=leave*-1;
+
+                    }
+                    else if(leave>=0)
+                    {
+                        double class_att2=att*noofdays/100.0;
+                        double att_final2=(class_att2+leave)/(noofdays+leave)*100.0;
+                        newAttendance=((int) (att_final2));
+                    }
+                    newAtt.setText(newAttendance+"%");
                 }
             });
         }
@@ -116,27 +142,6 @@ public class showSubject extends AppCompatActivity {
                     occurred.setBackground(getResources().getDrawable(R.drawable.border_class_occurence));
                 }
             }
-            super.onPostExecute(aVoid);
-        }
-    }
-
-    class calculateAttendanceAsync extends AsyncTask<Void,Void,Void>{
-        double newAttendance;
-        int leave;
-        calculateAttendanceAsync(int leave){
-            this.leave=leave;
-        }
-        @Override
-        protected Void doInBackground(Void... voids) {
-            double class_att=att*noofdays/100.0;
-            double att_final=(class_att/(noofdays+leave))*100.0;
-            newAttendance =((int)(att_final));
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            newAtt.setText(newAttendance+"%");
             super.onPostExecute(aVoid);
         }
     }
