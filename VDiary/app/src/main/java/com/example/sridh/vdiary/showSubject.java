@@ -28,7 +28,7 @@ public class showSubject extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_subject);
         con=this;
-        for(int i=-50;i<=50;i++)
+        for(int i=50;i>=-50;i--)
         {
             array[c++]=Integer.toString(i);
         }
@@ -61,16 +61,14 @@ public class showSubject extends AppCompatActivity {
                     double newAttendance=0.0;
                     int leave=next;
                     leave=leave-50;
-                    if(leave<0) {
-                        leave=leave*-1;
+                    if(leave>=0) {
                         double class_att = att * noofdays / 100.0;
                         double att_final = (class_att / (noofdays + leave)) * 100.0;
                         newAttendance = ((int) (att_final));
-                        leave=leave*-1;
-
                     }
-                    else if(leave>=0)
+                    else if(leave<0)
                     {
+                        leave=leave*-1;
                         double class_att2=att*noofdays/100.0;
                         double att_final2=(class_att2+leave)/(noofdays+leave)*100.0;
                         newAttendance=((int) (att_final2));
