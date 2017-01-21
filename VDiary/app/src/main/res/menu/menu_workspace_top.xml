@@ -3,18 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.sridh.vdiary.workSpace">
     <item
+        android:id="@+id/toSchedule"
+        android:orderInCategory="0"
+        android:icon="@drawable/ic_schedule"
+        android:title="Time Table"
+        app:showAsAction="always"
+        />
+    <item
         android:id="@+id/refresh"
-        android:orderInCategory="100"
+        android:orderInCategory="1"
         android:title="Refresh"
         android:icon="@drawable/refresh"
         app:showAsAction="always"
         />
     <item
-        android:id="@+id/toSchedule"
-        android:orderInCategory="200"
-        android:icon="@drawable/goright"
-        android:title="Time Table"
-        app:showAsAction="always"
+        android:title="Settings"
+        android:id="@+id/action_more_settings"
         />
+    <item
+        android:title="About"
+        android:id="@+id/action_show_about"/>
 
 </menu>

@@ -46,14 +46,4 @@
 
 
 </android.support.design.widget.CoordinatorLayout>
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_more_stacktype"
-        android:background="@android:color/transparent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="28dp"
-        android:id="@+id/workspace_more" />
     </RelativeLayout>

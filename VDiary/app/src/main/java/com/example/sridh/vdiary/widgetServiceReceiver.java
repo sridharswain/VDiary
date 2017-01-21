@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -18,8 +17,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class widgetServiceReceiver extends BroadcastReceiver {
-    public widgetServiceReceiver() {
-    }
+    public widgetServiceReceiver() {}
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -35,9 +33,8 @@ public class widgetServiceReceiver extends BroadcastReceiver {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
             if (isLoggedIn(context)) {
                 Calendar calendar = Calendar.getInstance();
-                String ocassion = readHolidayPrefs(context, calendar);
-                //updateAppWidget(context, appWidgetManager, apwidget_screenShotpWidgetId);
-                if ((ocassion == null)) {
+                String occasion = readHolidayPrefs(context, calendar);
+                if ((occasion == null)) {
                     int today = calendar.get(Calendar.DAY_OF_WEEK);
                     if (today > 1 && today < 7) {
                         Intent intent = new Intent(context, widgetService.class);
@@ -52,7 +49,7 @@ public class widgetServiceReceiver extends BroadcastReceiver {
                     }
                 } else {
                     changeStatus(views,true);
-                    views.setTextViewText(R.id.widget_status, ocassion);
+                    views.setTextViewText(R.id.widget_status, occasion);
                 }
             } else {
                 changeStatus(views,true);

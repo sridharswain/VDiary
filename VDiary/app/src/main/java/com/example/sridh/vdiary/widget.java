@@ -24,11 +24,10 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Implementation of App Widget functionality.
+ * Implementation of App Widget functionality. Sid
  */
 public class widget extends AppWidgetProvider {
-    AlarmManager alarmManager;
-    PendingIntent pendingIntent;
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
@@ -38,9 +37,9 @@ public class widget extends AppWidgetProvider {
     public void onEnabled(Context context) {
         super.onEnabled(context);
         // Enter relevant functionality for when the first widget is created
-        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent toWidgetService = new Intent(context,widgetServiceReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(context,0,toWidgetService,0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,toWidgetService,0);
         Calendar calendarMan = Calendar.getInstance();
         calendarMan.set(Calendar.HOUR_OF_DAY,0);
         calendarMan.set(Calendar.MINUTE,0);
@@ -52,6 +51,9 @@ public class widget extends AppWidgetProvider {
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
         super.onDisabled(context);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent toWidgetService = new Intent(context,widgetServiceReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,toWidgetService,0);
         alarmManager.cancel(pendingIntent);
     }
 }

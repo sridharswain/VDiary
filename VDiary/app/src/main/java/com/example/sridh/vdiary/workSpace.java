@@ -119,26 +119,6 @@ public class workSpace extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.workspacetoptoolbar);
         toolbar.setTitle("Zchedule");
         setSupportActionBar(toolbar);
-        final ImageButton more= (ImageButton)findViewById(R.id.workspace_more);
-        more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu menu = new PopupMenu(workSpace.this,more);
-                menu.getMenuInflater().inflate(R.menu.more,menu.getMenu());
-                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int id= item.getItemId();
-                        if(id==R.id.action_more_settings)
-                            startActivity(new Intent(workSpace.this,settings.class));
-                        else
-                            startActivity(new Intent(workSpace.this,About.class));
-                        return false;
-                    }
-                });
-                menu.show();
-            }
-        });
     }  //SET THE TOOLBARS FOR THE WORKSPACE CLASS
 
     @Override
@@ -156,15 +136,24 @@ public class workSpace extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.toSchedule) {
-            Intent i = new Intent(workSpace.this, schedule.class);
-            startActivity(i);
 
-        } else if (id == R.id.refresh) {
-            scrapper.tryRefresh = true;
-            startActivity(new Intent(workSpace.this, scrapper.class));
-            overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
-            finish();
+        switch (id){
+            case R.id.toSchedule:
+                Intent i = new Intent(workSpace.this, schedule.class);
+                startActivity(i);
+                break;
+            case R.id.refresh:
+                scrapper.tryRefresh = true;
+                startActivity(new Intent(workSpace.this, scrapper.class));
+                overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
+                finish();
+                break;
+            case R.id.action_more_settings:
+                startActivity(new Intent(workSpace.this,settings.class));
+                break;
+            case  R.id.action_show_about:
+                startActivity(new Intent(workSpace.this,About.class));
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -570,7 +559,7 @@ public class workSpace extends AppCompatActivity {
                 case 0:
                     return "Courses";
                 case 1:
-                    return "Teachers";
+                    return "Faculty";
                 case 2:
                     return "Tasks";
             }
