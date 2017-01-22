@@ -3,6 +3,11 @@ package com.example.sridh.vdiary;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -69,6 +74,7 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
         else{
             if (shouldShowAttendance) {
                 row = new RemoteViews(context.getPackageName(), R.layout.rowview_widget_with_attendance);
+
                 row.setTextViewText(R.id.widget_attendance,session.attString);
             }
             else
@@ -101,5 +107,4 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
     public boolean hasStableIds() {
         return true;
     }
-
 }

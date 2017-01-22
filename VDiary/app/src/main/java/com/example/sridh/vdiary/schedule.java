@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.Calendar;
 
@@ -40,15 +42,16 @@ public class schedule extends AppCompatActivity {
     Intent intent;
     AlarmManager alarm;
     public static int i=0;
+    Typeface fredoka;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
         s=getApplicationContext();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Schedule");
-        setSupportActionBar(toolbar);
+
+        fredoka=Typeface.createFromAsset(getAssets(),"fonts/FredokaOne-Regular.ttf");
+        initToolbar();
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
@@ -63,7 +66,11 @@ public class schedule extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
+    }
+    void initToolbar(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView title =(TextView)toolbar.findViewById(R.id.schedule_title);
+        title.setTypeface(fredoka);
     }
 
     /**

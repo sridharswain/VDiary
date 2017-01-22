@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:text="Notify me before a class"
-        android:textSize="25sp"
+        android:textSize="22sp"
         android:id="@+id/toggle_showNotification"
         android:buttonTint="@color/descent_orange"/>
         <TextView
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="Show attendance on widget"
-                android:textSize="25sp"
+                android:textSize="22sp"
                 android:id="@+id/toggle_showAttendance"
                 android:buttonTint="@color/descent_orange"/>
             <TextView

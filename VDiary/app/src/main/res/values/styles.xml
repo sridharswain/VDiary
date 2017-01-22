@@ -30,7 +30,7 @@
     <style name="MyAppBar" parent="AppTheme.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimaryLight</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="android:textColorSecondary">@android:color/white</item>
     </style>
 
@@ -41,7 +41,9 @@
         <item name="android:textColorSecondary">@android:color/white</item>
     </style>
 
-
+    <style name="AppTheme.Picker" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="android:textColorPrimary">@android:color/white</item>
+    </style>
 
 
 </resources>

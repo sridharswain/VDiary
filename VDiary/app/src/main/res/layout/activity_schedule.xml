@@ -12,7 +12,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="92dp"
+        android:layout_height="100dp"
         android:paddingTop="@dimen/appbar_padding_top"
         android:theme="@style/MyAppBar"
         app:elevation="0dp"
@@ -26,6 +26,14 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:titleTextColor="@android:color/white"
             >
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Zchedule"
+                android:textSize="30dp"
+                android:textColor="@android:color/white"
+                android:id="@+id/schedule_title"
+                />
 
         </android.support.v7.widget.Toolbar>
 

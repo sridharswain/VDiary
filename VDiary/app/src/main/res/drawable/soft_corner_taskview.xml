@@ -2,10 +2,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-    <solid
-        android:color="#FFFFFF" >
-    </solid>
-
     <padding
         android:left="5dp"
         android:top="5dp"
@@ -14,7 +10,7 @@
     </padding>
 
     <corners
-        android:radius="2dp"   >
+        android:radius="5dp"   >
     </corners>
 
 </shape>

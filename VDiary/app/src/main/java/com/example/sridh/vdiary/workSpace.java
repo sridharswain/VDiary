@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,6 +21,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -72,6 +74,7 @@ public class workSpace extends AppCompatActivity {
 
 
     static ListView resultList;
+    Typeface fredoka,nunito_bold,nunito_Extrabold;
 
     @Override
     public void onBackPressed() {
@@ -111,52 +114,77 @@ public class workSpace extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        setTabLayout(tabLayout);
         vClass.setStatusBar(getWindow(), getApplicationContext(),R.color.colorPrimaryDark);
 
     }
 
+    void setTabLayout(TabLayout tabLayout){
+        final int[] unselectedDrawables= new int[]{R.drawable.notselected_course_book,R.drawable.notselected_teacher,R.drawable.notselected_tasks};
+        final int[] selectedDrawables = new int[]{R.drawable.selected_course_book,R.drawable.selected_teacher,R.drawable.selected_tasks};
+        for(int i=1;i<3;i++){
+            tabLayout.getTabAt(i).setIcon(unselectedDrawables[i]);
+        }
+        tabLayout.getTabAt(0).setIcon(R.drawable.selected_course_book);
+        //TABICONS INITIALISED
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                tab.setIcon(selectedDrawables[position]);
+                mViewPager.setCurrentItem(position);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                tab.setIcon(unselectedDrawables[position]);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+    }
+
     void setToolbars() {
+        fredoka=Typeface.createFromAsset(getAssets(),"fonts/FredokaOne-Regular.ttf");
+        nunito_bold=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Bold.ttf");
+        nunito_Extrabold=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-ExtraBold.ttf");
         Toolbar toolbar = (Toolbar) findViewById(R.id.workspacetoptoolbar);
-        toolbar.setTitle("Zchedule");
-        setSupportActionBar(toolbar);
+        toolbar.inflateMenu(R.menu.menu_workspace_top);
+        TextView title = (TextView)toolbar.findViewById(R.id.workSpace_title);
+        title.setTypeface(fredoka);
+        //setSupportActionBar(toolbar);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                int id = item.getItemId();
+
+                switch (id){
+                    case R.id.toSchedule:
+                        Intent i = new Intent(workSpace.this, schedule.class);
+                        startActivity(i);
+                        break;
+                    case R.id.refresh:
+                        scrapper.tryRefresh = true;
+                        startActivity(new Intent(workSpace.this, scrapper.class));
+                        overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
+                        finish();
+                        break;
+                    case R.id.action_more_settings:
+                        startActivity(new Intent(workSpace.this,settings.class));
+                        break;
+                    case  R.id.action_show_about:
+                        startActivity(new Intent(workSpace.this,About.class));
+                        break;
+                }
+                return true;
+            }
+        });
     }  //SET THE TOOLBARS FOR THE WORKSPACE CLASS
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_workspace_top, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-
-        switch (id){
-            case R.id.toSchedule:
-                Intent i = new Intent(workSpace.this, schedule.class);
-                startActivity(i);
-                break;
-            case R.id.refresh:
-                scrapper.tryRefresh = true;
-                startActivity(new Intent(workSpace.this, scrapper.class));
-                overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
-                finish();
-                break;
-            case R.id.action_more_settings:
-                startActivity(new Intent(workSpace.this,settings.class));
-                break;
-            case  R.id.action_show_about:
-                startActivity(new Intent(workSpace.this,About.class));
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     /**
      * A placeholder fragment containing a simple view.
@@ -169,8 +197,11 @@ public class workSpace extends AppCompatActivity {
         private static final String ARG_SECTION_NUMBER = "section_number";
         EditText teacherSearch;
         List<teacher> searchResult;
+        Typeface nunito_reg,nunito_bold;
 
         public PlaceholderFragment() {
+            nunito_reg= Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Regular.ttf");
+            nunito_bold= Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Bold.ttf");
         }
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
@@ -385,6 +416,7 @@ public class workSpace extends AppCompatActivity {
         void setSearcher(View view) {
             searchResult = new ArrayList<>();
             teacherSearch = (EditText) view.findViewById(R.id.teachers_searchText);
+            teacherSearch.setTypeface(nunito_reg);
             resultList = (ListView) view.findViewById(R.id.teachers_search_list);
             final listAdapter_searchTeacher searchAdapter = new listAdapter_searchTeacher(context, searchResult,teacherSearch);
             resultList.setAdapter(searchAdapter);
@@ -443,14 +475,19 @@ public class workSpace extends AppCompatActivity {
             }
         }
 
-        int[] colors = new int[]{R.color.tufts_blue,R.color.sunflower, R.color.nephritis, R.color.green_cyan, R.color.amethyst, R.color.pomegranate};
+        int[] colors = new int[]{R.color.bg_screen1, R.color.bg_screen2,R.color.bg_screen3,R.color.bg_screen4,R.color.bg_screen6};
 
         View getTaskView(final int index) {
             final Notification_Holder cTask = vClass.notes.get(index);
             final View taskView = getActivity().getLayoutInflater().inflate(R.layout.course_task_view, null);
-            ((TextView) taskView.findViewById(R.id.task_title)).setText(cTask.title);
+            TextView title =((TextView) taskView.findViewById(R.id.task_title));
+            title.setTypeface(nunito_bold);
+            title.setText(cTask.title);
             TextView deadLineTextView= (TextView) taskView.findViewById(R.id.task_deadLine);
-            ((TextView) taskView.findViewById(R.id.task_desc)).setText(cTask.content);
+            deadLineTextView.setTypeface(nunito_reg);
+            TextView desc=((TextView) taskView.findViewById(R.id.task_desc));
+            desc.setTypeface(nunito_reg);
+            desc.setText(cTask.content);
             (taskView.findViewById(R.id.task_delete)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -464,7 +501,7 @@ public class workSpace extends AppCompatActivity {
             });
             Calendar deadLine = cTask.cal;
             deadLineTextView.setText(getDateTimeString(deadLine));
-            taskView.setBackground(getResources().getDrawable(R.drawable.soft_corner_taskview));
+            //taskView.setBackground(getResources().getDrawable(R.drawable.soft_corner_taskview));
             GradientDrawable softShape = (GradientDrawable) taskView.getBackground();
             final int colorIndex = index % (colors.length);
             softShape.setColor(getResources().getColor(colors[colorIndex]));
@@ -542,14 +579,11 @@ public class workSpace extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             return PlaceholderFragment.newInstance(position + 1);
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
             return 3;
         }
 
@@ -565,6 +599,9 @@ public class workSpace extends AppCompatActivity {
             }
             return null;
         }
+
+
+
     }
 
     public static void writeCabListToPrefs() {

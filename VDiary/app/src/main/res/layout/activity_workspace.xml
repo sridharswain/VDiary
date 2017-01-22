@@ -15,7 +15,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="100dp"
         android:paddingTop="@dimen/appbar_padding_top"
         android:theme="@style/MyAppBar"
         android:background="@drawable/background_toolbar"
@@ -26,7 +26,15 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/transparent"
-            app:titleTextColor="@android:color/white">
+            android:paddingRight="14dp">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Zchedule"
+                android:textSize="30dp"
+                android:textColor="@android:color/white"
+                android:id="@+id/workSpace_title"
+                />
 
         </android.support.v7.widget.Toolbar>
 

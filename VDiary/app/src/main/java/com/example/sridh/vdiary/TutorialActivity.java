@@ -42,8 +42,6 @@ public class TutorialActivity extends AppCompatActivity {
         }// Making notification bar transparent
 
         initLayout();
-
-        setIsFirstLaunch();
     }
 
     void setIsFirstLaunch(){
@@ -135,6 +133,7 @@ public class TutorialActivity extends AppCompatActivity {
     }
 
     void launchScrapper(){
+        setIsFirstLaunch();
         startActivity(new Intent(TutorialActivity.this,scrapper.class));
         overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
         finish();

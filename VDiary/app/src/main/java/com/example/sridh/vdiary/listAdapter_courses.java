@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.graphics.Typeface;
 
 import java.util.List;
 
@@ -19,11 +20,14 @@ public class listAdapter_courses extends BaseAdapter {
     Context context;
     public static View rowview;
     public static LayoutInflater inflater=null;
+    Typeface nunito_reg,nunito_bold;
 
     //Constructor
     listAdapter_courses(Context t, List<subject> l)
     {
         context=t;
+        nunito_reg=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Regular.ttf");
+        nunito_bold=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Bold.ttf");
         list=l;
         inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -66,6 +70,10 @@ public class listAdapter_courses extends BaseAdapter {
         holder.teachername=(TextView)rowview.findViewById(R.id.course_teacher);
         holder.type=(TextView)rowview.findViewById(R.id.course_type);
 
+        holder.subname.setTypeface(nunito_bold);
+        holder.teachername.setTypeface(nunito_reg);
+        holder.attendance.setTypeface(nunito_reg);
+        holder.type.setTypeface(nunito_reg);
         //set items
         holder.subname.setText(sub.title);
         holder.teachername.setText(sub.teacher);

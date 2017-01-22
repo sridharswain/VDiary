@@ -26,8 +26,7 @@
         android:maxWidth="270dp"
         android:text="SOFTWARE ENGINEERING AND DISCREETE AND MATHEMATICS FS"
         android:layout_toRightOf="@id/widget_type"
-        android:textSize="17sp"
-        android:textStyle="normal|bold" />
+        android:textSize="17sp" />
 
     <TextView
         android:layout_width="wrap_content"

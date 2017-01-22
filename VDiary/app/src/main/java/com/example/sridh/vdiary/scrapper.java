@@ -176,7 +176,8 @@ public class scrapper extends AppCompatActivity {
                 if (schedule.getUrl().equals("https://academicscc.vit.ac.in/student/course_regular.asp?sem=" + vClass.SEM)) {
                     getFormTable1();
                     getFromTable2();
-                } else {
+                }
+                else if(loggedIn) {
                     new waitForLogIn().execute();
                 }
             }
@@ -198,7 +199,7 @@ public class scrapper extends AppCompatActivity {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            getAttendance();
+            if (loggedIn) getAttendance();
         }
     } //WEBVIEWCLIENT TO GET ATTENDANCE
 
@@ -236,7 +237,6 @@ public class scrapper extends AppCompatActivity {
         reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    new waitForLogIn().execute(); //NEEDS HIGHER LEVEL OF TESTING
                     loginWebView.setWebViewClient(new loginClient());
                     loginWebView.loadUrl("https://academicscc.vit.ac.in/student/stud_login.asp");
                     status.setText("Building Captcha...");
@@ -359,7 +359,7 @@ public class scrapper extends AppCompatActivity {
                                                         schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[2].innerText.toString()"), new ValueCallback<String>() {
                                                             @Override
                                                             public void onReceiveValue(String name) {
-                                                                sub.title = trim(name);
+                                                                sub.title = toTitleCase(trim(name));
                                                             }
                                                         });
                                                         //TEACHER
@@ -367,7 +367,7 @@ public class scrapper extends AppCompatActivity {
                                                             @Override
                                                             public void onReceiveValue(String teacher) {
                                                                 String rawTeacher = trim(teacher).split("-")[0];
-                                                                sub.teacher = rawTeacher.substring(0, rawTeacher.length() - 1);
+                                                                sub.teacher = toTitleCase(rawTeacher.substring(0, rawTeacher.length() - 1));
                                                             }
                                                         });
                                                         //TYPE
@@ -620,73 +620,6 @@ public class scrapper extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            /*SharedPreferences so=context.getSharedPreferences("cancelprefs",Context.MODE_PRIVATE);
-            if(so.getBoolean("log",false)) {
-                List<List<subject>> temp=vClass.timeTable;//new Gson().fromJson(getSharedPreferences("academicPrefs",Context.MODE_PRIVATE).getString("schedule",""),new TypeToken<List<List<subject>>>(){}.getType());
-                Intent intent = new Intent(context, NotifyService.class);
-                PendingIntent pendingintent;
-                AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                for (int k = 0; k < temp.size(); k++) {
-                    List<subject> f = temp.get(k);
-                    for (int l = 0; l < f.size(); l++) {
-                        subject sub = f.get(l);
-                        if (!sub.type.equals("")) {
-                            pendingintent = PendingIntent.getBroadcast(context, sub.notif_id, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-                            alarm.cancel(pendingintent);
-
-                        }
-                    }
-                }
-
-            }
-            Toast.makeText(scrapper.this, "All alarms cancelled", Toast.LENGTH_SHORT).show();
-            SharedPreferences.Editor ef=so.edit();
-            ef.putBoolean("log",true);
-            ef.apply();
-
-                SharedPreferences settingprefs=getSharedPreferences(settings.SETTING_PREFS_NAME,Context.MODE_PRIVATE);
-                if (settingprefs.getBoolean(settings.SHOW_NOTIF_KEY,true)) {
-                    //Sparsha code starts from here to schedule notifications for the timetable class
-                    for (int k = 0; k < vClass.timeTable.size(); k++) {
-                        List<subject> f = vClass.timeTable.get(k);
-                        for (int l = 0; l < f.size(); l++) {
-                            subject sub = f.get(l);
-                            if (!sub.type.equals("")) {
-                                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                                Intent in = new Intent(scrapper.this, NotifyService.class);
-                                scrapper.editor.putInt("id_time", n_id);
-                                Calendar c = Calendar.getInstance();
-                                int st_hr, st_min, ampm;
-                                st_hr = Integer.parseInt(sub.startTime.substring(0, 2));
-                                st_min = Integer.parseInt(sub.startTime.substring(3, 5));
-                                String kk = sub.startTime.substring(6);
-
-                                if (kk.equals("AM"))
-                                    ampm = 0;
-                                else
-                                    ampm = 1;
-
-                                c.set(Calendar.HOUR, st_hr);
-                                c.set(Calendar.MINUTE, st_min);
-                                c.set(Calendar.SECOND, 0);
-                                c.set(Calendar.DAY_OF_WEEK, k + 2);
-                                c.set(Calendar.AM_PM, ampm);
-                                Notification_Holder nh = new Notification_Holder(c, sub.title + " " + sub.code, sub.room,"Upcoming class in 5 minutes");
-                                Gson j = new Gson();
-                                in.putExtra("one", j.toJson(nh));
-                                in.putExtra("intent_chooser", "one");
-                                PendingIntent pintent = PendingIntent.getBroadcast(context, scrapper.n_id, in, 0);
-                                vClass.timeTable.get(k).get(l).notif_id = n_id;
-                                n_id++;
-                                Log.d("tagthem2",nh.title+"    "+nh.cal.get(Calendar.HOUR));
-                                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() - 5 * 60 * 1000, 24 * 7 * 60 * 60 * 1000, pintent);
-                            }
-                        }
-                    }
-                }
-                n_id=0;*/
-
-
 
             createNotification(context);
             Calendar calendar=Calendar.getInstance();
@@ -932,5 +865,25 @@ public class scrapper extends AppCompatActivity {
         ComponentName thisWidget = new ComponentName(context, widget.class);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_today);
+    }
+
+    String toTitleCase(String input){
+        StringBuilder titleCase = new StringBuilder();
+        boolean nextTitleCase = true;
+        for (char c : input.toCharArray()) {
+            if (Character.isSpaceChar(c)) {
+                nextTitleCase = true;
+            }
+            else if (nextTitleCase) {
+                c = Character.toUpperCase(c);
+                nextTitleCase = false;
+            }
+            else{
+                c=Character.toLowerCase(c);
+                nextTitleCase=false;
+            }
+            titleCase.append(c);
+        }
+        return titleCase.toString();
     }
 }

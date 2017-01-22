@@ -7,8 +7,18 @@
     <EditText
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:hint="Search.."
-        android:id="@+id/teachers_searchText"/>
+        android:hint="Search Your Faculty  ..."
+        android:id="@+id/teachers_searchText"
+        android:paddingEnd="40dp"/>
+    <ImageView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_search"
+        android:layout_alignEnd="@id/teachers_searchText"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="5dp"
+        />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +35,7 @@
         android:stackFromBottom="false"
         android:contextClickable="false"
         android:choiceMode="singleChoice"
-        android:background="@android:color/white"/>
+        android:background="@color/colorPrimaryLight"/>
     <android.support.design.widget.FloatingActionButton
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"

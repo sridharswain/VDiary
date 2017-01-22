@@ -1,9 +1,11 @@
 package com.example.sridh.vdiary;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ListAdapter;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -15,19 +17,20 @@ public class showSubject extends AppCompatActivity {
     subject clicked;
     int width=vClass.width;
     int height=vClass.height;
-    Context con;
+    Context context;
     int att,noofdays;
     NumberPicker leave;
     String array[]=new String[101];
 
     TextView mon,tue,wed,thu,fri,newAtt;
     public static ListAdapter todoList;
+    Typeface nunito_bold,nunito_reg;
     int c=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_subject);
-        con=this;
+        context =this;
         for(int i=50;i>=-50;i--)
         {
             array[c++]=Integer.toString(i);
@@ -46,37 +49,42 @@ public class showSubject extends AppCompatActivity {
         show(clicked); //Initialize the popup activity to show the contents of the subject
     }
     void show(subject sub){
+        nunito_reg=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Regular.ttf");
+        nunito_bold=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Bold.ttf");
         getWindow().setLayout(width,((int)(0.68*height)));
-        ((TextView)findViewById(R.id.subject_Title)).setText(sub.title);
-        ((TextView)findViewById(R.id.subject_Teacher)).setText(sub.teacher);
+        TextView Title = ((TextView)findViewById(R.id.subject_Title));
+        Title.setTypeface(nunito_bold);
+        Title.setText(sub.title);
+        TextView teacher = ((TextView)findViewById(R.id.subject_Teacher));
+        teacher.setTypeface(nunito_reg);
+        teacher.setText(sub.teacher);
         newAtt=(TextView)findViewById(R.id.tv_newAtt);
         String attString = clicked.attString;
         att = Integer.parseInt(attString.substring(0,attString.length()-1));
         noofdays=clicked.ctd;
         newAtt.setText(attString);
-        if(noofdays!=0) {
+        newAtt.setTypeface(nunito_reg);
             leave.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                 @Override
                 public void onValueChange(NumberPicker numberPicker, int old, int next) {
                     double newAttendance=0.0;
                     int leave=next;
                     leave=leave-50;
-                    if(leave>=0) {
-                        double class_att = att * noofdays / 100.0;
-                        double att_final = (class_att / (noofdays + leave)) * 100.0;
-                        newAttendance = ((int) (att_final));
-                    }
-                    else if(leave<0)
+                    double class_att = att * noofdays / 100.0;
+                    if(leave<0)
                     {
                         leave=leave*-1;
-                        double class_att2=att*noofdays/100.0;
-                        double att_final2=(class_att2+leave)/(noofdays+leave)*100.0;
+                        double att_final2=(class_att+leave)/(noofdays+leave)*100.0;
                         newAttendance=((int) (att_final2));
+                    }
+                    else if((noofdays+leave)>=0) {
+                        class_att = att * noofdays / 100.0;
+                        double att_final = (class_att / (noofdays + leave)) * 100.0;
+                        newAttendance = ((int) (att_final));
                     }
                     newAtt.setText(newAttendance+"%");
                 }
             });
-        }
     }
 
 
@@ -116,6 +124,12 @@ public class showSubject extends AppCompatActivity {
             wed=(TextView)findViewById(R.id.tv_wed);
             thu=(TextView)findViewById(R.id.tv_thu);
             fri=(TextView)findViewById(R.id.tv_fri);
+
+            mon.setTypeface(nunito_reg);
+            tue.setTypeface(nunito_reg);
+            wed.setTypeface(nunito_reg);
+            thu.setTypeface(nunito_reg);
+            fri.setTypeface(nunito_reg);
             TextView occurred=null;
             for (int i: occurrence){
                 switch (i){

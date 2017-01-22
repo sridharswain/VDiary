@@ -69,15 +69,15 @@ public class settings extends AppCompatActivity {
     }
     public static void ShutDownNotifications()
     {
-        /*Intent intent=new Intent(con,NotifyService.class);
+        /*Intent intent=new Intent(context,NotifyService.class);
         PendingIntent pendingintent;
-        AlarmManager alarm=(AlarmManager)con.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarm=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         for (int k = 0; k < vClass.timeTable.size(); k++) {
             List<subject> f = vClass.timeTable.get(k);
             for (int l = 0; l < f.size(); l++) {
                 subject sub = f.get(l);
                 if(!sub.type.equals("")) {
-                    pendingintent = PendingIntent.getBroadcast(con, sub.notif_id, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                    pendingintent = PendingIntent.getBroadcast(context, sub.notif_id, intent, PendingIntent.FLAG_CANCEL_CURRENT);
                     alarm.cancel(pendingintent);
 
                 }
@@ -96,8 +96,8 @@ public class settings extends AppCompatActivity {
             for (int l = 0; l < f.size(); l++) {
                 subject sub = f.get(l);
                 if (!sub.type.equals("")) {
-                    AlarmManager alarmManager = (AlarmManager) con.getSystemService(Context.ALARM_SERVICE);
-                    Intent in = new Intent(con, NotifyService.class);
+                    AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                    Intent in = new Intent(context, NotifyService.class);
                     Calendar c = Calendar.getInstance();
                     int st_hr, st_min, ampm;
                     st_hr = Integer.parseInt(sub.startTime.substring(0, 2));
@@ -117,10 +117,10 @@ public class settings extends AppCompatActivity {
                     Notification_Holder noh = new Notification_Holder(c,sub.title + " " + sub.code, sub.room);
                     Gson jackson = new Gson();
                     String hh=jackson.toJson(noh);
-                    Toast.makeText(con, hh, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, hh, Toast.LENGTH_SHORT).show();
                     in.putExtra("one", hh);
                     in.putExtra("intent_chooser","one");
-                    PendingIntent pintent = PendingIntent.getBroadcast(con,sub.notif_id, in, 0);
+                    PendingIntent pintent = PendingIntent.getBroadcast(context,sub.notif_id, in, 0);
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() - 5 * 60 * 1000, 24 * 7 * 60 * 60 * 1000, pintent);
                     o++;
                 }

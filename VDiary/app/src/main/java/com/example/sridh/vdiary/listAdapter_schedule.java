@@ -1,6 +1,7 @@
 package com.example.sridh.vdiary;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +20,14 @@ public class listAdapter_schedule extends BaseAdapter {
 
     public static View rowview;
     public static LayoutInflater inflater=null;
+    Typeface nunito_reg,nunito_bold;
     //parameterized constructor
     public listAdapter_schedule(Context c, List<subject> j)
     {
         scheduleList=j;
         context=c;
+        nunito_reg=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Regular.ttf");
+        nunito_bold=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Bold.ttf");
         inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
     @Override
@@ -47,9 +51,13 @@ public class listAdapter_schedule extends BaseAdapter {
         rowview=inflater.inflate(R.layout.rowview_schedule,null);
         subject course=scheduleList.get(position);
         TextView title= ((TextView)rowview.findViewById(R.id.schedule_title));
+        title.setTypeface(nunito_bold);
         TextView type =(TextView)rowview.findViewById(R.id.schedule_type);
+        type.setTypeface(nunito_reg);
         TextView Time=(TextView)rowview.findViewById(R.id.schedule_Time);
+        Time.setTypeface(nunito_reg);
         TextView room= (TextView)rowview.findViewById(R.id.schedule_room);
+        room.setTypeface(nunito_reg);
         title.setText(course.title);
         if(!course.type.equals("")){
             type.setText(course.type);
