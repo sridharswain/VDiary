@@ -127,54 +127,30 @@
         <NumberPicker
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="70dp"
             android:id="@+id/leave_picker"
-            android:theme="@style/AppTheme.Picker" />
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/attendLayout"
-            android:layout_alignTop="@id/leave_picker"
-            android:layout_toEndOf="@id/leave_picker"
-            android:layout_marginStart="7dp"
-            android:layout_marginTop="20dp">
-        <ImageView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/ic_attend"
-            android:id="@+id/ic_attend"
-            android:layout_alignParentStart="true"/>
-            <TextView
+            android:theme="@style/AppTheme.Picker"
+            android:layout_marginTop="16dp"/>
+        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bunk"
+                android:text="Attend"
                 android:textColor="@android:color/white"
-                android:layout_toEndOf="@id/ic_attend"
-                android:layout_centerVertical="true"
+                android:layout_alignStart="@id/leave_picker"
+                android:layout_alignEnd="@id/leave_picker"
+                android:textAlignment="center"
                 android:id="@+id/tv_attend" />
-            </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/bunkLayout"
-            android:layout_alignBottom="@id/leave_picker"
-            android:layout_toEndOf="@id/leave_picker"
-            android:layout_marginBottom="20dp"
-            android:layout_marginStart="7dp">
-            <ImageView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:src="@drawable/ic_bunk"
-                android:id="@+id/ic_bunk"
-                android:layout_alignParentStart="true" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Attend"
+            android:text="Bunk"
             android:textColor="@android:color/white"
             android:id="@+id/tv_bunk"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/ic_bunk"/>
-        </RelativeLayout>
+            android:layout_below="@id/leave_picker"
+            android:layout_alignStart="@id/leave_picker"
+            android:layout_alignEnd="@id/leave_picker"
+            android:textAlignment="center"/>
+
     </RelativeLayout>
 </LinearLayout>

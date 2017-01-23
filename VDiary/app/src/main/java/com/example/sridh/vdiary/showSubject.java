@@ -40,6 +40,8 @@ public class showSubject extends AppCompatActivity {
     }
 
     void show(subject sub) {
+        nunito_reg = Typeface.createFromAsset(getAssets(), "fonts/Nunito-Regular.ttf");
+        nunito_bold = Typeface.createFromAsset(getAssets(), "fonts/Nunito-Bold.ttf");
         getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         TextView Title = ((TextView) findViewById(R.id.subject_Title));
         Title.setTypeface(nunito_bold);
@@ -53,41 +55,22 @@ public class showSubject extends AppCompatActivity {
         noofdays = clicked.ctd;
         newAtt.setText(attString);
         newAtt.setTypeface(nunito_reg);
-        nunito_reg = Typeface.createFromAsset(getAssets(), "fonts/Nunito-Regular.ttf");
-        nunito_bold = Typeface.createFromAsset(getAssets(), "fonts/Nunito-Bold.ttf");
         leave = (NumberPicker) findViewById(R.id.leave_picker);
         final String[] intArray = numArray();
-        leave.setMaxValue(101);
+        leave.setMaxValue(100);
         leave.setMinValue(0);
         leave.setValue(50);
         leave.setWrapSelectorWheel(false);
         leave.setDisplayedValues(intArray);
-        leave.setFormatter(new NumberPicker.Formatter() {
+        /*leave.setFormatter(new NumberPicker.Formatter() {
             @Override
             public String format(int index) {
                 return intArray[index];
             }
-        });
+        });*/
         final numberPickerValueChangeHandler leaveScrollHandler = new numberPickerValueChangeHandler();
-        //leave.setOnValueChangedListener(leaveScrollHandler);
-        (findViewById(R.id.bunkLayout)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*int oldValue = getNumberPickerValue();
-                int newValue = oldValue + 1;
-                leave.setValue(newValue);
-                leaveScrollHandler.onValueChange(leave,oldValue,newValue);*/
-            }
-        });
-        (findViewById(R.id.attendLayout)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*int oldValue = getNumberPickerValue();
-                int newValue = oldValue - 1;
-                leave.setValue(newValue);
-                leaveScrollHandler.onValueChange(leave,oldValue,newValue);*/
-            }
-        });
+        leave.setOnValueChangedListener(leaveScrollHandler);
+        leave.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
     }
 
 

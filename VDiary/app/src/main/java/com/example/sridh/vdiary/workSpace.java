@@ -149,8 +149,8 @@ public class workSpace extends AppCompatActivity {
 
     void setToolbars() {
         fredoka=Typeface.createFromAsset(getAssets(),"fonts/FredokaOne-Regular.ttf");
-        nunito_bold=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Bold.ttf");
-        nunito_Extrabold=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-ExtraBold.ttf");
+        nunito_bold=Typeface.createFromAsset(getAssets(),"fonts/Nunito-Bold.ttf");
+        nunito_Extrabold=Typeface.createFromAsset(getAssets(),"fonts/Nunito-ExtraBold.ttf");
         Toolbar toolbar = (Toolbar) findViewById(R.id.workspacetoptoolbar);
         toolbar.inflateMenu(R.menu.menu_workspace_top);
         TextView title = (TextView)toolbar.findViewById(R.id.workSpace_title);
@@ -199,9 +199,9 @@ public class workSpace extends AppCompatActivity {
         List<teacher> searchResult;
         Typeface nunito_reg,nunito_bold;
 
-        public PlaceholderFragment() {
-            nunito_reg= Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Regular.ttf");
-            nunito_bold= Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Bold.ttf");
+        public PlaceholderFragment(){
+            nunito_reg = Typeface.createFromAsset(context.getAssets(), "fonts/Nunito-Regular.ttf");
+            nunito_bold = Typeface.createFromAsset(context.getAssets(), "fonts/Nunito-Bold.ttf");
         }
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();

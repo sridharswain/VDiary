@@ -52,7 +52,6 @@ public class scrapper extends AppCompatActivity {
     //for Notifications
     public static String title;
     public static Context context;
-    public static PendingIntent pintent;
     public static SharedPreferences shared;
     public static SharedPreferences.Editor editor;
     static int n_id=0;
@@ -93,7 +92,6 @@ public class scrapper extends AppCompatActivity {
     }
 
     void start() {
-        Log.d("tryRefresh",tryRefresh+"");
         if(!tryRefresh && readFromPrefs()){
             startActivity(new Intent(this, workSpace.class));
             overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
@@ -101,9 +99,7 @@ public class scrapper extends AppCompatActivity {
         }
         else{
             initWebViews();
-            setUp(); //after intwebview
-            //new compileInf().execute();
-            //new checkBooleans().execute();
+            setUp();
         }
     } //STARTS THE PROCESSING
 
@@ -128,7 +124,7 @@ public class scrapper extends AppCompatActivity {
                     loginWebView.evaluateJavascript(getcmd("return document.getElementsByName(\"message\")[0].value"), new ValueCallback<String>() {
                         @Override
                         public void onReceiveValue(String message) {
-                            if (!message.equals("\"\"") & !message.equals("null")) {
+                            if (!message.equals("\"\"") && !message.equals("null")) {
                                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                                 captchaBox.setText("");
                             }

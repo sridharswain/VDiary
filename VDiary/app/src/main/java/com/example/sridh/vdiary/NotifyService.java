@@ -28,15 +28,11 @@ public class NotifyService extends WakefulBroadcastReceiver {
             Calendar cal = Calendar.getInstance();
 
             Calendar notiCalendar= notificationHolder.cal;
-            Log.d("Created but cannotshow", notificationHolder.title);
-           if((notiCalendar.get(Calendar.DAY_OF_WEEK)==cal.get(Calendar.DAY_OF_WEEK) && notiCalendar.get(Calendar.HOUR)>= cal.get(Calendar.HOUR))) {
-               Log.d("hhug",notiCalendar.get(Calendar.HOUR)+"    "+cal.get(Calendar.HOUR));
+           if((notiCalendar.get(Calendar.DAY_OF_WEEK)==cal.get(Calendar.DAY_OF_WEEK) && notiCalendar.get(Calendar.HOUR)>= cal.get(Calendar.HOUR))) {;
                Notification_Creator notifcreator = new Notification_Creator(notificationHolder.title, notificationHolder.content, notificationHolder.ticker, context);
                notifcreator.create_notification();
-               Log.d("Will be shown", notificationHolder.title);
             }
 }
-        Log.d("is holiday", notificationHolder.title);
     }
     boolean isHolidayToday(Context context){
         SharedPreferences holidayPrefs= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE);
