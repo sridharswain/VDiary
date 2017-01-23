@@ -147,7 +147,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Attend"
+                android:text="Bunk"
                 android:textColor="@android:color/white"
                 android:layout_toEndOf="@id/ic_attend"
                 android:layout_centerVertical="true"
@@ -170,7 +170,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bunk  "
+            android:text="Attend"
             android:textColor="@android:color/white"
             android:id="@+id/tv_bunk"
             android:layout_centerVertical="true"

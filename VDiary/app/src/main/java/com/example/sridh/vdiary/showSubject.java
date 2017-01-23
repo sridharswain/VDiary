@@ -20,115 +20,94 @@ import java.util.List;
 
 public class showSubject extends AppCompatActivity {
     subject clicked;
-    int width=vClass.width;
-    int height=vClass.height;
+    final int min = -50;
+    final int max = 50;
     Context context;
-    int att,noofdays;
+    int att, noofdays;
     NumberPicker leave;
-    String array[]=new String[101];
 
-    TextView mon,tue,wed,thu,fri,newAtt;
-    public static ListAdapter todoList;
-    Typeface nunito_bold,nunito_reg;
-    int c=0;
+    TextView mon, tue, wed, thu, fri, newAtt;
+    Typeface nunito_bold, nunito_reg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_subject);
-        context =this;
-        for(int i=50;i>=-50;i--)
-        {
-            array[c++]=Integer.toString(i);
-        }
-        c=0;
-        int position=getIntent().getIntExtra("position",0);
-        clicked= vClass.subList.get(position);
-        leave=(NumberPicker)findViewById(R.id.leave_picker);
-        leave.setDisplayedValues(array);
-
-        leave.setMaxValue(100);
-        leave.setMinValue(0);
-        leave.setValue(50);
-
-        new Async_search(position).execute();
+        int position = getIntent().getIntExtra("position", 0);
+        clicked = vClass.subList.get(position);
         show(clicked); //Initialize the popup activity to show the contents of the subject
+        new Async_search(position).execute();
     }
-    void show(subject sub){
-        nunito_reg=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Regular.ttf");
-        nunito_bold=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Bold.ttf");
-        getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT );
-        TextView Title = ((TextView)findViewById(R.id.subject_Title));
+
+    void show(subject sub) {
+        getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        TextView Title = ((TextView) findViewById(R.id.subject_Title));
         Title.setTypeface(nunito_bold);
         Title.setText(sub.title);
-        TextView teacher = ((TextView)findViewById(R.id.subject_Teacher));
+        TextView teacher = ((TextView) findViewById(R.id.subject_Teacher));
         teacher.setTypeface(nunito_reg);
         teacher.setText(sub.teacher);
-        newAtt=(TextView)findViewById(R.id.tv_newAtt);
+        newAtt = (TextView) findViewById(R.id.tv_newAtt);
         String attString = clicked.attString;
-        att = Integer.parseInt(attString.substring(0,attString.length()-1));
-        noofdays=clicked.ctd;
+        att = Integer.parseInt(attString.substring(0, attString.length() - 1));
+        noofdays = clicked.ctd;
         newAtt.setText(attString);
         newAtt.setTypeface(nunito_reg);
-            leave.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-                @Override
-                public void onValueChange(NumberPicker numberPicker, int old, int next) {
-                    double newAttendance=0.0;
-                    int leave=next;
-                    leave=leave-50;
-                    double class_att = att * noofdays / 100.0;
-                    if(leave<0)
-                    {
-                        leave=leave*-1;
-                        double att_final2=(class_att+leave)/(noofdays+leave)*100.0;
-                        newAttendance=((int) (att_final2));
-                    }
-                    else if((noofdays+leave)>=0) {
-                        class_att = att * noofdays / 100.0;
-                        double att_final = (class_att / (noofdays + leave)) * 100.0;
-                        newAttendance = ((int) (att_final));
-                    }
-                    newAtt.setText(newAttendance+"%");
-                }
-            });
+        nunito_reg = Typeface.createFromAsset(getAssets(), "fonts/Nunito-Regular.ttf");
+        nunito_bold = Typeface.createFromAsset(getAssets(), "fonts/Nunito-Bold.ttf");
+        leave = (NumberPicker) findViewById(R.id.leave_picker);
+        final String[] intArray = numArray();
+        leave.setMaxValue(101);
+        leave.setMinValue(0);
+        leave.setValue(50);
+        leave.setWrapSelectorWheel(false);
+        leave.setDisplayedValues(intArray);
+        leave.setFormatter(new NumberPicker.Formatter() {
+            @Override
+            public String format(int index) {
+                return intArray[index];
+            }
+        });
+        final numberPickerValueChangeHandler leaveScrollHandler = new numberPickerValueChangeHandler();
+        //leave.setOnValueChangedListener(leaveScrollHandler);
         (findViewById(R.id.bunkLayout)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                leave.setValue(leave.getValue()+1);
-
+                /*int oldValue = getNumberPickerValue();
+                int newValue = oldValue + 1;
+                leave.setValue(newValue);
+                leaveScrollHandler.onValueChange(leave,oldValue,newValue);*/
             }
         });
         (findViewById(R.id.attendLayout)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                leave.setValue(leave.getValue()-1);
-                Toast.makeText(context, ""+leave.getValue(), Toast.LENGTH_SHORT).show();
-
+                /*int oldValue = getNumberPickerValue();
+                int newValue = oldValue - 1;
+                leave.setValue(newValue);
+                leaveScrollHandler.onValueChange(leave,oldValue,newValue);*/
             }
         });
     }
 
 
 
-    class Async_search extends AsyncTask<Void,Void,Void>
-    {
+    class Async_search extends AsyncTask<Void, Void, Void> {
         int position;
         ArrayList<Integer> occurrence;
-        Async_search(int x)
-        {
-            position=x;
+
+        Async_search(int x) {
+            position = x;
             occurrence = new ArrayList<>();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            subject sub=vClass.subList.get(position);
-            for(int i=0;i<vClass.timeTable.size();i++)
-            {
-                List<subject> z=vClass.timeTable.get(i);
-                for(int j=0;j<z.size();j++)
-                {
-                    if(z.get(j).title.equals(sub.title) && z.get(j).type.equals(sub.type))
-                    {
+            subject sub = vClass.subList.get(position);
+            for (int i = 0; i < vClass.timeTable.size(); i++) {
+                List<subject> z = vClass.timeTable.get(i);
+                for (int j = 0; j < z.size(); j++) {
+                    if (z.get(j).title.equals(sub.title) && z.get(j).type.equals(sub.type)) {
                         occurrence.add(i);
                     }
                 }
@@ -139,42 +118,70 @@ public class showSubject extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             //SET THE TEXTVIEWS OF OCUURENCE FOUND
-            mon=(TextView)findViewById(R.id.tv_mon);
-            tue=(TextView)findViewById(R.id.tv_tue);
-            wed=(TextView)findViewById(R.id.tv_wed);
-            thu=(TextView)findViewById(R.id.tv_thu);
-            fri=(TextView)findViewById(R.id.tv_fri);
+            mon = (TextView) findViewById(R.id.tv_mon);
+            tue = (TextView) findViewById(R.id.tv_tue);
+            wed = (TextView) findViewById(R.id.tv_wed);
+            thu = (TextView) findViewById(R.id.tv_thu);
+            fri = (TextView) findViewById(R.id.tv_fri);
 
             mon.setTypeface(nunito_reg);
             tue.setTypeface(nunito_reg);
             wed.setTypeface(nunito_reg);
             thu.setTypeface(nunito_reg);
             fri.setTypeface(nunito_reg);
-            TextView occurred=null;
-            for (int i: occurrence){
-                switch (i){
+            TextView occurred = null;
+            for (int i : occurrence) {
+                switch (i) {
                     case 0:
-                        occurred=mon;
+                        occurred = mon;
                         break;
                     case 1:
-                        occurred=tue;
+                        occurred = tue;
                         break;
                     case 2:
-                        occurred=wed;
+                        occurred = wed;
                         break;
                     case 3:
-                        occurred=thu;
+                        occurred = thu;
                         break;
                     case 4:
-                        occurred=fri;
+                        occurred = fri;
                         break;
                 }
-                if(occurred!=null) {
+                if (occurred != null) {
                     occurred.setTextColor(getResources().getColor(R.color.colorWhite));
                     occurred.setBackground(getResources().getDrawable(R.drawable.border_class_occurence));
                 }
             }
             super.onPostExecute(aVoid);
         }
+    }
+
+    class numberPickerValueChangeHandler implements NumberPicker.OnValueChangeListener{
+        @Override
+        public void onValueChange(NumberPicker numberPicker, int old, int next) {
+            double newAttendance = 0.0;
+            int leave = next;
+            leave = leave - 50;
+            double class_att = att * noofdays / 100.0;
+            if (leave < 0) {
+                leave = leave * -1;
+                double att_final2 = (class_att + leave) / (noofdays + leave) * 100.0;
+                newAttendance = ((int) (att_final2));
+            } else if ((noofdays + leave) >= 0) {
+                class_att = att * noofdays / 100.0;
+                double att_final = (class_att / (noofdays + leave)) * 100.0;
+                newAttendance = ((int) (att_final));
+            }
+            newAtt.setText(newAttendance + "%");
+        }
+    }
+
+    String[] numArray(){
+        String[] array= new String[101];
+        for(int i=50;i>=-50;i--){
+            array[50-i]=Integer.toString(i);
+        }
+        return array;
     }
 }

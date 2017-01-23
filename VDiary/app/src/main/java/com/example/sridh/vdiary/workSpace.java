@@ -222,7 +222,6 @@ public class workSpace extends AppCompatActivity {
                     FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.teachers_add);
                     ListView lv = (ListView) rootView.findViewById(R.id.teachers_list);
                     final listAdapter_teachers mad = new listAdapter_teachers(context, vClass.cablist);
-                    showSubject.todoList = mad;
                     listAdapter_searchTeacher.teacherAdapter = mad;
                     lv.setAdapter(mad);
                     fab.setOnClickListener(new View.OnClickListener() { //Onclick Listener for floating action Button

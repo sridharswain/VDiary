@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/task_deadLine"
         android:textSize="10dp"
-        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"/>
     <ImageButton
         android:layout_height="25dp"
@@ -39,4 +39,14 @@
         android:scaleType="fitXY"
         android:background="@android:color/transparent"
         android:id="@+id/task_delete"/>
+
+    <ImageButton
+        android:layout_height="25dp"
+        android:layout_width="25dp"
+        android:layout_below="@id/task_desc"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_edit"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent"
+        android:id="@+id/task_edit"/>
 </RelativeLayout>
