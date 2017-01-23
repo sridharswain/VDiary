@@ -4,11 +4,16 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +56,7 @@ public class showSubject extends AppCompatActivity {
     void show(subject sub){
         nunito_reg=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Regular.ttf");
         nunito_bold=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Bold.ttf");
-        getWindow().setLayout(width,((int)(0.68*height)));
+        getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT );
         TextView Title = ((TextView)findViewById(R.id.subject_Title));
         Title.setTypeface(nunito_bold);
         Title.setText(sub.title);
@@ -85,6 +90,20 @@ public class showSubject extends AppCompatActivity {
                     newAtt.setText(newAttendance+"%");
                 }
             });
+        (findViewById(R.id.bunkLayout)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                leave.setValue(leave.getValue()+1);
+            }
+        });
+        (findViewById(R.id.attendLayout)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                leave.setValue(leave.getValue()-1);
+                Toast.makeText(context, ""+leave.getValue(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
 
