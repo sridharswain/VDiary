@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:minHeight="20dp"
     android:background="#ffffff">
 
@@ -13,7 +14,6 @@
         android:background="#ffffff"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/course_type"
-        android:padding="0dp"
         android:text="RESEARCH METHODS IN MANAGEMENT"/>
 
     <TextView
@@ -23,7 +23,7 @@
         android:textSize="13dp"
         android:textColor="#939292"
         android:background="#ffffff"
-        android:padding="0dp"
+        android:paddingBottom="10dp"
         android:layout_alignTop="@+id/course_attendance"
         android:layout_alignStart="@+id/course_title"
         android:text="ANGELINE GAUTAMI FERNANDO"

@@ -93,10 +93,11 @@ public class scrapper extends AppCompatActivity {
     }
 
     void start() {
+        Log.d("tryRefresh",tryRefresh+"");
         if(!tryRefresh && readFromPrefs()){
             startActivity(new Intent(this, workSpace.class));
             overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
-            finish();
+            finalise();
         }
         else{
             initWebViews();
@@ -157,7 +158,7 @@ public class scrapper extends AppCompatActivity {
             if (tryRefresh) {
                 Toast.makeText(getApplicationContext(), "Connection Failed!", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(scrapper.this, workSpace.class));
-                finish();
+                finalise();
             } else {
                 status.setText("Connection Failed!");
                 showRetry();
@@ -202,6 +203,12 @@ public class scrapper extends AppCompatActivity {
             if (loggedIn) getAttendance();
         }
     } //WEBVIEWCLIENT TO GET ATTENDANCE
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finalise();
+    }
 
     private String getcmd(String js){
 
@@ -648,12 +655,16 @@ public class scrapper extends AppCompatActivity {
             startActivity(new Intent(scrapper.this,workSpace.class));
             overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
             finish();
+            try {
+                this.finalize();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
     } //REARRANGE THE INFORMATION SCRAPPED FORM THE WEBPAGE
 
     public static void createNotification(Context con){
         SharedPreferences noticationPrefs= con.getSharedPreferences("notificationPrefs",MODE_PRIVATE);
-        SharedPreferences.Editor notificationPrefsEditor= noticationPrefs.edit();
         int day=2;
         int notificationCode=1;
         for(List<subject> today: vClass.timeTable){
@@ -892,5 +903,13 @@ public class scrapper extends AppCompatActivity {
             titleCase.append(c);
         }
         return titleCase.toString();
+    }
+
+
+    void finalise(){
+        tryRefresh=false;
+        isLoaded=false;
+        loggedIn=false;
+        finish();
     }
 }

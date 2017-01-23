@@ -94,6 +94,7 @@ public class showSubject extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 leave.setValue(leave.getValue()+1);
+
             }
         });
         (findViewById(R.id.attendLayout)).setOnClickListener(new View.OnClickListener() {

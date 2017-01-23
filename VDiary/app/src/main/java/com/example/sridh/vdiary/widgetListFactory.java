@@ -9,7 +9,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import android.widget.Toast;
@@ -21,17 +24,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
-    Context context=null;
+public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory {
+    Context context = null;
     int today;
     List<subject> todaySchedule;
     List<List<subject>> timeTable;
     boolean shouldShowAttendance;
-    String SETTING_PREFS_NAME= "settingPrefs";
-    String SHOW_ATT_KEY ="showAttendance";
-    public widgetListFactory(Context c, Intent intent){
-        this.context=c;
+    String SETTING_PREFS_NAME = "settingPrefs";
+    String SHOW_ATT_KEY = "showAttendance";
+
+    public widgetListFactory(Context c, Intent intent) {
+        this.context = c;
     }
+
     @Override
     public void onCreate() {
 
@@ -39,18 +44,18 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
 
     @Override
     public void onDataSetChanged() {
-        today=Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        SharedPreferences prefs=context.getSharedPreferences("academicPrefs",Context.MODE_PRIVATE);
-        String scheduleJson=prefs.getString("schedule",null);
-        if(scheduleJson!=null){
-            Gson g= new Gson();
-            timeTable=g.fromJson(scheduleJson,new TypeToken<ArrayList<List<subject>>>() {}.getType());
-            todaySchedule=timeTable.get(today-2);
-        }
-        else{
+        today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        SharedPreferences prefs = context.getSharedPreferences("academicPrefs", Context.MODE_PRIVATE);
+        String scheduleJson = prefs.getString("schedule", null);
+        if (scheduleJson != null) {
+            Gson g = new Gson();
+            timeTable = g.fromJson(scheduleJson, new TypeToken<ArrayList<List<subject>>>() {
+            }.getType());
+            todaySchedule = timeTable.get(today - 2);
+        } else {
 
         }
-        shouldShowAttendance= context.getSharedPreferences(SETTING_PREFS_NAME,Context.MODE_PRIVATE).getBoolean(SHOW_ATT_KEY,false);
+        shouldShowAttendance = context.getSharedPreferences(SETTING_PREFS_NAME, Context.MODE_PRIVATE).getBoolean(SHOW_ATT_KEY, false);
     }
 
     @Override
@@ -66,23 +71,21 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory{
     @Override
     public RemoteViews getViewAt(int position) {
         RemoteViews row;
-        subject session=todaySchedule.get(position);
-        if(session.type.equals("")){
-            row = new RemoteViews(context.getPackageName(),R.layout.rowview_widget_free_slot);
-            row.setTextViewText(R.id.widget_free_slot_title,session.title);
-        }
-        else{
+        subject session = todaySchedule.get(position);
+        if (session.type.equals("")) {
+            row = new RemoteViews(context.getPackageName(), R.layout.rowview_widget_free_slot);
+            row.setTextViewText(R.id.widget_free_slot_title, session.title);
+        } else {
             if (shouldShowAttendance) {
                 row = new RemoteViews(context.getPackageName(), R.layout.rowview_widget_with_attendance);
 
-                row.setTextViewText(R.id.widget_attendance,session.attString);
-            }
-            else
-                row = new RemoteViews(context.getPackageName(),R.layout.rowview_widget_class_slot);
-            row.setTextViewText(R.id.widget_title,session.title);
-            row.setTextViewText(R.id.widget_Time,session.startTime.toLowerCase());
-            row.setTextViewText(R.id.widget_type,session.type);
-            row.setTextViewText(R.id.widget_room,session.room);
+                row.setTextViewText(R.id.widget_attendance, session.attString);
+            } else
+                row = new RemoteViews(context.getPackageName(), R.layout.rowview_widget_class_slot);
+            row.setTextViewText(R.id.widget_title, session.title);
+            row.setTextViewText(R.id.widget_Time, session.startTime.toLowerCase());
+            row.setTextViewText(R.id.widget_type, session.type);
+            row.setTextViewText(R.id.widget_room, session.room);
         }
         return row;
     }
