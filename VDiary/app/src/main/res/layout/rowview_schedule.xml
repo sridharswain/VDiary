@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dp"
-    android:background="#ffffff">
+    android:background="#ffffff"
+    android:paddingBottom="7dp"
+    android:paddingTop="7dp">
 
 
     <TextView
@@ -42,7 +44,7 @@
         android:id="@+id/schedule_Time"
         android:background="@android:color/transparent"
         android:layout_below="@id/schedule_title"
-        android:layout_toEndOf="@id/schedule_type"/>
+        android:layout_toEndOf="@id/schedule_type" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,7 +52,8 @@
         android:layout_toEndOf="@id/schedule_Time"
         android:layout_marginStart="15dp"
         android:layout_below="@id/schedule_title"
-        android:text="AB605"/>
+        android:text="AB605"
+        android:paddingBottom="15dp"/>
 
 
 

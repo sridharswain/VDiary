@@ -7,12 +7,16 @@
     android:layout_height="match_parent"
     android:background="@color/taskbar_orange"
     tools:context="com.example.sridh.vdiary.scrapper">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/loginView"
+        android:visibility="visible"
+        android:layout_centerInParent="true">
 <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/loginView"
-    android:visibility="visible"
-    android:layout_centerInParent="true">
+    android:layout_height="wrap_content"
+    android:visibility="visible">
 
     <ImageView
         android:layout_width="220dp"
@@ -30,7 +34,7 @@
         android:hint="Registration Number"
         android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white" />
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,7 +44,8 @@
         android:layout_alignEnd="@+id/regBox"
         android:layout_below="@+id/regBox"
         android:hint="Password"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:layout_marginTop="7dp"/>
     <ImageButton
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
@@ -55,7 +60,7 @@
         android:layout_height="wrap_content"
         android:inputType="textCapCharacters"
         android:id="@+id/captchaBox"
-        android:layout_alignTop="@+id/captcha"
+        android:layout_alignBottom="@+id/captcha"
         android:layout_alignEnd="@+id/passbox"
         android:layout_toEndOf="@+id/captcha"
         android:hint="Captcha"
@@ -67,7 +72,8 @@
         android:layout_below="@+id/passbox"
         android:layout_alignStart="@+id/passbox"
         android:src="@drawable/download"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"
+        android:layout_marginTop="7dp"/>
 
 
     <android.support.design.widget.FloatingActionButton
@@ -91,10 +97,12 @@
         android:checked="true"
         android:layout_below="@id/captcha"
         android:layout_alignEnd="@+id/captchaBox"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:layout_marginTop="7dp"/>
 
     <!--Loading content-->
 </RelativeLayout>
+    </ScrollView>
     <RelativeLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"

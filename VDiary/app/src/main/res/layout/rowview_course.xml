@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:minHeight="20dp"
-    android:background="#ffffff">
+    android:background="#ffffff"
+    android:paddingBottom="7dp"
+    android:paddingTop="7dp">
 
     <TextView
         android:layout_width="250dp"
@@ -23,7 +25,6 @@
         android:textSize="13dp"
         android:textColor="#939292"
         android:background="#ffffff"
-        android:paddingBottom="10dp"
         android:layout_alignTop="@+id/course_attendance"
         android:layout_alignStart="@+id/course_title"
         android:text="ANGELINE GAUTAMI FERNANDO"
@@ -38,8 +39,7 @@
         android:textAlignment="textEnd"
         android:layout_below="@+id/course_title"
         android:layout_alignParentEnd="true"
-        android:background="#ffffff"
-        android:layout_marginEnd="15dp"/>
+        android:background="#ffffff" />
 
     <TextView
         android:layout_width="wrap_content"

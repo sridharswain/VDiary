@@ -29,6 +29,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,7 +63,8 @@ public class scrapper extends AppCompatActivity {
     ImageView captcha;
     CheckBox cb;
     TextView status;
-    RelativeLayout loginView,loadView;
+    RelativeLayout loadView;
+    ScrollView loginView;
     FloatingActionButton reload,login;
     boolean attendanceStatus=true;
     boolean isPasswordShown=false;
@@ -226,7 +228,7 @@ public class scrapper extends AppCompatActivity {
     private void setUp(){
         setContentView(R.layout.activity_login);
         status=(TextView)findViewById(R.id.status);
-        loginView=(RelativeLayout)findViewById(R.id.loginView);
+        loginView=(ScrollView)findViewById(R.id.loginView);
         loadView=(RelativeLayout)findViewById(R.id.loadView);
         captcha=(ImageView)findViewById(R.id.captcha);
         regBox=(EditText)findViewById(R.id.regBox);
