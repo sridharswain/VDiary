@@ -17,13 +17,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -480,6 +477,7 @@ public class workSpace extends AppCompatActivity {
             final Notification_Holder cTask = vClass.notes.get(index);
             final View taskView = getActivity().getLayoutInflater().inflate(R.layout.course_task_view, null);
             TextView title =((TextView) taskView.findViewById(R.id.task_title));
+            ImageButton edit=(ImageButton) taskView.findViewById(R.id.task_edit);
             title.setTypeface(nunito_bold);
             title.setText(cTask.title);
             TextView deadLineTextView= (TextView) taskView.findViewById(R.id.task_deadLine);
@@ -496,6 +494,82 @@ public class workSpace extends AppCompatActivity {
                         taskGridLeft.removeView(taskView);
                     }
                     delTask(cTask);
+                }
+            });
+
+            edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Notification_Holder n=vClass.notes.get(index);
+                    final AlertDialog alert;
+                    View root = getActivity().getLayoutInflater().inflate(R.layout.floatingview_add_todo, null);
+                    final EditText title = (EditText) root.findViewById(R.id.title);
+                    final EditText other = (EditText) root.findViewById(R.id.note);
+                    final Switch reminderSwitch =(Switch)root.findViewById(R.id.add_todo_reminder_switch);
+                    Toolbar addTaskToolbar=((Toolbar)root.findViewById(R.id.add_task_toolbar));
+                    addTaskToolbar.inflateMenu(R.menu.menu_add_todo);
+                    title.setText(n.title);
+                    other.setText(n.content);
+
+
+                    AlertDialog.Builder bui = new AlertDialog.Builder(context);
+                    bui.setView(root);
+                    alert = bui.create();
+                    alert.show();
+
+                    reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                                    if(checked) {
+                                        c = null;
+                                        showReminderSetter(reminderSwitch);
+                                    }
+                                    else {
+                                        c = null;
+                                        reminderSwitch.setText("Set Reminder");
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                    addTaskToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            int id = item.getItemId();
+                            if(id==R.id.action_add_todo) {
+                                if (title.getText().toString() != null && title.getText().toString().equals("") != true & other.getText().toString() != null && other.getText().toString().equals("") != true) {
+                                    Notification_Holder n;
+                                    if(c!=null) {
+                                        n = new Notification_Holder(c, title.getText().toString(), other.getText().toString(),"You have a deadline to meet");
+                                        schedule_todo_notification(n);
+                                    }
+                                    else
+                                        n = new Notification_Holder(Calendar.getInstance(), title.getText().toString(), other.getText().toString(),"You have a deadline to meet");
+                                    n.id = id - 1;
+                                    vClass.notes.set(index,n);
+                                    //updateTaskGrid(vClass.notes.size() - 1);
+                                    Gson json = new Gson();
+                                    String temporary = json.toJson(vClass.notes);
+                                    editor.putString("todolist", temporary);
+                                    editor.apply();
+                                    alert.cancel();
+                                } else
+                                    Toast.makeText(getContext(), "Both title and note must contain some text", Toast.LENGTH_SHORT).show();
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
+
+
+
+
+
+
                 }
             });
             Calendar deadLine = cTask.cal;
