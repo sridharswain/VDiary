@@ -286,7 +286,6 @@ public class workSpace extends AppCompatActivity {
                                             }
                                             else
                                                 n = new Notification_Holder(Calendar.getInstance(), title.getText().toString(), other.getText().toString(),"You have a deadline to meet");
-                                            n.id = id - 1;
                                             vClass.notes.add(n);
                                             updateTaskGrid(vClass.notes.size() - 1);
                                             Gson json = new Gson();
@@ -314,8 +313,8 @@ public class workSpace extends AppCompatActivity {
                 Intent intent = new Intent(getActivity(), NotifyService.class);
                 Gson js = new Gson();
                 String f = js.toJson(n);
-                intent.putExtra("one", f);
-                intent.putExtra("intent_chooser","one");
+                intent.putExtra("notificationContent", f);
+                intent.putExtra("fromClass","WorkSpace");
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), id, intent, 0);
                 id++;
                 editor.putInt("identifier", id);
@@ -492,6 +491,9 @@ public class workSpace extends AppCompatActivity {
                         taskGridRight.removeView(taskView);
                     } else {
                         taskGridLeft.removeView(taskView);
+                        if(taskGridLeft.getChildCount()==0){
+                            //populateTaskGrid();
+                        }
                     }
                     delTask(cTask);
                 }
@@ -519,20 +521,15 @@ public class workSpace extends AppCompatActivity {
 
                     reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                @Override
-                                public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                                    if(checked) {
-                                        c = null;
-                                        showReminderSetter(reminderSwitch);
-                                    }
-                                    else {
-                                        c = null;
-                                        reminderSwitch.setText("Set Reminder");
-                                    }
-                                }
-                            });
+                        public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                            if(checked) {
+                                c = null;
+                                showReminderSetter(reminderSwitch);
+                            }
+                            else {
+                                c = null;
+                                reminderSwitch.setText("Set Reminder");
+                            }
                         }
                     });
 
@@ -549,13 +546,20 @@ public class workSpace extends AppCompatActivity {
                                     }
                                     else
                                         n = new Notification_Holder(Calendar.getInstance(), title.getText().toString(), other.getText().toString(),"You have a deadline to meet");
-                                    n.id = id - 1;
-                                    vClass.notes.set(index,n);
-                                    //updateTaskGrid(vClass.notes.size() - 1);
+                                    updateTask(n,index);
                                     Gson json = new Gson();
                                     String temporary = json.toJson(vClass.notes);
                                     editor.putString("todolist", temporary);
                                     editor.apply();
+                                    if (index % 2 != 0) {
+                                        int i=taskGridRight.indexOfChild(taskView);
+                                        taskGridRight.removeView(taskView);
+                                        taskGridRight.addView(getTaskView(index),i);
+                                    } else {
+                                        int i =taskGridLeft.indexOfChild(taskView);
+                                        taskGridLeft.removeView(taskView);
+                                        taskGridLeft.addView(getTaskView(index),i);
+                                    }
                                     alert.cancel();
                                 } else
                                     Toast.makeText(getContext(), "Both title and note must contain some text", Toast.LENGTH_SHORT).show();
@@ -627,6 +631,17 @@ public class workSpace extends AppCompatActivity {
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), task.id, intent, PendingIntent.FLAG_CANCEL_CURRENT);
             alarmManager.cancel(pendingIntent);
             vClass.notes.remove(task);
+            editor.putString("todolist", Notification_Holder.convert_to_jason(vClass.notes));
+            editor.commit();
+        }
+
+        void updateTask(Notification_Holder newtask, int index){
+            Notification_Holder oldTask= vClass.notes.get(index);
+            AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(getActivity(), NotifyService.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), oldTask.id, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            alarmManager.cancel(pendingIntent);
+            vClass.notes.set(index,newtask);
             editor.putString("todolist", Notification_Holder.convert_to_jason(vClass.notes));
             editor.commit();
         }

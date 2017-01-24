@@ -667,6 +667,7 @@ public class scrapper extends AppCompatActivity {
                 if(!sub.type.equals("")){
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     Intent toNotifyService = new Intent(context,NotifyService.class);
+                    toNotifyService.putExtra("fromClass","scheduleNotification");
                     Calendar calendar = Calendar.getInstance();
                     int startHour,startMin,AMPM;
                     startHour=Integer.parseInt(sub.startTime.substring(0, 2));

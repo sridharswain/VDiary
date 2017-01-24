@@ -23,16 +23,24 @@ public class NotifyService extends WakefulBroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         //TAKE THIS CODE INTO THE IF CONDITION
-        Notification_Holder notificationHolder= (new Gson()).fromJson(intent.getStringExtra("notificationContent"),new TypeToken<Notification_Holder>(){}.getType());
-        if(!isHolidayToday(context) && isNotificationOn(context)){
-            Calendar cal = Calendar.getInstance();
-
-            Calendar notiCalendar= notificationHolder.cal;
-           if((notiCalendar.get(Calendar.DAY_OF_WEEK)==cal.get(Calendar.DAY_OF_WEEK) && notiCalendar.get(Calendar.HOUR)>= cal.get(Calendar.HOUR))) {;
-               Notification_Creator notifcreator = new Notification_Creator(notificationHolder.title, notificationHolder.content, notificationHolder.ticker, context);
-               notifcreator.create_notification();
+        String fromClass = intent.getStringExtra("fromClass");
+        if(fromClass.equals("WorkSpace")){
+            Notification_Holder notificationHolder = (new Gson()).fromJson(intent.getStringExtra("notificationContent"), new TypeToken<Notification_Holder>() {}.getType());
+            Notification_Creator notifcreator = new Notification_Creator(notificationHolder.title, notificationHolder.content, notificationHolder.ticker, context);
+            notifcreator.create_notification();
+        }
+        else {
+            if (!isHolidayToday(context) && isNotificationOn(context)) {
+                Calendar cal = Calendar.getInstance();
+                Notification_Holder notificationHolder = (new Gson()).fromJson(intent.getStringExtra("notificationContent"), new TypeToken<Notification_Holder>() {
+                }.getType());
+                Calendar notiCalendar = notificationHolder.cal;
+                if ((notiCalendar.get(Calendar.DAY_OF_WEEK) == cal.get(Calendar.DAY_OF_WEEK) && notiCalendar.get(Calendar.HOUR) >= cal.get(Calendar.HOUR))) {
+                    Notification_Creator notifcreator = new Notification_Creator(notificationHolder.title, notificationHolder.content, notificationHolder.ticker, context);
+                    notifcreator.create_notification();
+                }
             }
-}
+        }
     }
     boolean isHolidayToday(Context context){
         SharedPreferences holidayPrefs= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE);
