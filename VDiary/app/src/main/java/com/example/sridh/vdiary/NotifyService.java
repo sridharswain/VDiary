@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,7 +27,7 @@ public class NotifyService extends WakefulBroadcastReceiver {
             Calendar cal = Calendar.getInstance();
 
             Calendar notiCalendar= notificationHolder.cal;
-           if((notiCalendar.get(Calendar.DAY_OF_WEEK)==cal.get(Calendar.DAY_OF_WEEK) && notiCalendar.get(Calendar.HOUR)>= cal.get(Calendar.HOUR))) {;
+           if((notiCalendar.get(Calendar.DAY_OF_WEEK)==cal.get(Calendar.DAY_OF_WEEK) && notiCalendar.get(Calendar.HOUR_OF_DAY)>= cal.get(Calendar.HOUR_OF_DAY))) {
                Notification_Creator notifcreator = new Notification_Creator(notificationHolder.title, notificationHolder.content, notificationHolder.ticker, context);
                notifcreator.create_notification();
             }
