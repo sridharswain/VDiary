@@ -872,16 +872,18 @@ public class scrapper extends AppCompatActivity {
             schedule.setWebViewClient(new scheduleClient());
             schedule.loadUrl("https://academicscc.vit.ac.in/student/course_regular.asp?sem="+vClass.SEM);
             getTeacherCabins();
+            getHolidays(context);
             super.onPostExecute(aVoid);
         }
     }
 
     void updateWidget(){
-        Context context = getApplicationContext();
+        /*Context context = getApplicationContext();
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         ComponentName thisWidget = new ComponentName(context, widget.class);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_today);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);*/
+        (new widgetServiceReceiver()).onReceive(context,(new Intent(context,widgetServiceReceiver.class)));
+        //appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_today);
     }
 
     String toTitleCase(String input){
@@ -910,5 +912,29 @@ public class scrapper extends AppCompatActivity {
         isLoaded=false;
         loggedIn=false;
         finish();
+    }
+
+    void getHolidays(final Context context){
+        Firebase.setAndroidContext(context);
+        final Firebase database= new Firebase(vClass.FIREBASE_URL);
+        database.child("Holidays").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    String dateString = snapshot.getValue().toString();
+                    Calendar c = Calendar.getInstance();
+                    c.set(Integer.parseInt(dateString.substring(6)),Integer.parseInt(dateString.substring(3,5))-1,Integer.parseInt(dateString.substring(0,2)));
+                    vClass.holidays.add(new holiday(c,snapshot.getKey()));
+                }
+                Gson serializer = new Gson();
+                SharedPreferences.Editor holidays= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE).edit();
+                holidays.putString("holidays",serializer.toJson(vClass.holidays));
+                holidays.apply();
+                updateWidget();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {}
+        });
     }
 }

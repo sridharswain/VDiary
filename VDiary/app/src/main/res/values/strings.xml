@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Zchedule Beta 2.1</string>
+    <string name="app_name">Zchedule Beta</string>
     <string name="title_activity_time_table">TimeTable</string>
 
     <string name="title_activity_welcome">Home Screen</string>

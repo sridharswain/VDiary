@@ -71,9 +71,10 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     }
 
     void updateWidget(){
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+       /* AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         ComponentName thisWidget = new ComponentName(context, widget.class);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_today);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_today);*/
+        (new widgetServiceReceiver()).onReceive(context,(new Intent(context,widgetServiceReceiver.class)));
     }
 }
