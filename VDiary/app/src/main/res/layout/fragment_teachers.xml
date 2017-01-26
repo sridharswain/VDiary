@@ -19,12 +19,6 @@
         android:layout_marginTop="4dp"
         android:layout_marginEnd="5dp"
         />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/teachers_searchText"
-        android:text="S"
-        android:id="@+id/teacher_search_button"/>
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,9 +27,8 @@
         android:layout_below="@id/teachers_searchText"
         android:drawSelectorOnTop="true"
         android:stackFromBottom="false"
-        android:contextClickable="false"
-        android:choiceMode="singleChoice"
-        android:background="@color/colorPrimaryLight"/>
+        android:choiceMode="singleChoice">
+    </ListView>
     <android.support.design.widget.FloatingActionButton
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"

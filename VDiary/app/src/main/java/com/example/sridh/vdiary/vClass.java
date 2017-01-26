@@ -1,6 +1,7 @@
 package com.example.sridh.vdiary;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.view.Window;
@@ -22,6 +23,7 @@ public class vClass {
     public static String fat;
     public static int width;
     public static int  height;
+    public static Typeface fredoka,nunito_Extrabold,nunito_bold,nunito_reg;
     public static List<Notification_Holder> notes=new ArrayList<>();
     public static void setStatusBar(Window window, Context context,int color) {
         if(Build.VERSION.SDK_INT>=21){
@@ -35,11 +37,17 @@ public class vClass {
     public static String FIREBASE_URL= "https://vdiary-a25b2.firebaseio.com/";
     //PARAMETERS FOR CHANGING THE LINKS
     public static String SEM = "WS";
-    public static String VERSION= "2.1";
+    public static String VERSION= "2.2";
 
     //HOLIDAYS
     public static List<holiday> holidays= new ArrayList<>();
 
+    public static void getFonts(Context context){
+        fredoka=Typeface.createFromAsset(context.getAssets(),"fonts/FredokaOne-Regular.ttf");
+        nunito_bold=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Bold.ttf");
+        nunito_Extrabold=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-ExtraBold.ttf");
+        nunito_reg = Typeface.createFromAsset(context.getAssets(), "fonts/Nunito-Regular.ttf");
+    }
 
 }
 class Note

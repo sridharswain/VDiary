@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -32,6 +33,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -60,7 +62,6 @@ public class workSpace extends AppCompatActivity {
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    static workSpace w;
 
     private ViewPager mViewPager;
     public static SharedPreferences shared;
@@ -71,7 +72,6 @@ public class workSpace extends AppCompatActivity {
 
 
     static ListView resultList;
-    Typeface fredoka,nunito_bold,nunito_Extrabold;
 
     @Override
     public void onBackPressed() {
@@ -86,11 +86,10 @@ public class workSpace extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workspace);
         context = this;
-        w = this;
         SharedPreferences s = getSharedPreferences("notiftimetable", Context.MODE_PRIVATE);
         String z = s.getString("last_ref", "");
         if (!z.equals(""))
-            Toast.makeText(w, "Last synced on " + z, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Last synced on " + z, Toast.LENGTH_LONG).show();
         shared = getSharedPreferences("todoshared", MODE_PRIVATE);
         //Get vClass.notes list from shared preferences
         String get_list = shared.getString("todolist", null);
@@ -145,13 +144,10 @@ public class workSpace extends AppCompatActivity {
     }
 
     void setToolbars() {
-        fredoka=Typeface.createFromAsset(getAssets(),"fonts/FredokaOne-Regular.ttf");
-        nunito_bold=Typeface.createFromAsset(getAssets(),"fonts/Nunito-Bold.ttf");
-        nunito_Extrabold=Typeface.createFromAsset(getAssets(),"fonts/Nunito-ExtraBold.ttf");
         Toolbar toolbar = (Toolbar) findViewById(R.id.workspacetoptoolbar);
         toolbar.inflateMenu(R.menu.menu_workspace_top);
         TextView title = (TextView)toolbar.findViewById(R.id.workSpace_title);
-        title.setTypeface(fredoka);
+        title.setTypeface(vClass.fredoka);
         //setSupportActionBar(toolbar);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -194,11 +190,8 @@ public class workSpace extends AppCompatActivity {
         private static final String ARG_SECTION_NUMBER = "section_number";
         EditText teacherSearch;
         List<teacher> searchResult;
-        Typeface nunito_reg,nunito_bold;
 
         public PlaceholderFragment(){
-            nunito_reg = Typeface.createFromAsset(context.getAssets(), "fonts/Nunito-Regular.ttf");
-            nunito_bold = Typeface.createFromAsset(context.getAssets(), "fonts/Nunito-Bold.ttf");
         }
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
@@ -211,26 +204,10 @@ public class workSpace extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  final Bundle savedInstanceState) {
-            View rootView = null;
             switch (getArguments().getInt(ARG_SECTION_NUMBER) - 1) {
-                case 1:
-                    rootView = inflater.inflate(R.layout.fragment_teachers, container, false);
-                    setSearcher(rootView);
-                    FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.teachers_add);
-                    ListView lv = (ListView) rootView.findViewById(R.id.teachers_list);
-                    final listAdapter_teachers mad = new listAdapter_teachers(context, vClass.cablist);
-                    listAdapter_searchTeacher.teacherAdapter = mad;
-                    lv.setAdapter(mad);
-                    fab.setOnClickListener(new View.OnClickListener() { //Onclick Listener for floating action Button
-                        @Override
-                        public void onClick(View v) {
-                            showCabinAlertDialog(mad);
-                        }
-                    });
-                    break;
                 case 0:
-                    rootView = inflater.inflate(R.layout.fragment_courses, container, false);
-                    ListView lview = (ListView) rootView.findViewById(R.id.course_listview);
+                    View rootViewCourse = inflater.inflate(R.layout.fragment_courses, container, false);
+                    ListView lview = (ListView) rootViewCourse.findViewById(R.id.course_listview);
                     listAdapter_courses cadd = new listAdapter_courses(context, vClass.subList);
                     lview.setAdapter(cadd);
                     lview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -241,11 +218,26 @@ public class workSpace extends AppCompatActivity {
                             context.startActivity(showSubjectIntent);
                         }
                     });
-                    break;
+                    return rootViewCourse;
+                case 1:
+                    View rootViewteachers = inflater.inflate(R.layout.fragment_teachers, container, false);
+                    setSearcher(rootViewteachers);
+                    FloatingActionButton fab = (FloatingActionButton) rootViewteachers.findViewById(R.id.teachers_add);
+                    ListView lv = (ListView) rootViewteachers.findViewById(R.id.teachers_list);
+                    final listAdapter_teachers mad = new listAdapter_teachers(context, vClass.cablist);
+                    listAdapter_searchTeacher.teacherAdapter = mad;
+                    lv.setAdapter(mad);
+                    fab.setOnClickListener(new View.OnClickListener() { //Onclick Listener for floating action Button
+                        @Override
+                        public void onClick(View v) {
+                            //showCabinAlertDialog(mad);
+                        }
+                    });
+                    return rootViewteachers;
                 case 2:
-                    rootView = inflater.inflate(R.layout.fragment_notes, container, false);
-                    populateTaskGrid(rootView);
-                    FloatingActionButton fb = (FloatingActionButton) rootView.findViewById(R.id.notes_add);
+                    View rootViewNotes = inflater.inflate(R.layout.fragment_notes, container, false);
+                    populateTaskGrid(rootViewNotes);
+                    FloatingActionButton fb = (FloatingActionButton) rootViewNotes.findViewById(R.id.notes_add);
                     fb.setOnClickListener(new View.OnClickListener() { //Floating action button onclick listener
                         @Override
                         public void onClick(View v) {
@@ -302,9 +294,9 @@ public class workSpace extends AppCompatActivity {
                             });
                         }
                     });
-
+                    return rootViewNotes;
             }
-            return rootView;
+            return null;
         }
 
         public void schedule_todo_notification(Notification_Holder n) {
@@ -396,7 +388,6 @@ public class workSpace extends AppCompatActivity {
                             vClass.cablist.add(c);
                             writeCabListToPrefs();
                             cabinListAdapter.updatecontent(vClass.cablist);
-
                             alert.cancel();
                             return true;
                         }
@@ -404,6 +395,7 @@ public class workSpace extends AppCompatActivity {
                     return false;
                 }
             });
+
             alert.show();
         }  //CREATE AND HANDLES THE ALERT DIALOG BOX TO ADD CABIN
 
@@ -411,7 +403,9 @@ public class workSpace extends AppCompatActivity {
         void setSearcher(View view) {
             searchResult = new ArrayList<>();
             teacherSearch = (EditText) view.findViewById(R.id.teachers_searchText);
-            teacherSearch.setTypeface(nunito_reg);
+            InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(teacherSearch.getWindowToken(), 0);
+            teacherSearch.setTypeface(vClass.nunito_reg);
             resultList = (ListView) view.findViewById(R.id.teachers_search_list);
             final listAdapter_searchTeacher searchAdapter = new listAdapter_searchTeacher(context, searchResult,teacherSearch);
             resultList.setAdapter(searchAdapter);
@@ -470,19 +464,19 @@ public class workSpace extends AppCompatActivity {
             }
         }
 
-        int[] colors = new int[]{R.color.bg_screen1, R.color.bg_screen2,R.color.bg_screen3,R.color.bg_screen4,R.color.bg_screen6};
+        int[] colors = new int[]{R.color.dot_light_screen1,R.color.dot_light_screen5, R.color.dot_light_screen2,R.color.dot_light_screen3,R.color.dot_light_screen4};
 
         View getTaskView(final int index) {
             final Notification_Holder cTask = vClass.notes.get(index);
             final View taskView = getActivity().getLayoutInflater().inflate(R.layout.course_task_view, null);
             TextView title =((TextView) taskView.findViewById(R.id.task_title));
             ImageButton edit=(ImageButton) taskView.findViewById(R.id.task_edit);
-            title.setTypeface(nunito_bold);
+            title.setTypeface(vClass.nunito_bold);
             title.setText(cTask.title);
             TextView deadLineTextView= (TextView) taskView.findViewById(R.id.task_deadLine);
-            deadLineTextView.setTypeface(nunito_reg);
+            deadLineTextView.setTypeface(vClass.nunito_reg);
             TextView desc=((TextView) taskView.findViewById(R.id.task_desc));
-            desc.setTypeface(nunito_reg);
+            desc.setTypeface(vClass.nunito_reg);
             desc.setText(cTask.content);
             (taskView.findViewById(R.id.task_delete)).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -491,9 +485,6 @@ public class workSpace extends AppCompatActivity {
                         taskGridRight.removeView(taskView);
                     } else {
                         taskGridLeft.removeView(taskView);
-                        if(taskGridLeft.getChildCount()==0){
-                            //populateTaskGrid();
-                        }
                     }
                     delTask(cTask);
                 }
@@ -532,7 +523,7 @@ public class workSpace extends AppCompatActivity {
                             }
                         }
                     });
-
+                    addTaskToolbar.setTitle("Edit Note");
                     addTaskToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {

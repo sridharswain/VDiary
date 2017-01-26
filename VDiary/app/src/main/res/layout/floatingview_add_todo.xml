@@ -15,13 +15,12 @@
         android:id="@+id/add_task_toolbar"
         app:titleTextColor="@android:color/white">
     </android.support.v7.widget.Toolbar>
-<ScrollView
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp">
 
     <EditText
         android:layout_width="match_parent"
@@ -42,14 +41,15 @@
         android:layout_below="@+id/title"
         android:layout_marginTop="15dp"
         android:hint="Enter Note" />
-    </RelativeLayout>
-    </ScrollView>
 
-    <Switch
-        android:text=" Set Reminder"
-        android:textSize="17dp"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/add_todo_reminder_switch" />
+        <Switch
+            android:text=" Set Reminder"
+            android:textSize="17dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/add_todo_reminder_switch"
+            android:layout_below="@id/note"
+            android:layout_marginTop="15dp"/>
+    </RelativeLayout>
 
 </LinearLayout>

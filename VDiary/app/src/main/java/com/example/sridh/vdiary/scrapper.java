@@ -73,7 +73,7 @@ public class scrapper extends AppCompatActivity {
     Gson jsonBuilder = new Gson();
     static boolean tryRefresh=false;
     ProgressBar pb_loading;
-    ImageButton toogle_showPassword;
+    ImageButton toggle_showPassword;
     List<String> attList = new ArrayList<>();
     List<String> ctdList = new ArrayList<>();
     List<subject> courses = new ArrayList<>();
@@ -90,6 +90,7 @@ public class scrapper extends AppCompatActivity {
         //FIREBASE INITIATION
         vClass.setStatusBar(getWindow(),getApplicationContext(),R.color.taskbar_orange);
         getDimensions();
+        vClass.getFonts(this);
         start();
     }
 
@@ -238,7 +239,7 @@ public class scrapper extends AppCompatActivity {
         login=(FloatingActionButton)findViewById(R.id.login);
         reload=(FloatingActionButton)findViewById(R.id.refresh_FloatButton);
         pb_loading=(ProgressBar)findViewById(R.id.pb_login);
-        toogle_showPassword=(ImageButton)findViewById(R.id.toogle_showPassword);
+        toggle_showPassword =(ImageButton)findViewById(R.id.toogle_showPassword);
         reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -263,7 +264,7 @@ public class scrapper extends AppCompatActivity {
                 else delCreds();
             }
         });
-        toogle_showPassword.setOnClickListener(new View.OnClickListener() {
+        toggle_showPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 toogleShowPassword();
@@ -304,14 +305,14 @@ public class scrapper extends AppCompatActivity {
         if(isPasswordShown){
             //DONT SHOW PASSWORD
             passBox.setTransformationMethod(new PasswordTransformationMethod());
-            Glide.with(getApplicationContext()).load(R.drawable.ic_view_password).into(toogle_showPassword);
+            Glide.with(getApplicationContext()).load(R.drawable.ic_view_password).into(toggle_showPassword);
             isPasswordShown=false;
             passBox.setSelection(passBox.getText().length());
         }
         else{
             //SHOW PASSWORD
             passBox.setTransformationMethod(null);
-            Glide.with(getApplicationContext()).load(R.drawable.ic_unview_password).into(toogle_showPassword);
+            Glide.with(getApplicationContext()).load(R.drawable.ic_unview_password).into(toggle_showPassword);
             isPasswordShown=true;
             passBox.setSelection(passBox.getText().length());
         }

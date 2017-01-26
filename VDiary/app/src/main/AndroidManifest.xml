@@ -14,7 +14,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/MyAppBar">
+        android:theme="@style/MyAppBar"
+        android:debuggable="false">
         <activity
             android:name=".scrapper"
             android:noHistory="true"

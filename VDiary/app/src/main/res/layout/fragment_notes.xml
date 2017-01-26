@@ -13,7 +13,10 @@
         android:id="@+id/show_subject_scoller"
         android:layout_margin="1dp"
         >
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,6 +44,12 @@
                 android:divider="@drawable/task_view_divider">
             </LinearLayout>
         </RelativeLayout>
+            <TextView
+                android:id="@+id/sv_grid"
+                android:layout_height="90dp"
+                android:layout_width="match_parent"
+                android:background="@android:color/white"/>
+</LinearLayout>
     </ScrollView>
     <android.support.design.widget.FloatingActionButton
         android:layout_height="wrap_content"

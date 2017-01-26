@@ -16,13 +16,19 @@
         android:id="@+id/alert_cabin_toolbar"
         app:title="Add Teacher"
         app:titleTextColor="@android:color/white" />
+    <RelativeLayout
+        android:layout_below="@id/alert_cabin_toolbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
     <EditText
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:hint="Teacher's Name"
         android:id="@+id/alert_cabin_teacherName"
-        android:layout_below="@id/alert_cabin_toolbar"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="7dp"/>
 
     <EditText
         android:layout_height="wrap_content"
@@ -30,7 +36,8 @@
         android:hint="Cabin Address"
         android:id="@+id/alert_cabin_cabinAddress"
         android:layout_below="@id/alert_cabin_teacherName"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="7dp"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -40,5 +47,7 @@
         android:id="@+id/alert_cabin_comment"
         android:hint="Comment..."
         android:layout_below="@id/alert_cabin_cabinAddress"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="7dp"/>
+        </RelativeLayout>
 </RelativeLayout>

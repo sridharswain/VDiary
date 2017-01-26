@@ -22,13 +22,10 @@ class listAdapter_teachers extends BaseAdapter// LIST ADAPTER FOR CABIN VIEW
     List<Cabin_Details> cab;
     Context context;
     public View view;
-    Typeface nunito_bold,nunito_reg;
 
     listAdapter_teachers(Context c, List<Cabin_Details> lis)
     {
         context=c;
-        nunito_reg=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Regular.ttf");
-        nunito_bold=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-Bold.ttf");
         cab=lis;
         inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -62,9 +59,9 @@ class listAdapter_teachers extends BaseAdapter// LIST ADAPTER FOR CABIN VIEW
         holder.cabin=(TextView)view.findViewById(R.id.newcabin);
         holder.others=(TextView)view.findViewById(R.id.newOthers);
 
-        holder.name.setTypeface(nunito_bold);
-        holder.cabin.setTypeface(nunito_reg);
-        holder.others.setTypeface(nunito_reg);
+        holder.name.setTypeface(vClass.nunito_bold);
+        holder.cabin.setTypeface(vClass.nunito_reg);
+        holder.others.setTypeface(vClass.nunito_reg);
         //Setting Data
         holder.name.setText(cab.get(position).name);
         holder.cabin.setText(cab.get(position).cabin);

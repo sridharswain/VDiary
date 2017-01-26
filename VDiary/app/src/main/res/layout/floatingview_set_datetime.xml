@@ -1,27 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary">
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:text="Time:"
         android:id="@+id/timeView"
-        android:layout_marginStart="10dp"/>
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@android:color/white"/>
     <TimePicker
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/timePicker"
         android:layout_below="@id/timeView"
         android:layout_centerHorizontal="true"
-        android:timePickerMode="spinner"/>
+        android:timePickerMode="spinner"
+        android:theme="@style/AppTheme.Picker"/>
+    <SurfaceView
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimaryDark"
+        android:layout_below="@id/timePicker"/>
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:text="Date:"
         android:id="@+id/dateView"
         android:layout_below="@id/timePicker"
-        android:layout_marginStart="10dp"/>
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@android:color/white"/>
 
     <DatePicker
         android:layout_width="wrap_content"
@@ -30,7 +41,8 @@
         android:datePickerMode="spinner"
         android:calendarViewShown="false"
         android:layout_below="@id/dateView"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:theme="@style/AppTheme.Picker"/>
     <Button
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
@@ -38,7 +50,8 @@
         android:background="@android:color/transparent"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:id="@+id/datetime_ok"/>
+        android:id="@+id/datetime_ok"
+        android:textColor="@android:color/white"/>
 
     <Button
         android:layout_height="wrap_content"
@@ -47,6 +60,7 @@
         android:background="@android:color/transparent"
         android:id="@+id/datetime_cancel"
         android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/datetime_ok" />
+        android:layout_toStartOf="@+id/datetime_ok"
+        android:textColor="@android:color/white"/>
 
 </RelativeLayout>

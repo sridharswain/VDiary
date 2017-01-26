@@ -5,11 +5,11 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.fourthstatelabs.vdiary"
+        applicationId "com.fourthstatelabs.zchedule"
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "1.3"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {

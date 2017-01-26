@@ -1,6 +1,8 @@
 package com.example.sridh.vdiary;
 
+import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,6 +49,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 SharedPreferences.Editor holidays= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE).edit();
                 holidays.putString("holidays",serializer.toJson(vClass.holidays));
                 holidays.apply();
+                updateWidget();
             }
 
             @Override
@@ -65,5 +68,12 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 }
             }
         }
+    }
+
+    void updateWidget(){
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName thisWidget = new ComponentName(context, widget.class);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_today);
     }
 }

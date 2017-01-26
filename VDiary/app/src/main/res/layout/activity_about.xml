@@ -35,7 +35,7 @@
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="Core Developers:"
+            android:text="Developers:"
             android:id="@+id/about_core_developers"
             android:layout_below="@id/about_logo"
             android:layout_marginTop="30dp"

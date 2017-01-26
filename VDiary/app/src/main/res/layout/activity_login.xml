@@ -7,12 +7,22 @@
     android:layout_height="match_parent"
     android:background="@color/taskbar_orange"
     tools:context="com.example.sridh.vdiary.scrapper">
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="FFCS Login"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:textSize="17sp"
+        android:id="@+id/tv_ffcs"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/loginView"
         android:visibility="visible"
-        android:layout_centerInParent="true">
+        android:layout_centerInParent="true"
+        android:layout_below="@id/tv_ffcs">
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -108,7 +118,8 @@
         android:layout_width="match_parent"
         android:id="@+id/loadView"
         android:visibility="invisible"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:layout_below="@id/tv_ffcs">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

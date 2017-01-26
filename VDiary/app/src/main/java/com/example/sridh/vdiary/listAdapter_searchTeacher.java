@@ -1,6 +1,7 @@
 package com.example.sridh.vdiary;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ public class listAdapter_searchTeacher extends BaseAdapter {
     EditText searchBox;
     static listAdapter_teachers teacherAdapter;
     TextView editcabin;
+
     public listAdapter_searchTeacher(Context context, List<teacher> results,EditText searchBox){
         this.context=context;
         this.searchResult=results;
@@ -51,7 +53,9 @@ public class listAdapter_searchTeacher extends BaseAdapter {
     @Override
     public View getView(final int position, View view, ViewGroup viewGroup) {
         View teacherView = inflater.inflate(R.layout.rowview_search_teacher,null);
-        ((TextView)teacherView.findViewById(R.id.search_teacher_name)).setText(searchResult.get(position).name);
+        TextView teacherName = ((TextView)teacherView.findViewById(R.id.search_teacher_name));
+        teacherName.setTypeface(vClass.nunito_reg);
+        teacherName.setText(searchResult.get(position).name);
         teacherView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,8 +73,11 @@ public class listAdapter_searchTeacher extends BaseAdapter {
         final teacher found=searchResult.get(position);
         searchBox.setText(found.getName());
         final View view= inflater.inflate(R.layout.floatingview_show_teacher,null);
-        ((TextView)view.findViewById(R.id.show_teacher_name)).setText(found.name);
+        TextView teachername=((TextView)view.findViewById(R.id.show_teacher_name));
+        teachername.setText(found.name);
+        teachername.setTypeface(vClass.nunito_bold);
         final TextView cabin =(TextView)view.findViewById(R.id.show_teacher_cabin);
+        cabin.setTypeface(vClass.nunito_reg);
         cabin.setText(found.cabin);
         alertBuilder.setView(view);
         final AlertDialog alertDialog = alertBuilder.create();
@@ -100,17 +107,6 @@ public class listAdapter_searchTeacher extends BaseAdapter {
             public void onClick(View view) {
                 //CODE TO EXECUTE TO SAVE THE TEAHCER INFORMATION.
                 //SHOW EDITED ADDRESS TO THE TEACHER LISTVIEW
-
-                for (int i=0;i<vClass.cablist.size();i++){
-                    if(vClass.cablist.get(i).name.equals(found.name)){
-                        vClass.cablist.get(i).setCabin(editcabin.getText().toString());
-                        workSpace.writeCabListToPrefs();
-                        teacherAdapter.updatecontent(vClass.cablist);
-                        alertDialog.cancel();
-                        Toast.makeText(context, "Revision requested", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
                 Cabin_Details editedTeacher= new Cabin_Details();
                 editedTeacher.cabin=editcabin.getText().toString();
                 editedTeacher.name=found.name;
