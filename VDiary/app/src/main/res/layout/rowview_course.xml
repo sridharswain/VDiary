@@ -39,7 +39,8 @@
         android:textAlignment="textEnd"
         android:layout_below="@+id/course_title"
         android:layout_alignParentEnd="true"
-        android:background="#ffffff" />
+        android:background="#ffffff"
+        android:layout_marginEnd="15dp"/>
 
     <TextView
         android:layout_width="wrap_content"

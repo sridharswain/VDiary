@@ -1,5 +1,6 @@
 package com.example.sridh.vdiary;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -87,6 +88,7 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory 
             row.setTextViewText(R.id.widget_type, session.type);
             row.setTextViewText(R.id.widget_room, session.room);
         }
+        row.setOnClickFillInIntent(R.id.widget_layout,new Intent());
         return row;
     }
 

@@ -417,7 +417,6 @@ public class scrapper extends AppCompatActivity {
         schedule.evaluateJavascript(getcmd("return document.getElementsByTagName('table').length"), new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String s) {
-                Log.d("tableIndex",s);
                 getFromTable2(Integer.parseInt(s)-1);
             }
         });
@@ -595,7 +594,6 @@ public class scrapper extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            try{
                 vClass.subList=courses;
                 vClass.timeTable=scheduleList;
                 if (attendanceStatus) {
@@ -641,10 +639,6 @@ public class scrapper extends AppCompatActivity {
                 String last_ref=calendar.get(Calendar.DATE)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ "  "+ hr+":"+min;
                 editor.putString("last_ref",last_ref);
                 editor.apply();
-            }
-            catch (Exception e){
-                showRetry();
-            }
             return null;
         }
 
@@ -878,12 +872,7 @@ public class scrapper extends AppCompatActivity {
     }
 
     void updateWidget(){
-        /*Context context = getApplicationContext();
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        ComponentName thisWidget = new ComponentName(context, widget.class);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);*/
         (new widgetServiceReceiver()).onReceive(context,(new Intent(context,widgetServiceReceiver.class)));
-        //appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_today);
     }
 
     String toTitleCase(String input){
@@ -930,7 +919,6 @@ public class scrapper extends AppCompatActivity {
                 SharedPreferences.Editor holidays= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE).edit();
                 holidays.putString("holidays",serializer.toJson(vClass.holidays));
                 holidays.apply();
-                updateWidget();
             }
 
             @Override

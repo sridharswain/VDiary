@@ -2,7 +2,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/opac_transparent"
-    android:padding="@dimen/widget_margin">
+    android:padding="@dimen/widget_margin"
+    android:id="@+id/widget_parent_layout">
 
     <ListView
         android:layout_width="match_parent"
@@ -11,10 +12,12 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true" />
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:text="Loading..."
         android:id="@+id/widget_status"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:textAlignment="center"
+        android:gravity="center"/>
 </RelativeLayout>

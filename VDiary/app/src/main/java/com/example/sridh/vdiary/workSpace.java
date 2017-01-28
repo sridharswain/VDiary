@@ -230,7 +230,7 @@ public class workSpace extends AppCompatActivity {
                     fab.setOnClickListener(new View.OnClickListener() { //Onclick Listener for floating action Button
                         @Override
                         public void onClick(View v) {
-                            //showCabinAlertDialog(mad);
+                            showCabinAlertDialog(mad);
                         }
                     });
                     return rootViewteachers;

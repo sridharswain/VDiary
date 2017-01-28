@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:minHeight="40dp"
     android:paddingBottom="7dp"
-    android:paddingTop="7dp">
+    android:paddingTop="7dp"
+    android:id="@+id/widget_layout">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

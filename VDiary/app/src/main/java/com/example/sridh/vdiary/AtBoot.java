@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.Calendar;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -49,5 +50,16 @@ public class AtBoot extends BroadcastReceiver {
         List<List<subject>> timeTable = (new Gson()).fromJson(timeTableJson,new TypeToken<List<List<subject>>>(){}.getType());
         if(timeTableJson!=null) scrapper.createNotification(context,timeTable);
         //Daily timetable reschedule end
+
+        SharedPreferences widgetPrefs= context.getSharedPreferences("widgetPrefs",MODE_PRIVATE);
+        if(widgetPrefs.getBoolean("isEnabled",false)){
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            Intent toWidgetService = new Intent(context,widgetServiceReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,toWidgetService,0);
+            Calendar calendarMan = Calendar.getInstance();
+            calendarMan.set(Calendar.HOUR_OF_DAY,0);
+            calendarMan.set(Calendar.MINUTE,0);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendarMan.getTimeInMillis(), 24 * 60 * 60 * 1000, pendingIntent);
+        }
     }
 }

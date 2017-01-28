@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -20,8 +21,6 @@ public class NotifyService extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
-        //TAKE THIS CODE INTO THE IF CONDITION
 
         String fromClass = intent.getStringExtra("fromClass");
         if (fromClass.equals("WorkSpace")) {

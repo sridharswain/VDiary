@@ -1,5 +1,6 @@
 package com.example.sridh.vdiary;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -7,8 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -31,6 +34,10 @@ public class widgetServiceReceiver extends BroadcastReceiver {
     void updateWidget(AppWidgetManager appWidgetManager,Context context,int[] appWidgetIds){
         for (int appWidgetId : appWidgetIds) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
+            Intent launchActivity = new Intent(context, splashScreen.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, launchActivity, 0);
+            views.setOnClickPendingIntent(R.id.widget_status,pendingIntent);
+            views.setPendingIntentTemplate(R.id.widget_today,pendingIntent);
             if (isLoggedIn(context)) {
                 Calendar calendar = Calendar.getInstance();
                 String occasion = readHolidayPrefs(context, calendar);

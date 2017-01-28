@@ -31,12 +31,16 @@ public class widget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
+        (new widgetServiceReceiver()).onReceive(context,(new Intent(context,widgetServiceReceiver.class)));
     }
 
     @Override
     public void onEnabled(Context context) {
         super.onEnabled(context);
         // Enter relevant functionality for when the first widget is created
+        SharedPreferences.Editor widgetPrefsEditor=context.getSharedPreferences("widgetPrefs",Context.MODE_PRIVATE).edit();
+        widgetPrefsEditor.putBoolean("isEnabled",true);
+        widgetPrefsEditor.commit();
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent toWidgetService = new Intent(context,widgetServiceReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,toWidgetService,0);
@@ -51,6 +55,9 @@ public class widget extends AppWidgetProvider {
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
         super.onDisabled(context);
+        SharedPreferences.Editor widgetPrefsEditor=context.getSharedPreferences("widgetPrefs",Context.MODE_PRIVATE).edit();
+        widgetPrefsEditor.putBoolean("isEnabled",false);
+        widgetPrefsEditor.commit();
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent toWidgetService = new Intent(context,widgetServiceReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,toWidgetService,0);
