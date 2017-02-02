@@ -5,7 +5,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:fadeScrollbars="false"
-    android:fadingEdge="horizontal|vertical">
+    android:fadingEdge="horizontal|vertical"
+    app:theme="@style/MyAppBar">
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

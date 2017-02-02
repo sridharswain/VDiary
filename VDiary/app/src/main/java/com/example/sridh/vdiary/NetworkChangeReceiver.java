@@ -64,7 +64,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             List<Cabin_Details> cabin_detailsList = (new Gson()).fromJson(teacherJson,new TypeToken<List<Cabin_Details>>(){}.getType());
             if (cabin_detailsList.size() > 0) {
                 for (Cabin_Details editedTeacher : cabin_detailsList) {
-                    database.child("custom").child(editedTeacher.name + "--" + editedTeacher.cabin).setValue(editedTeacher);
+                    database.child("custom").child(editedTeacher.name).setValue(editedTeacher.cabin);
                 }
             }
         }

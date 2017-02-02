@@ -40,15 +40,14 @@ public class widget extends AppWidgetProvider {
         // Enter relevant functionality for when the first widget is created
         SharedPreferences.Editor widgetPrefsEditor=context.getSharedPreferences("widgetPrefs",Context.MODE_PRIVATE).edit();
         widgetPrefsEditor.putBoolean("isEnabled",true);
-        widgetPrefsEditor.commit();
+        widgetPrefsEditor.apply();
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent toWidgetService = new Intent(context,widgetServiceReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,toWidgetService,0);
         Calendar calendarMan = Calendar.getInstance();
-        calendarMan.set(Calendar.HOUR_OF_DAY,0);
+        calendarMan.set(Calendar.HOUR,12);
         calendarMan.set(Calendar.MINUTE,0);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendarMan.getTimeInMillis(), 24 * 60 * 60 * 1000, pendingIntent);
-
     }
 
     @Override

@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#dbd6d6"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:theme="@style/MyAppBar">
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,7 +41,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/title"
         android:layout_marginTop="15dp"
-        android:hint="Enter Note" />
+        android:hint="Enter Note"/>
 
         <Switch
             android:text=" Set Reminder"

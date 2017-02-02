@@ -1,5 +1,6 @@
 package com.example.sridh.vdiary;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -18,7 +19,10 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
@@ -87,7 +91,6 @@ public class scrapper extends AppCompatActivity {
         editor=shared.edit();
         n_id=shared.getInt("id_time",0);
 
-        //FIREBASE INITIATION
         vClass.setStatusBar(getWindow(),getApplicationContext(),R.color.taskbar_orange);
         getDimensions();
         vClass.getFonts(this);
@@ -240,6 +243,7 @@ public class scrapper extends AppCompatActivity {
         reload=(FloatingActionButton)findViewById(R.id.refresh_FloatButton);
         pb_loading=(ProgressBar)findViewById(R.id.pb_login);
         toggle_showPassword =(ImageButton)findViewById(R.id.toogle_showPassword);
+        ((TextView)findViewById(R.id.tv_ffcs)).setTypeface(vClass.nunito_reg);
         reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -256,9 +260,9 @@ public class scrapper extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                hideSoftKeyboard(scrapper.this);
                 placeCreds();
                 load(true);
-
                 status.setText("Logging In...");
                 if(cb.isChecked()) saveCreds();
                 else delCreds();
@@ -924,5 +928,13 @@ public class scrapper extends AppCompatActivity {
             @Override
             public void onCancelled(FirebaseError firebaseError) {}
         });
+    }
+
+    public void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
     }
 }

@@ -1,12 +1,14 @@
 package com.example.sridh.vdiary;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -22,6 +24,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -33,7 +36,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -84,7 +87,9 @@ public class workSpace extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_workspace);
+        View rootView = getLayoutInflater().inflate(R.layout.activity_workspace,null);
+        setContentView(rootView);
+        setOnTouchListener(rootView,workSpace.this);
         context = this;
         SharedPreferences s = getSharedPreferences("notiftimetable", Context.MODE_PRIVATE);
         String z = s.getString("last_ref", "");
@@ -207,6 +212,7 @@ public class workSpace extends AppCompatActivity {
             switch (getArguments().getInt(ARG_SECTION_NUMBER) - 1) {
                 case 0:
                     View rootViewCourse = inflater.inflate(R.layout.fragment_courses, container, false);
+                    setOnTouchListener(rootViewCourse,getActivity());
                     ListView lview = (ListView) rootViewCourse.findViewById(R.id.course_listview);
                     listAdapter_courses cadd = new listAdapter_courses(context, vClass.subList);
                     lview.setAdapter(cadd);
@@ -221,6 +227,7 @@ public class workSpace extends AppCompatActivity {
                     return rootViewCourse;
                 case 1:
                     View rootViewteachers = inflater.inflate(R.layout.fragment_teachers, container, false);
+                    setOnTouchListener(rootViewteachers,getActivity());
                     setSearcher(rootViewteachers);
                     FloatingActionButton fab = (FloatingActionButton) rootViewteachers.findViewById(R.id.teachers_add);
                     ListView lv = (ListView) rootViewteachers.findViewById(R.id.teachers_list);
@@ -236,6 +243,7 @@ public class workSpace extends AppCompatActivity {
                     return rootViewteachers;
                 case 2:
                     View rootViewNotes = inflater.inflate(R.layout.fragment_notes, container, false);
+                    setOnTouchListener(rootViewNotes,getActivity());
                     populateTaskGrid(rootViewNotes);
                     FloatingActionButton fb = (FloatingActionButton) rootViewNotes.findViewById(R.id.notes_add);
                     fb.setOnClickListener(new View.OnClickListener() { //Floating action button onclick listener
@@ -265,6 +273,12 @@ public class workSpace extends AppCompatActivity {
                             bui.setView(root);
                             alert = bui.create();
                             alert.show();
+                            alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialogInterface) {
+                                    hideSoftKeyboard(getActivity());
+                                }
+                            });
                             addTaskToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem item) {
@@ -307,9 +321,10 @@ public class workSpace extends AppCompatActivity {
                 String f = js.toJson(n);
                 intent.putExtra("notificationContent", f);
                 intent.putExtra("fromClass","WorkSpace");
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), id, intent, 0);
                 id++;
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), id, intent, 0);
                 editor.putInt("identifier", id);
+                editor.apply();
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, n.cal.getTimeInMillis(), pendingIntent);
             }
         }
@@ -358,6 +373,12 @@ public class workSpace extends AppCompatActivity {
             final AlertDialog alert = alertBuilder.create();
             Toolbar addCabinToolbar =(Toolbar)alertCabinView.findViewById(R.id.alert_cabin_toolbar);
             addCabinToolbar.inflateMenu(R.menu.menu_add_todo);
+            alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    workSpace.hideSoftKeyboard(getActivity());
+                }
+            });
             addCabinToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -370,7 +391,6 @@ public class workSpace extends AppCompatActivity {
                             Toast.makeText(context, "Invalid Data !", Toast.LENGTH_LONG).show();
                         }
                         else {
-
                             for (int i = 0; i < vClass.cablist.size(); i++) {
                                 if (vClass.cablist.get(i).name.toLowerCase().equals(name.toLowerCase())) {
                                     vClass.cablist.get(i).cabin = cabin;
@@ -395,7 +415,6 @@ public class workSpace extends AppCompatActivity {
                     return false;
                 }
             });
-
             alert.show();
         }  //CREATE AND HANDLES THE ALERT DIALOG BOX TO ADD CABIN
 
@@ -455,20 +474,39 @@ public class workSpace extends AppCompatActivity {
                 taskGridLeft.removeAllViews();
                 taskGridRight.removeAllViews();
                 while (i < vClass.notes.size()) {
-                    taskGridLeft.addView(getTaskView(i));
+                    View LeftView = getTaskView(i);
+                    setTaskOnClick(LeftView,i);
+                    taskGridLeft.addView(LeftView);
                     i++;
-                    if (i < vClass.notes.size())
-                        taskGridRight.addView(getTaskView(i));
+                    if (i < vClass.notes.size()) {
+                        View rightView = getTaskView(i);
+                        setTaskOnClick(rightView, i);
+                        taskGridRight.addView(rightView);
+                    }
                     i++;
                 }
             }
+        }
+        AlertDialog expanded;
+        void setTaskOnClick(View view,final int index){
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder alertDialogBuilder= new AlertDialog.Builder(context);
+                    alertDialogBuilder.setView(getExpanded(index));
+                    expanded= alertDialogBuilder.create();
+                    expanded.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    expanded.show();
+                    expanded.getWindow().setLayout(((int)(vClass.width*0.8)),RelativeLayout.LayoutParams.WRAP_CONTENT);
+                }
+            });
         }
 
         int[] colors = new int[]{R.color.dot_light_screen1,R.color.dot_light_screen5, R.color.dot_light_screen2,R.color.dot_light_screen3,R.color.dot_light_screen4};
 
         View getTaskView(final int index) {
             final Notification_Holder cTask = vClass.notes.get(index);
-            final View taskView = getActivity().getLayoutInflater().inflate(R.layout.course_task_view, null);
+            final View taskView = getActivity().getLayoutInflater().inflate(R.layout.course_task_card_view, null);
             TextView title =((TextView) taskView.findViewById(R.id.task_title));
             ImageButton edit=(ImageButton) taskView.findViewById(R.id.task_edit);
             title.setTypeface(vClass.nunito_bold);
@@ -482,9 +520,9 @@ public class workSpace extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if (index % 2 != 0) {
-                        taskGridRight.removeView(taskView);
+                        taskGridRight.removeViewAt((index/2));
                     } else {
-                        taskGridLeft.removeView(taskView);
+                        taskGridLeft.removeViewAt(index/2);
                     }
                     delTask(cTask);
                 }
@@ -544,13 +582,18 @@ public class workSpace extends AppCompatActivity {
                                     editor.apply();
                                     if (index % 2 != 0) {
                                         int i=taskGridRight.indexOfChild(taskView);
-                                        taskGridRight.removeView(taskView);
-                                        taskGridRight.addView(getTaskView(index),i);
+                                        taskGridRight.removeViewAt(i);
+                                        View view = getTaskView(index);
+                                        setTaskOnClick(view,index);
+                                        taskGridRight.addView(view,i);
                                     } else {
                                         int i =taskGridLeft.indexOfChild(taskView);
                                         taskGridLeft.removeView(taskView);
-                                        taskGridLeft.addView(getTaskView(index),i);
+                                        View view = getTaskView(index);
+                                        setTaskOnClick(view,index);
+                                        taskGridLeft.addView(view,i);
                                     }
+                                    workSpace.hideSoftKeyboard(getActivity());
                                     alert.cancel();
                                 } else
                                     Toast.makeText(getContext(), "Both title and note must contain some text", Toast.LENGTH_SHORT).show();
@@ -559,12 +602,6 @@ public class workSpace extends AppCompatActivity {
                             return false;
                         }
                     });
-
-
-
-
-
-
                 }
             });
             Calendar deadLine = cTask.cal;
@@ -573,12 +610,117 @@ public class workSpace extends AppCompatActivity {
             GradientDrawable softShape = (GradientDrawable) taskView.getBackground();
             final int colorIndex = index % (colors.length);
             softShape.setColor(getResources().getColor(colors[colorIndex]));
-            taskView.setOnLongClickListener(new View.OnLongClickListener() {
+            return taskView;
+        }
+
+        View getExpanded(final int index){
+            final Notification_Holder cTask = vClass.notes.get(index);
+            final View taskView = getActivity().getLayoutInflater().inflate(R.layout.expanded_task_card_view, null);
+            TextView title =((TextView) taskView.findViewById(R.id.task_title));
+            ImageButton edit=(ImageButton) taskView.findViewById(R.id.task_edit);
+            title.setTypeface(vClass.nunito_bold);
+            title.setText(cTask.title);
+            TextView deadLineTextView= (TextView) taskView.findViewById(R.id.task_deadLine);
+            deadLineTextView.setTypeface(vClass.nunito_reg);
+            TextView desc=((TextView) taskView.findViewById(R.id.task_desc));
+            desc.setTypeface(vClass.nunito_reg);
+            desc.setText(cTask.content);
+            (taskView.findViewById(R.id.task_delete)).setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View view) {
-                    return false;
+                public void onClick(View view) {
+                    if (index % 2 != 0) {
+                        taskGridRight.removeViewAt((index/2));
+                    } else {
+                        taskGridLeft.removeViewAt(index/2);
+                    }
+                    try{expanded.cancel();}
+                    catch (Exception e){}
+                    delTask(cTask);
                 }
             });
+
+            edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Notification_Holder n=vClass.notes.get(index);
+                    final AlertDialog alert;
+                    View root = getActivity().getLayoutInflater().inflate(R.layout.floatingview_add_todo, null);
+                    final EditText title = (EditText) root.findViewById(R.id.title);
+                    final EditText other = (EditText) root.findViewById(R.id.note);
+                    final Switch reminderSwitch =(Switch)root.findViewById(R.id.add_todo_reminder_switch);
+                    Toolbar addTaskToolbar=((Toolbar)root.findViewById(R.id.add_task_toolbar));
+                    addTaskToolbar.inflateMenu(R.menu.menu_add_todo);
+                    title.setText(n.title);
+                    other.setText(n.content);
+
+
+                    AlertDialog.Builder bui = new AlertDialog.Builder(context);
+                    bui.setView(root);
+                    alert = bui.create();
+                    alert.show();
+
+                    reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                            if(checked) {
+                                c = null;
+                                showReminderSetter(reminderSwitch);
+                            }
+                            else {
+                                c = null;
+                                reminderSwitch.setText("Set Reminder");
+                            }
+                        }
+                    });
+                    addTaskToolbar.setTitle("Edit Note");
+                    addTaskToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            int id = item.getItemId();
+                            if(id==R.id.action_add_todo) {
+                                if (title.getText().toString() != null && title.getText().toString().equals("") != true & other.getText().toString() != null && other.getText().toString().equals("") != true) {
+                                    Notification_Holder n;
+                                    if(c!=null) {
+                                        n = new Notification_Holder(c, title.getText().toString(), other.getText().toString(),"You have a deadline to meet");
+                                        schedule_todo_notification(n);
+                                    }
+                                    else
+                                        n = new Notification_Holder(Calendar.getInstance(), title.getText().toString(), other.getText().toString(),"You have a deadline to meet");
+                                    updateTask(n,index);
+                                    Gson json = new Gson();
+                                    String temporary = json.toJson(vClass.notes);
+                                    editor.putString("todolist", temporary);
+                                    editor.apply();
+                                    int indexOfView=index/2;
+                                    if (index % 2 != 0) {
+                                        View view = getTaskView(index);
+                                        setTaskOnClick(view,index);
+                                        taskGridRight.removeViewAt(indexOfView);
+                                        taskGridRight.addView(view,indexOfView);
+                                    } else {
+                                        View view = getTaskView(index);
+                                        setTaskOnClick(view,index);
+                                        taskGridLeft.removeViewAt(indexOfView);
+                                        taskGridLeft.addView(view,indexOfView);
+                                    }
+                                    expanded.cancel();
+                                    workSpace.hideSoftKeyboard(getActivity());
+                                    alert.cancel();
+                                } else
+                                    Toast.makeText(getContext(), "Both title and note must contain some text", Toast.LENGTH_SHORT).show();
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
+                }
+            });
+            Calendar deadLine = cTask.cal;
+            deadLineTextView.setText(getDateTimeString(deadLine));
+            //taskView.setBackground(getResources().getDrawable(R.drawable.soft_corner_taskview));
+            GradientDrawable softShape = (GradientDrawable) taskView.getBackground();
+            final int colorIndex = index % (colors.length);
+            softShape.setColor(getResources().getColor(colors[colorIndex]));
             return taskView;
         }
 
@@ -595,11 +737,16 @@ public class workSpace extends AppCompatActivity {
             }
             return String.valueOf(minute);
         }
+
+        String getHour(int hour){
+            if(hour==0) return "12";
+            else return String.valueOf(hour);
+        }
         String getDateTimeString(Calendar deadLine){
             int today = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
             int taskDay= deadLine.get(Calendar.DAY_OF_YEAR);
             String dateString;
-            String timeString = deadLine.get(Calendar.HOUR)+":"+getMinute(deadLine.get(Calendar.MINUTE))+getAMPM(deadLine.get(Calendar.AM_PM));
+            String timeString = getHour(deadLine.get(Calendar.HOUR))+":"+getMinute(deadLine.get(Calendar.MINUTE))+getAMPM(deadLine.get(Calendar.AM_PM));
             if(today==taskDay){
                 dateString= "Today";
             }
@@ -638,10 +785,12 @@ public class workSpace extends AppCompatActivity {
         }
 
         void updateTaskGrid(int index) {
+            View view = getTaskView(index);
+            setTaskOnClick(view,index);
             if ((index) % 2 == 0) {
-                taskGridLeft.addView(getTaskView(index));
+                taskGridLeft.addView(view);
             } else {
-                taskGridRight.addView(getTaskView(index));
+                taskGridRight.addView(view);
             }
         } //UPDATE THE TASK GRID WHEN NEW TASK IS ADDED
     }
@@ -690,4 +839,30 @@ public class workSpace extends AppCompatActivity {
         cabListEditor.putString("customTeachers",cabListJson);
         cabListEditor.commit();
     } //SAVE THE CONTENT OF CABLIST TO THE PREFERENCES
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
+    public static void setOnTouchListener(View view, final Activity activity) {
+        if (!(view instanceof EditText)) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(activity);
+                    if (resultList.getVisibility()==View.VISIBLE){
+                        resultList.setVisibility(View.INVISIBLE);
+                    }
+                    return false;
+                }
+            });
+        }
+
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setOnTouchListener(innerView,activity);
+            }
+        }
+    }
 }
