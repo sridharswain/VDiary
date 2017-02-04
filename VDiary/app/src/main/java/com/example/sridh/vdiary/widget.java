@@ -47,7 +47,7 @@ public class widget extends AppWidgetProvider {
         Calendar calendarMan = Calendar.getInstance();
         calendarMan.set(Calendar.HOUR,12);
         calendarMan.set(Calendar.MINUTE,0);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendarMan.getTimeInMillis(), 24 * 60 * 60 * 1000, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendarMan.getTimeInMillis(), 12 * 60 * 60 * 1000, pendingIntent);
     }
 
     @Override

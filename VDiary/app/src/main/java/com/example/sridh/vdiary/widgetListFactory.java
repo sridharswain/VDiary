@@ -48,13 +48,11 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory 
         today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
         SharedPreferences prefs = context.getSharedPreferences("academicPrefs", Context.MODE_PRIVATE);
         String scheduleJson = prefs.getString("schedule", null);
-        if (scheduleJson != null) {
+        if (scheduleJson != null && today>1 && today<7) {
             Gson g = new Gson();
             timeTable = g.fromJson(scheduleJson, new TypeToken<ArrayList<List<subject>>>() {
             }.getType());
             todaySchedule = timeTable.get(today - 2);
-        } else {
-
         }
         shouldShowAttendance = context.getSharedPreferences(SETTING_PREFS_NAME, Context.MODE_PRIVATE).getBoolean(SHOW_ATT_KEY, false);
     }

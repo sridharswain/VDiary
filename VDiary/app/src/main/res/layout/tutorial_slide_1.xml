@@ -19,8 +19,8 @@
         android:id="@+id/iv_tutorial"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"
-        android:layout_below="@id/tv_tutorial_head" />
-    <!--android:src="@drawable/schedule"-->
+        android:layout_below="@id/tv_tutorial_head"/>
+
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"

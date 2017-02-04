@@ -29,7 +29,8 @@
         android:hint="Teacher's Name"
         android:id="@+id/alert_cabin_teacherName"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="7dp"/>
+        android:layout_marginTop="7dp"
+        android:maxLines="3"/>
 
     <EditText
         android:layout_height="wrap_content"
@@ -38,7 +39,8 @@
         android:id="@+id/alert_cabin_cabinAddress"
         android:layout_below="@id/alert_cabin_teacherName"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="7dp"/>
+        android:layout_marginTop="7dp"
+        android:maxLines="3"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -49,6 +51,7 @@
         android:hint="Comment..."
         android:layout_below="@id/alert_cabin_cabinAddress"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="7dp"/>
+        android:layout_marginTop="7dp"
+        android:maxLines="5"/>
         </RelativeLayout>
 </RelativeLayout>
