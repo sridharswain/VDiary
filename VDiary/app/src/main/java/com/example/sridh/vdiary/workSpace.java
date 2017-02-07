@@ -842,7 +842,12 @@ public class workSpace extends AppCompatActivity {
 
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        try {
+            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        }
+        catch (Exception e){
+            //KEYBOARD HIDE FAILED
+        }
     }
 
     public static void setOnTouchListener(View view, final Activity activity) {

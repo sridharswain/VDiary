@@ -38,10 +38,11 @@ public class AtBoot extends BroadcastReceiver {
         for (int i=0;i<vClass.notes.size();i++)
         {
             x=new Intent(context,NotifyService.class);
+            x.putExtra("fromClass","WorkSpace");
             Gson js=new Gson();
             Notification_Holder n=vClass.notes.get(i);
             String m=js.toJson(n);
-            x.putExtra("one",m);
+            x.putExtra("notificationContent",m);
             pendingIntent=PendingIntent.getBroadcast(context,vClass.notes.get(i).id,x,0);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, vClass.notes.get(i).cal.getTimeInMillis(),pendingIntent);
         }
@@ -57,9 +58,9 @@ public class AtBoot extends BroadcastReceiver {
             Intent toWidgetService = new Intent(context,widgetServiceReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,toWidgetService,0);
             Calendar calendarMan = Calendar.getInstance();
-            calendarMan.set(Calendar.HOUR_OF_DAY,0);
+            calendarMan.set(Calendar.HOUR,12);
             calendarMan.set(Calendar.MINUTE,0);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendarMan.getTimeInMillis(), 24 * 60 * 60 * 1000, pendingIntent);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendarMan.getTimeInMillis(), 12 * 60 * 60 * 1000, pendingIntent);
         }
     }
 }

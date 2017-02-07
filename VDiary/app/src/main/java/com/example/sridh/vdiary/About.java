@@ -11,7 +11,7 @@ public class About extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         vClass.setStatusBar(getWindow(),getApplicationContext(),R.color.colorPrimaryDark);
-        ((TextView)findViewById(R.id.about_core_developers)).setText("The only developers: Sparsha, Sridhar");
+        ((TextView)findViewById(R.id.about_core_developers)).setText("Developed By : Sparsha, Sridhar");
         ((TextView)findViewById(R.id.about_name_and_version)).setText("Zchedule Beta "+vClass.VERSION);
         String thanks="";
         /*thanks = "Special Thanks to:\n";
