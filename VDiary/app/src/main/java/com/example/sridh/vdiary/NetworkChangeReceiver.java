@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -23,15 +24,11 @@ import java.util.List;
  */
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
-    Firebase database;
     Context context;
     @Override
     public void onReceive(Context ctxt, Intent intent) {
         context=ctxt;
-        Firebase.setAndroidContext(context);
-        database= new Firebase(vClass.FIREBASE_URL);
-        getHolidays(context);
-        requestToDatabase();
+        scrapper.getFromFirebase(context);
     }
     void getHolidays(final Context context){
         Firebase.setAndroidContext(context);
@@ -55,19 +52,6 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             @Override
             public void onCancelled(FirebaseError firebaseError) {}
         });
-    }
-
-    void requestToDatabase(){
-        SharedPreferences teacherPrefs = context.getSharedPreferences("teacherPrefs",Context.MODE_PRIVATE);
-        String teacherJson = teacherPrefs.getString("customTeachers",null);
-        if(teacherJson!=null){
-            List<Cabin_Details> cabin_detailsList = (new Gson()).fromJson(teacherJson,new TypeToken<List<Cabin_Details>>(){}.getType());
-            if (cabin_detailsList.size() > 0) {
-                for (Cabin_Details editedTeacher : cabin_detailsList) {
-                    database.child("custom").child(editedTeacher.name).setValue(editedTeacher.cabin);
-                }
-            }
-        }
     }
 
     void updateWidget(){

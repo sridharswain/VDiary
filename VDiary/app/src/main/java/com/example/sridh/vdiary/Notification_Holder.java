@@ -17,7 +17,6 @@ public class Notification_Holder {
     String title;
     String content;
     String ticker;
-    boolean scheduled;
     int id;
     //long mills;
 
@@ -27,7 +26,6 @@ public class Notification_Holder {
         this.title=title;
         this.content=content;
         this.ticker=ticker;
-        scheduled=false;
         //mills=cal.getTimeInMillis();
     }
 

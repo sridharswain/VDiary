@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -26,6 +28,7 @@ public class NotifyService extends WakefulBroadcastReceiver {
             Notification_Creator notifcreator = new Notification_Creator(notificationHolder.title, notificationHolder.content, notificationHolder.ticker, context);
             notifcreator.create_notification();
         } else {
+            Log.d("isNotificationOn",String.valueOf(isNotificationOn(context)));
             if (!isHolidayToday(context) && isNotificationOn(context)) {
                 Calendar cal = Calendar.getInstance();
                 Notification_Holder notificationHolder = (new Gson()).fromJson(intent.getStringExtra("notificationContent"), new TypeToken<Notification_Holder>() {

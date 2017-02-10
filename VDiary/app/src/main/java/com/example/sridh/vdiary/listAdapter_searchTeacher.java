@@ -1,6 +1,7 @@
 package com.example.sridh.vdiary;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -111,6 +113,8 @@ public class listAdapter_searchTeacher extends BaseAdapter {
                 editedTeacher.cabin=editcabin.getText().toString();
                 editedTeacher.name=found.name;
                 vClass.cablist.add(editedTeacher);
+                vClass.toBeUpdated.add(editedTeacher);
+                writeEditedToPrefs(context);
                 editedTeacher.others="Custom";
                 teacherAdapter.updatecontent(vClass.cablist);
                 workSpace.writeCabListToPrefs();
@@ -119,6 +123,12 @@ public class listAdapter_searchTeacher extends BaseAdapter {
             }
         });
         alertDialog.show();
+    }
+
+    public static void writeEditedToPrefs(Context context){
+        SharedPreferences.Editor upList= context.getSharedPreferences("toUpdate",Context.MODE_PRIVATE).edit();
+        upList.putString("toUpdate",(new Gson()).toJson(vClass.toBeUpdated));
+        upList.apply();
     }
 }
 

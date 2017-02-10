@@ -460,8 +460,10 @@ public class scrapper extends AppCompatActivity {
                                                                     String text = trim(value);
                                                                     final subject sub = new subject();
                                                                     if (cellColor.equals("#CCFF33")) {
-                                                                        sub.code = text.substring(0, 7); //CODE
-                                                                        String rawType = text.split("-")[1];
+                                                                        String[] foundText= text.split("-");
+                                                                        String rawCode = foundText[0];
+                                                                        sub.code = rawCode.substring(0,rawCode.length()-1); //CODE
+                                                                        String rawType = foundText[1];
                                                                         String type = rawType.substring(1, rawType.length() - 1); //TYPE
                                                                         sub.type = type;
                                                                         //TIME
@@ -665,7 +667,7 @@ public class scrapper extends AppCompatActivity {
         int notificationCode=1;
         for(List<subject> today: timeTable){
             for (subject sub : today){
-                if(!sub.type.equals("")){
+                if(!sub.code.equals("")){
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     Intent toNotifyService = new Intent(context,NotifyService.class);
                     toNotifyService.putExtra("fromClass","scheduleNotification");
@@ -733,6 +735,8 @@ public class scrapper extends AppCompatActivity {
             vClass.holidays=jsonBuilder.fromJson(holidays,new TypeToken<List<holiday>>(){}.getType());
         }
         if(allSubJson!=null && scheduleJson!=null){
+            Log.d("timeTabledda",allSubJson);
+            Log.d("timeTabledaca",scheduleJson);
             vClass.subList=jsonBuilder.fromJson(allSubJson,new TypeToken<ArrayList<subject>>(){}.getType());
             vClass.timeTable=jsonBuilder.fromJson(scheduleJson, new TypeToken<ArrayList<ArrayList<subject>>>(){}.getType());
             return true;
@@ -808,13 +812,14 @@ public class scrapper extends AppCompatActivity {
         }
     }   //SWITCH BETWEEN LOADING SCREEN AND LOGIN SCREEN
 
-    void getTeacherCabins(){
-        Firebase.setAndroidContext(this);
-        Firebase database= new Firebase(vClass.FIREBASE_URL);
+    public static void getFromFirebase(final Context context){
+        Firebase.setAndroidContext(context);
+        final Firebase database= new Firebase(vClass.FIREBASE_URL);
         database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 vClass.teachers.clear();
+                //FETCH TEACHERS
                 DataSnapshot teachers=dataSnapshot.child("teachers");
                 for(DataSnapshot snapshot:teachers.getChildren()){
                     try {
@@ -825,9 +830,40 @@ public class scrapper extends AppCompatActivity {
                         //DO NOT ADD THE CHANGE REQUESTED TEACHER DETAILS
                     }
                 }
-                SharedPreferences.Editor editor = getSharedPreferences("teacherPrefs",MODE_PRIVATE).edit();
-                editor.putString("teachers",(jsonBuilder.toJson(vClass.teachers)));
-                editor.commit();
+                SharedPreferences.Editor editor = context.getSharedPreferences("teacherPrefs",MODE_PRIVATE).edit();
+                String teacherJsonTest=(new Gson()).toJson(vClass.teachers);
+                editor.putString("teachers",teacherJsonTest);
+                editor.apply();
+
+                vClass.holidays.clear();
+                //FETCH HOLIDAYS
+                DataSnapshot holiday=dataSnapshot.child("Holidays");
+                for (DataSnapshot snapshot : holiday.getChildren()){
+                    String dateString = snapshot.getValue().toString();
+                    Calendar c = Calendar.getInstance();
+                    c.set(Integer.parseInt(dateString.substring(6)),Integer.parseInt(dateString.substring(3,5))-1,Integer.parseInt(dateString.substring(0,2)));
+                    vClass.holidays.add(new holiday(c,snapshot.getKey()));
+                }
+                Gson serializer = new Gson();
+                SharedPreferences.Editor holidays= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE).edit();
+                String holidayJson = serializer.toJson(vClass.holidays);
+                holidays.putString("holidays",holidayJson);
+                holidays.apply();
+
+                //REQUEST TO DATABASE
+                SharedPreferences teacherPrefs = context.getSharedPreferences("toUpdate",Context.MODE_PRIVATE);
+                String teacherJson = teacherPrefs.getString("toUpdate",null);
+                if(teacherJson!=null){
+                    List<Cabin_Details> cabin_detailsList = (new Gson()).fromJson(teacherJson,new TypeToken<List<Cabin_Details>>(){}.getType());
+                    if (cabin_detailsList.size() > 0) {
+                        for (Cabin_Details editedTeacher : cabin_detailsList) {
+                            database.child("custom").child(editedTeacher.name).setValue(editedTeacher.cabin);
+                            cabin_detailsList.remove(editedTeacher);
+                            listAdapter_searchTeacher.writeEditedToPrefs(context);
+                        }
+                    }
+                }
+                Firebase.goOffline();
             }
 
             @Override
@@ -869,8 +905,7 @@ public class scrapper extends AppCompatActivity {
             status.setText("Fetching Courses...");
             schedule.setWebViewClient(new scheduleClient());
             schedule.loadUrl("https://academicscc.vit.ac.in/student/course_regular.asp?sem="+vClass.SEM);
-            getTeacherCabins();
-            getHolidays(context);
+            getFromFirebase(context);
             super.onPostExecute(aVoid);
         }
     }
@@ -905,29 +940,6 @@ public class scrapper extends AppCompatActivity {
         isLoaded=false;
         loggedIn=false;
         finish();
-    }
-
-    void getHolidays(final Context context){
-        Firebase.setAndroidContext(context);
-        final Firebase database= new Firebase(vClass.FIREBASE_URL);
-        database.child("Holidays").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    String dateString = snapshot.getValue().toString();
-                    Calendar c = Calendar.getInstance();
-                    c.set(Integer.parseInt(dateString.substring(6)),Integer.parseInt(dateString.substring(3,5))-1,Integer.parseInt(dateString.substring(0,2)));
-                    vClass.holidays.add(new holiday(c,snapshot.getKey()));
-                }
-                Gson serializer = new Gson();
-                SharedPreferences.Editor holidays= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE).edit();
-                holidays.putString("holidays",serializer.toJson(vClass.holidays));
-                holidays.apply();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {}
-        });
     }
 
     public void hideSoftKeyboard(Activity activity) {

@@ -75,6 +75,7 @@ public class workSpace extends AppCompatActivity {
 
 
     static ListView resultList;
+    static EditText teacherSearch;
 
     @Override
     public void onBackPressed() {
@@ -193,7 +194,6 @@ public class workSpace extends AppCompatActivity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-        EditText teacherSearch;
         List<teacher> searchResult;
 
         public PlaceholderFragment(){
@@ -227,8 +227,17 @@ public class workSpace extends AppCompatActivity {
                     return rootViewCourse;
                 case 1:
                     View rootViewteachers = inflater.inflate(R.layout.fragment_teachers, container, false);
-                    setOnTouchListener(rootViewteachers,getActivity());
-                    setSearcher(rootViewteachers);
+                    teacherSearch = (EditText) rootViewteachers.findViewById(R.id.teachers_searchText);
+                    resultList = (ListView) rootViewteachers.findViewById(R.id.teachers_search_list);
+                    resultList.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            hideSoftKeyboard(getActivity());
+                            return false;
+                        }
+                    });
+                    setOnViewTouchListener(rootViewteachers,getActivity());
+                    setSearcher();
                     FloatingActionButton fab = (FloatingActionButton) rootViewteachers.findViewById(R.id.teachers_add);
                     ListView lv = (ListView) rootViewteachers.findViewById(R.id.teachers_list);
                     final listAdapter_teachers mad = new listAdapter_teachers(context, vClass.cablist);
@@ -406,6 +415,8 @@ public class workSpace extends AppCompatActivity {
                             c.cabin = cabin;
                             c.others = comment;
                             vClass.cablist.add(c);
+                            vClass.toBeUpdated.add(c);
+                            listAdapter_searchTeacher.writeEditedToPrefs(context);
                             writeCabListToPrefs();
                             cabinListAdapter.updatecontent(vClass.cablist);
                             alert.cancel();
@@ -419,13 +430,11 @@ public class workSpace extends AppCompatActivity {
         }  //CREATE AND HANDLES THE ALERT DIALOG BOX TO ADD CABIN
 
 
-        void setSearcher(View view) {
+        void setSearcher() {
             searchResult = new ArrayList<>();
-            teacherSearch = (EditText) view.findViewById(R.id.teachers_searchText);
             InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(teacherSearch.getWindowToken(), 0);
             teacherSearch.setTypeface(vClass.nunito_reg);
-            resultList = (ListView) view.findViewById(R.id.teachers_search_list);
             final listAdapter_searchTeacher searchAdapter = new listAdapter_searchTeacher(context, searchResult,teacherSearch);
             resultList.setAdapter(searchAdapter);
             teacherSearch.addTextChangedListener(new TextWatcher() {
@@ -845,9 +854,7 @@ public class workSpace extends AppCompatActivity {
         try {
             inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
         }
-        catch (Exception e){
-            //KEYBOARD HIDE FAILED
-        }
+        catch (Exception e){ /*KEYBOARD HIDE FAILED*/ }
     }
 
     public static void setOnTouchListener(View view, final Activity activity) {
@@ -869,5 +876,17 @@ public class workSpace extends AppCompatActivity {
                 setOnTouchListener(innerView,activity);
             }
         }
+    }
+
+    public static void setOnViewTouchListener(View view,final Activity activity){
+        view.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                hideSoftKeyboard(activity);
+                if (resultList.getVisibility()==View.VISIBLE){
+                    resultList.setVisibility(View.INVISIBLE);
+                }
+                return false;
+            }
+        });
     }
 }

@@ -90,7 +90,7 @@ public class showSubject extends AppCompatActivity {
             for (int i = 0; i < vClass.timeTable.size(); i++) {
                 List<subject> z = vClass.timeTable.get(i);
                 for (int j = 0; j < z.size(); j++) {
-                    if (z.get(j).title.equals(sub.title) && z.get(j).type.equals(sub.type)) {
+                    if (z.get(j).code.equals(sub.code) && z.get(j).type.equals(sub.type)) {
                         occurrence.add(i);
                     }
                 }

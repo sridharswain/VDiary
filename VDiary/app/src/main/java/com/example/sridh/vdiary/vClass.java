@@ -35,9 +35,12 @@ public class vClass {
     public static List<teacher> teachers= new ArrayList<>();
     public static  List<Cabin_Details> cablist=new ArrayList<>();
     public static String FIREBASE_URL= "https://vdiary-a25b2.firebaseio.com/";
+
+    public static List<Cabin_Details> toBeUpdated = new ArrayList<>();
+
     //PARAMETERS FOR CHANGING THE LINKS
     public static String SEM = "WS";
-    public static String VERSION= "1.9";
+    public static String VERSION= "1.11";
 
     //HOLIDAYS
     public static List<holiday> holidays= new ArrayList<>();
