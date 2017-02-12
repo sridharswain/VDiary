@@ -240,6 +240,7 @@ public class workSpace extends AppCompatActivity {
                     setSearcher();
                     FloatingActionButton fab = (FloatingActionButton) rootViewteachers.findViewById(R.id.teachers_add);
                     ListView lv = (ListView) rootViewteachers.findViewById(R.id.teachers_list);
+                    setOnTouchListener(lv,getActivity());
                     final listAdapter_teachers mad = new listAdapter_teachers(context, vClass.cablist);
                     listAdapter_searchTeacher.teacherAdapter = mad;
                     lv.setAdapter(mad);

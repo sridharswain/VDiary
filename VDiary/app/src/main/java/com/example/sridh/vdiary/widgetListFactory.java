@@ -64,7 +64,12 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory 
 
     @Override
     public int getCount() {
-        return todaySchedule.size();
+        try{
+            return todaySchedule.size();
+        }
+        catch (Exception r){
+            return 0;
+        }
     }
 
     @Override

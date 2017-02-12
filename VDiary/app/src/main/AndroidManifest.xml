@@ -20,7 +20,8 @@
             android:name=".scrapper"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:clearTaskOnLaunch="true"/>
         <activity
             android:name=".schedule"
             android:screenOrientation="portrait"

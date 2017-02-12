@@ -115,7 +115,7 @@ public class listAdapter_searchTeacher extends BaseAdapter {
                 vClass.cablist.add(editedTeacher);
                 vClass.toBeUpdated.add(editedTeacher);
                 writeEditedToPrefs(context);
-                editedTeacher.others="Custom";
+                editedTeacher.others="Waiting for validation :)";
                 teacherAdapter.updatecontent(vClass.cablist);
                 workSpace.writeCabListToPrefs();
                 alertDialog.cancel();

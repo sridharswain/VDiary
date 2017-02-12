@@ -97,6 +97,13 @@ public class scrapper extends AppCompatActivity {
         start();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("Hello Eo","Hello Wold");
+        readFromPrefs();
+    }
+
     void start() {
         if(!tryRefresh && readFromPrefs()){
             startActivity(new Intent(this, workSpace.class));
@@ -108,6 +115,7 @@ public class scrapper extends AppCompatActivity {
             setUp();
         }
     } //STARTS THE PROCESSING
+
 
     private class loginClient extends WebViewClient{
 
@@ -863,6 +871,7 @@ public class scrapper extends AppCompatActivity {
                         }
                     }
                 }
+                // TODO------ FETCH VALIDATED TEACHERS AND DELETE FROM THE TEACHERS LIST
                 Firebase.goOffline();
             }
 

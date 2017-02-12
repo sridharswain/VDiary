@@ -40,7 +40,7 @@ public class vClass {
 
     //PARAMETERS FOR CHANGING THE LINKS
     public static String SEM = "WS";
-    public static String VERSION= "1.11";
+    public static String VERSION= "1.12";
 
     //HOLIDAYS
     public static List<holiday> holidays= new ArrayList<>();
