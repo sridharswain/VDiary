@@ -82,4 +82,9 @@ public class listAdapter_courses extends BaseAdapter {
         }
         return rowview;
     }
+
+    void update(List<subject> courseList){
+        this.list=courseList;
+        notifyDataSetChanged();
+    }
 }

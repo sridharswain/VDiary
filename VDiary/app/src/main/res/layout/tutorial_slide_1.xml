@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_screen1"
-    android:padding="26dp">
+    android:padding="10dp">
 
     <TextView
         android:layout_height="wrap_content"
@@ -13,14 +13,6 @@
         android:textColor="@android:color/white"
         android:textSize="30sp"
         android:layout_marginTop="20dp"/>
-    <ImageView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/iv_tutorial"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"
-        android:layout_below="@id/tv_tutorial_head"/>
-
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
@@ -31,4 +23,13 @@
         android:textSize="30sp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="40dp"/>
+    <ImageView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/iv_tutorial"
+        android:layout_centerHorizontal="true"
+        android:padding="30dp"
+        android:layout_below="@id/tv_tutorial_head"
+        android:layout_above="@id/tv_tutorial_comment" />
+
 </RelativeLayout>

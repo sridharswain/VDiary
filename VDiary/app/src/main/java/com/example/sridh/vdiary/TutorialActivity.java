@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import static com.example.sridh.vdiary.splashScreen.*;
+import static com.example.sridh.vdiary.prefs.*;
 
 public class TutorialActivity extends AppCompatActivity {
 
@@ -45,9 +45,7 @@ public class TutorialActivity extends AppCompatActivity {
     }
 
     void setIsFirstLaunch(){
-        SharedPreferences.Editor prefsEditor = getSharedPreferences(LAUNCH_PREFS,MODE_PRIVATE).edit();
-        prefsEditor.putBoolean(IS_FIRST,false);
-        prefsEditor.commit();
+        put(getApplicationContext(),isFirst,false);//prefsEditor.putBoolean(IS_FIRST,false);
     }
 
     void initLayout() {
@@ -154,22 +152,22 @@ public class TutorialActivity extends AppCompatActivity {
             int image=0;
             switch (position){
                 case 0:
-                    image=R.drawable.schedule;
+                    image=R.drawable.iv_schedule;
                     break;
                 case 1:
-                    image=R.drawable.attendance;
+                    image=R.drawable.iv_attendance;
                     break;
                 case 2:
-                    image=R.drawable.search_teacher;
+                    image=R.drawable.iv_search_teacher;
                     break;
                 case 3:
-                    image=R.drawable.notified;
+                    image=R.drawable.iv_notification;
                     break;
                 case 4:
-                    image=R.drawable.widget_ic;
+                    image=R.drawable.iv_widget;
                     break;
                 case 5:
-                    image=R.drawable.tasks;
+                    image=R.drawable.iv_notes;
                     break;
             }
             Glide.with(getApplicationContext()).load(image).into(iv_tutorial);

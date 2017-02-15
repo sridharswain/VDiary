@@ -2,7 +2,6 @@ package com.example.sridh.vdiary;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
@@ -11,6 +10,10 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.Calendar;
 import java.util.List;
+
+import static com.example.sridh.vdiary.prefs.get;
+import static com.example.sridh.vdiary.prefs.holidays;
+import static com.example.sridh.vdiary.prefs.showNotification;
 
 /**
  * Created by Sparsha Saha on 12/12/2016.
@@ -42,8 +45,7 @@ public class NotifyService extends WakefulBroadcastReceiver {
         }
     }
     boolean isHolidayToday(Context context){
-        SharedPreferences holidayPrefs= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE);
-        String holidayJson = holidayPrefs.getString("holidays",null);
+        String holidayJson = get(context,holidays,null);//holidayPrefs.getString("holidays",null);
         Calendar today = Calendar.getInstance();
         if(holidayJson!=null){
             List<holiday> holidays = (new Gson()).fromJson(holidayJson,new TypeToken<List<holiday>>(){}.getType());
@@ -58,8 +60,7 @@ public class NotifyService extends WakefulBroadcastReceiver {
     }
 
     boolean isNotificationOn(Context context){
-        SharedPreferences settings = context.getSharedPreferences("settingPrefs",Context.MODE_PRIVATE);
-        return settings.getBoolean("showNotification",true);
+        return get(context,showNotification,true);
     }
 
 }

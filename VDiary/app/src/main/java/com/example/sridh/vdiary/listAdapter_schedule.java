@@ -21,6 +21,7 @@ public class listAdapter_schedule extends BaseAdapter {
     public static View rowview;
     public static LayoutInflater inflater=null;
     //parameterized constructor
+
     public listAdapter_schedule(Context c, List<subject> j)
     {
         scheduleList=j;

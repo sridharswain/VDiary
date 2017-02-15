@@ -6,7 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/taskbar_orange"
-    tools:context="com.example.sridh.vdiary.scrapper">
+    tools:context="com.example.sridh.vdiary.scrapper"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
@@ -65,50 +67,42 @@
         android:layout_alignTop="@id/passbox"
         android:layout_marginEnd="10dp"
         android:id="@+id/toogle_showPassword"/>
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textCapCharacters"
-        android:id="@+id/captchaBox"
-        android:layout_alignBottom="@+id/captcha"
-        android:layout_alignEnd="@+id/passbox"
-        android:layout_toEndOf="@+id/captcha"
-        android:hint="Captcha"
-        android:textColor="@android:color/white"/>
-    <ImageView
-        android:layout_width="120dp"
-        android:layout_height="40dp"
-        android:id="@+id/captcha"
-        android:layout_below="@+id/passbox"
-        android:layout_alignStart="@+id/passbox"
-        android:src="@drawable/download"
-        android:scaleType="fitXY"
-        android:layout_marginTop="7dp"/>
 
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:id="@+id/login"
-        android:scaleType="fitXY"
-        android:src="@drawable/done"
-        android:padding="0dp"
-        android:layout_below="@+id/saveCreds"
-        android:layout_centerHorizontal="true"
-        app:backgroundTint="@color/colorPrimaryDark"
-        />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Remember Me"
+        android:text="Remember Credentials"
         android:textSize="12sp"
         android:id="@+id/saveCreds"
         android:checked="true"
-        android:layout_below="@id/captcha"
-        android:layout_alignEnd="@+id/captchaBox"
         android:textColor="@android:color/white"
+        android:layout_marginTop="7dp"
+        android:layout_below="@id/passbox"
+        android:layout_alignEnd="@id/passbox"/>
+    <Button
+        android:layout_alignEnd="@id/passbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/passbox"
+        android:height="40dp"
+        android:background="@drawable/softcorner_login_button"
+        android:layout_below="@id/saveCreds"
+        android:text="Login"
+        android:textColor="@android:color/white"
+        android:id="@+id/login"
         android:layout_marginTop="7dp"/>
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:textColor="@android:color/white"
+        android:text="Note: Credentials are neither shared nor stored on any other device."
+        android:layout_below="@id/login"
+        android:id="@+id/note"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"/>
 
     <!--Loading content-->
 </RelativeLayout>
@@ -138,7 +132,7 @@
             android:layout_centerHorizontal="true"
             android:textColor="@android:color/white"
             android:layout_alignBottom="@id/Loadlogo"
-            />
+            android:textAlignment="center" />
         <ProgressBar
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"

@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 
 import android.view.View;
@@ -17,6 +16,10 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.Calendar;
 import java.util.List;
+
+import static com.example.sridh.vdiary.prefs.get;
+import static com.example.sridh.vdiary.prefs.holidays;
+import static com.example.sridh.vdiary.prefs.isLoggedIn;
 
 public class widgetServiceReceiver extends BroadcastReceiver {
     @Override
@@ -64,8 +67,7 @@ public class widgetServiceReceiver extends BroadcastReceiver {
     }
 
     String readHolidayPrefs(Context context,Calendar calendar){
-        SharedPreferences holidayPrefs= context.getSharedPreferences("holidayPrefs",Context.MODE_PRIVATE);
-        String holidayJson = holidayPrefs.getString("holidays",null);
+        String holidayJson = get(context,holidays,null);
         if(holidayJson!=null){
             List<holiday> holidays= (new Gson()).fromJson(holidayJson,new TypeToken<List<holiday>>(){}.getType());
             for (holiday h :holidays){
@@ -82,8 +84,7 @@ public class widgetServiceReceiver extends BroadcastReceiver {
     }
 
     boolean isLoggedIn(Context context){
-        SharedPreferences isLoggedIn = context.getSharedPreferences("isLoggedInPrefs",Context.MODE_PRIVATE);
-        return isLoggedIn.getBoolean("isLoggedIn",false);
+        return get(context,isLoggedIn,false);
     }
     void changeStatus(RemoteViews views,boolean x){
         if(x){

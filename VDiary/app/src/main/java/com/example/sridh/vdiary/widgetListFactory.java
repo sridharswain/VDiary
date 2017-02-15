@@ -3,17 +3,7 @@ package com.example.sridh.vdiary;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import android.widget.Toast;
@@ -24,6 +14,9 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import static com.example.sridh.vdiary.prefs.schedule;
+import static com.example.sridh.vdiary.prefs.get;
+import static com.example.sridh.vdiary.prefs.showAttendanceOnwidget;
 
 public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory {
     Context context = null;
@@ -31,8 +24,6 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory 
     List<subject> todaySchedule;
     List<List<subject>> timeTable;
     boolean shouldShowAttendance;
-    String SETTING_PREFS_NAME = "settingPrefs";
-    String SHOW_ATT_KEY = "showAttendance";
 
     public widgetListFactory(Context c, Intent intent) {
         this.context = c;
@@ -46,15 +37,14 @@ public class widgetListFactory implements RemoteViewsService.RemoteViewsFactory 
     @Override
     public void onDataSetChanged() {
         today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        SharedPreferences prefs = context.getSharedPreferences("academicPrefs", Context.MODE_PRIVATE);
-        String scheduleJson = prefs.getString("schedule", null);
+        String scheduleJson = get(context,schedule,null);//prefs.getString("schedule", null);
         if (scheduleJson != null && today>1 && today<7) {
             Gson g = new Gson();
             timeTable = g.fromJson(scheduleJson, new TypeToken<ArrayList<List<subject>>>() {
             }.getType());
             todaySchedule = timeTable.get(today - 2);
         }
-        shouldShowAttendance = context.getSharedPreferences(SETTING_PREFS_NAME, Context.MODE_PRIVATE).getBoolean(SHOW_ATT_KEY, false);
+        shouldShowAttendance = get(context,showAttendanceOnwidget,false);//context.getSharedPreferences(SETTING_PREFS_NAME, Context.MODE_PRIVATE).getBoolean(SHOW_ATT_KEY, false);
     }
 
     @Override

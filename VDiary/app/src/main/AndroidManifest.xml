@@ -30,7 +30,7 @@
             android:name=".workSpace"
             android:screenOrientation="portrait"
             android:theme="@style/MyAppBar.Workspace"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
 
         <receiver android:name=".widget">
             <intent-filter>

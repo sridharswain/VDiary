@@ -1,7 +1,6 @@
 package com.example.sridh.vdiary;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +15,8 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.google.gson.Gson;
+import static com.example.sridh.vdiary.prefs.put;
+import static com.example.sridh.vdiary.prefs.toUpdate;
 
 import java.util.List;
 
@@ -126,9 +127,7 @@ public class listAdapter_searchTeacher extends BaseAdapter {
     }
 
     public static void writeEditedToPrefs(Context context){
-        SharedPreferences.Editor upList= context.getSharedPreferences("toUpdate",Context.MODE_PRIVATE).edit();
-        upList.putString("toUpdate",(new Gson()).toJson(vClass.toBeUpdated));
-        upList.apply();
+        put(context,toUpdate,(new Gson()).toJson(vClass.toBeUpdated));//upList.putString("toUpdate",(new Gson()).toJson(vClass.toBeUpdated));
     }
 }
 

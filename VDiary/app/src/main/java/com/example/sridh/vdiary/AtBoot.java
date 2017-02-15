@@ -5,7 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import static com.example.sridh.vdiary.prefs.*;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -20,16 +20,13 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public class AtBoot extends BroadcastReceiver {
-    SharedPreferences sharedPreferences;
     AlarmManager alarmManager;
     Intent x;
     PendingIntent pendingIntent;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
-        sharedPreferences = context.getSharedPreferences("todoshared", MODE_PRIVATE);
-        String f = sharedPreferences.getString("todolist", null);
+        String f = get(context,todolist,null);//sharedPreferences.getString("todolist", null);
         alarmManager=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         if(f!=null)
             vClass.notes = Notification_Holder.convert_from_jason(f);
@@ -46,14 +43,11 @@ public class AtBoot extends BroadcastReceiver {
             pendingIntent=PendingIntent.getBroadcast(context,vClass.notes.get(i).id,x,0);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, vClass.notes.get(i).cal.getTimeInMillis(),pendingIntent);
         }
-        sharedPreferences= context.getSharedPreferences("academicPrefs",MODE_PRIVATE);
-        String timeTableJson = sharedPreferences.getString("schedule",null);
+        String timeTableJson = get(context,schedule,null);//sharedPreferences.getString("schedule",null);
         List<List<subject>> timeTable = (new Gson()).fromJson(timeTableJson,new TypeToken<List<List<subject>>>(){}.getType());
         if(timeTableJson!=null) scrapper.createNotification(context,timeTable);
         //Daily timetable reschedule end
-
-        SharedPreferences widgetPrefs= context.getSharedPreferences("widgetPrefs",MODE_PRIVATE);
-        if(widgetPrefs.getBoolean("isEnabled",false)){
+        if(get(context,isWidgetEnabled,false)){  //widgetPrefs.getBoolean("isEnabled",false)
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             Intent toWidgetService = new Intent(context,widgetServiceReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,toWidgetService,0);
