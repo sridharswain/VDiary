@@ -33,59 +33,73 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         (new widgetServiceReceiver()).onReceive(context,(new Intent(context,widgetServiceReceiver.class)));
     }
 
-    void getFromFirebase(final Context context){
+    void getFromFirebase(final Context context) {
         Firebase.setAndroidContext(context);
-        final Firebase database= new Firebase(vClass.FIREBASE_URL);
-        requestToDatabase(database,context);
-        database.addListenerForSingleValueEvent(new ValueEventListener() {
+        final Firebase database = new Firebase(vClass.FIREBASE_URL);
+        requestToDatabase(database, context);
+        database.child("dataVersion").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //CHECK IF CHANGES IN DATABASE
-                DataSnapshot rawDataVersion=dataSnapshot.child("dataVersion");
-                Log.d("ischanged",rawDataVersion.getValue().toString());
-                int mydataVersion = get(context,dataVersion,0);
-                Log.d("myDataVersion",String.valueOf(mydataVersion));
-                int DataVersion=Integer.parseInt(rawDataVersion.getValue().toString());
-                if(DataVersion>mydataVersion){
-                    Log.d("Fetching","Fetching");
-                    vClass.teachers.clear();
-                    //FETCH TEACHERS
-                    DataSnapshot teachersData=dataSnapshot.child("teachers");
-                    for(DataSnapshot snapshot:teachersData.getChildren()){
-                        try {
-                            teacher newTeacher = snapshot.getValue(teacher.class);
-                            vClass.teachers.add(newTeacher);
+            public void onDataChange(DataSnapshot rawDataVersion) {
+                Log.d("ischanged", rawDataVersion.getValue().toString());
+                int mydataVersion = get(context, dataVersion, 0);
+                Log.d("myDataVersion", String.valueOf(mydataVersion));
+                int DataVersion = Integer.parseInt(rawDataVersion.getValue().toString());
+                if (DataVersion > mydataVersion) {
+                    Log.d("Fetching","Fetching from database");
+                    put(context, dataVersion, DataVersion);
+                    database.child("teachers").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            vClass.teachers.clear();
+                            for (DataSnapshot teacher : dataSnapshot.getChildren()) {
+                                try {
+                                    teacher newTeacher = teacher.getValue(teacher.class);
+                                    vClass.teachers.add(newTeacher);//editor.putString("teachers",teacherJsonTest);
+                                } catch (Exception e) {
+                                    //DO NOT ADD THE CHANGE REQUESTED TEACHER DETAILS
+                                }
+                            }
+                            String teacherJsonTest = (new Gson()).toJson(vClass.teachers);
+                            put(context, teachers, teacherJsonTest);
                         }
-                        catch (Exception e){
-                            //DO NOT ADD THE CHANGE REQUESTED TEACHER DETAILS
-                        }
-                    }
-                    String teacherJsonTest=(new Gson()).toJson(vClass.teachers);
-                    put(context,teachers,teacherJsonTest);//editor.putString("teachers",teacherJsonTest);
 
-                    vClass.holidays.clear();
-                    //FETCH HOLIDAYS
-                    DataSnapshot holiday=dataSnapshot.child("Holidays");
-                    for (DataSnapshot snapshot : holiday.getChildren()){
-                        String dateString = snapshot.getValue().toString();
-                        Calendar c = Calendar.getInstance();
-                        c.set(Integer.parseInt(dateString.substring(6)),Integer.parseInt(dateString.substring(3,5))-1,Integer.parseInt(dateString.substring(0,2)));
-                        vClass.holidays.add(new holiday(c,snapshot.getKey()));
-                    }
-                    Gson serializer = new Gson();
-                    String holidayJson = serializer.toJson(vClass.holidays);
-                    put(context,holidays,holidayJson);//holidays.putString("holidays",holidayJson);
-                    updateWidget();
-                    put(context,dataVersion,DataVersion);
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
+
+                    database.child("Holidays").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            vClass.holidays.clear();
+                            //FETCH HOLIDAYS
+                            for (DataSnapshot holiday : dataSnapshot.getChildren()) {
+                                String dateString = holiday.getValue().toString();
+                                Calendar c = Calendar.getInstance();
+                                c.set(Integer.parseInt(dateString.substring(6)), Integer.parseInt(dateString.substring(3, 5)) - 1, Integer.parseInt(dateString.substring(0, 2)));
+                                vClass.holidays.add(new holiday(c, holiday.getKey()));
+                            }
+                            Gson serializer = new Gson();
+                            String holidayJson = serializer.toJson(vClass.holidays);
+                            put(context, holidays, holidayJson);//holidays.putString("holidays",holidayJson);
+                            updateWidget();
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
                 }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                //DO NOTHING
+
             }
         });
-    }  //GET THE CABIN DETAILS OF TEACHERS FORM FIREBASE DATABASE
+    }
     void requestToDatabase(Firebase database,Context context){
         //REQUEST TO DATABASE
         String teacherJson = get(context,toUpdate,null);//teacherPrefs.getString("toUpdate",null);

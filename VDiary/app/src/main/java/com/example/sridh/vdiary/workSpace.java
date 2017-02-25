@@ -24,6 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -43,6 +44,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -50,6 +52,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,7 +62,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.example.sridh.vdiary.prefs.*;
 import static com.example.sridh.vdiary.scrapper.getcmd;
 import static com.example.sridh.vdiary.scrapper.toTitleCase;
-import static com.example.sridh.vdiary.scrapper.updateWidget;
 
 
 public class workSpace extends AppCompatActivity {
@@ -90,16 +92,25 @@ public class workSpace extends AppCompatActivity {
 
     public static listAdapter_courses courseAdapter;
     WebView loginWebView, attWebView, scheduleWebView;
+
+    static WebView loadedAttView;
+    static int rowsInAtt;
     boolean loggedIn=false;
     boolean isLoaded = true;
     List<String> attList = new ArrayList<>();
     List<String> ctdList = new ArrayList<>();
+    List<String> attendedList = new ArrayList<>();
     List<subject> courses = new ArrayList<>();
     List<List<subject>> scheduleList = new ArrayList<>();
     Gson jsonBuilder= new Gson();
     boolean attendanceStatus=true;
     public static boolean refreshing=false;
     public static boolean refreshedByScrapper=false;
+
+    ProgressBar pb_syncing;
+
+    public static TextView currentShowSubjectTextView=null;
+    public static int currentShowing = -1;
 
     @Override
     public void onBackPressed() {
@@ -116,18 +127,20 @@ public class workSpace extends AppCompatActivity {
         setContentView(rootView);
         setOnTouchListener(rootView,workSpace.this);
         context = this;
+        vClass.getFonts(context);
+        getDimensions();
+        id = get(context,notificationIdentifier,1000);
+        readFromPrefs(getApplicationContext());
         String z = get(context,lastRefreshed,"");//s.getString("last_ref", "");
         if (!z.equals(""))
             Toast.makeText(context, "Last synced on " + z, Toast.LENGTH_LONG).show();
-        //Get vClass.notes list from shared preferences
         String get_list = get(context,todolist,null);//shared.getString("todolist", null);
         if (get_list != null) {
             vClass.notes = Notification_Holder.convert_from_jason(get_list);
         }
         //vClass.notes is initialized
-
-        id = get(context,notificationIdentifier,1000);//shared.getInt("notificationIdentifier", 1000);
         setToolbars();
+        //shared.getInt("notificationIdentifier", 1000);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -143,8 +156,108 @@ public class workSpace extends AppCompatActivity {
             refreshing=true;
             initWebViews();
         }
+        else{
+            getlastDayUpdated();
+        }
     }
+
+    boolean readFromPrefs(Context context){
+        Gson jsonBuilder = new Gson();
+        String allSubJson = get(context,allSub,null); //academicPrefs.getString("allSub",null);
+        String scheduleJson = get(context,schedule,null);//academicPrefs.getString("schedule",null);
+        String teachersJson = get(context,teachers,null);//teacherPrefs.getString("teachers",null);
+        String holidaysJson = get(context,holidays,null);//holidayPrefs.getString("holidays",null);
+        String customTeachersJson = get(context,customTeachers,null);//teacherPrefs.getString("customTeachers",null);
+        if(customTeachersJson!=null){
+            vClass.cablist=jsonBuilder.fromJson(customTeachersJson,new TypeToken<List<Cabin_Details>>(){}.getType());
+        }
+        if(teachersJson!=null){
+            vClass.teachers = jsonBuilder.fromJson(teachersJson,new TypeToken<List<teacher>>(){}.getType());
+        }
+        if(holidaysJson!=null){
+            vClass.holidays=jsonBuilder.fromJson(holidaysJson,new TypeToken<List<holiday>>(){}.getType());
+        }
+        if(allSubJson!=null && scheduleJson!=null){
+            Log.d("timeTabledda",allSubJson);
+            Log.d("timeTabledaca",scheduleJson);
+            vClass.subList=jsonBuilder.fromJson(allSubJson,new TypeToken<ArrayList<subject>>(){}.getType());
+            vClass.timeTable=jsonBuilder.fromJson(scheduleJson, new TypeToken<ArrayList<ArrayList<subject>>>(){}.getType());
+            return true;
+        }
+        return false;
+    } //READ ACADEMIC CONTENT FROM SHARED PREFERENCE
+
+    void getlastDayUpdated(){
+        for (int i = 1; i < rowsInAtt; i++) {
+            final int j = i;
+            loadedAttView.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows['" + j + "'].cells[10].innerHTML"), new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String s) {
+                    String form= "<html><body><form method='POST' action='https://academicscc.vit.ac.in/student/attn_report_details.asp'>"+s.substring(1,s.length()-1).replaceAll("u003C","<").replace("\\\"","")+"</form></body></html>";
+                    WebView lastUpdateWebView= new WebView(context);
+                    lastUpdateWebView.getSettings().setJavaScriptEnabled(true);
+                    lastUpdateWebView.getSettings().setDomStorageEnabled(true);
+                    lastUpdateWebView.setWebViewClient(new lastUpdatedWebClient(j));
+                    lastUpdateWebView.loadDataWithBaseURL(null, form, "text/html", "utf-8", null);
+                    //lastUpdateWebView.loadData(form, "text/html; charset=utf-8",null);
+                    Log.d("From Last Updated",form);
+                }
+            });
+        }
+    } //FETCHES THE LAST UPLOADED INFORMATION EVENTUALLY
+
+    class lastUpdatedWebClient extends WebViewClient{
+        int index =0;
+        boolean loaded=false;
+        public lastUpdatedWebClient(int index){
+            this.index=index;
+        }
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            super.onReceivedSslError(view, handler, error);
+            handler.proceed();
+        }
+
+        @Override
+        public void onPageFinished(final WebView view, String url) {
+            super.onPageFinished(view, url);
+            Log.d("WebviewURL",view.getUrl());
+            if (!loaded){
+                view.evaluateJavascript(getcmd("document.forms[0].submit()"), new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String s) {
+                        loaded=true;
+                    }
+                });
+            }
+            else {
+                view.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows.length"), new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String s) {
+                        view.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows['" + (Integer.parseInt(s)-1) + "'].cells[1].innerText"), new ValueCallback<String>() {
+                            @Override
+                            public void onReceiveValue(String s) {
+                                vClass.subList.get(index-1).lastUpdated=trim(s);
+                                try {
+                                    if (currentShowing == index - 1) {
+                                        currentShowSubjectTextView.setText("Last Uploaded: " + vClass.subList.get(index - 1).lastUpdated);
+                                    }
+                                }
+                                catch (Exception e){
+                                    //DO NOTHING
+                                }
+                                put(context,allSub,(new Gson()).toJson(vClass.subList));
+                                Log.d("last Updated",s);
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    }
+
     private void initWebViews(){
+        pb_syncing.setVisibility(View.VISIBLE);
         loginWebView =new WebView(context);
         scheduleWebView =new WebView(context);//new WebView(this);
         scheduleWebView.getSettings().setDomStorageEnabled(true);
@@ -212,10 +325,12 @@ public class workSpace extends AppCompatActivity {
     boolean webNotConnected(String webTitle) {
         if (webTitle.equals("") || webTitle.equals("Webpage not available") || webTitle.equals("Web page not available")) {
             refreshing=false;
+            pb_syncing.setVisibility(View.GONE);
             return true;
         }
         return false;
     }
+
     class waitForLogIn extends AsyncTask<Void,Void,Void> {
         @Override
         protected Void doInBackground(Void... voids) {
@@ -233,7 +348,8 @@ public class workSpace extends AppCompatActivity {
             scheduleWebView.loadUrl("https://academicscc.vit.ac.in/student/course_regular.asp?sem="+vClass.SEM);
             super.onPostExecute(aVoid);
         }
-    }
+    }  //CHECKS IF THE SERVERS HAS ACCEPTED THE LOGIN REQUESTED
+
     private class scheduleClient extends WebViewClient{
         @Override
         public void onPageFinished(WebView view, String url) {
@@ -512,14 +628,23 @@ public class workSpace extends AppCompatActivity {
                                     @Override
                                     public void onReceiveValue(String value) {
                                         ctdList.add(trim(value));
-                                        if (j == rows - 1) {
-                                            new compileInf().execute();
-                                        }
+                                        attWebView.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows[" + j + "].cells[6].innerText"), new ValueCallback<String>() {
+                                            @Override
+                                            public void onReceiveValue(String s) {
+                                                attendedList.add(trim(s));
+                                                if (j == rows - 1) {
+                                                    new compileInf().execute();
+                                                }
+                                            }
+                                        });
                                     }
                                 });
                             }
                         });
                     }
+                    loadedAttView=attWebView;
+                    rowsInAtt=rows;
+                    getlastDayUpdated();
                 }
             });
         }
@@ -538,17 +663,22 @@ public class workSpace extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             vClass.subList=courses;
             vClass.timeTable=scheduleList;
-            if (attendanceStatus) {
-                for (int i = 0; i < vClass.subList.size(); i++) {
-                    vClass.subList.get(i).ctd = Integer.parseInt(ctdList.get(i));
-                    vClass.subList.get(i).attString = attList.get(i) + "%";
-                    //vClass.subList.get(i).title="Hello World";
+            for (int i=0;i<courses.size();i++){
+                int ctd,attended;
+                String attString;
+                if(!attendanceStatus){
+                    ctd=0;
+                    attString=String.valueOf(0);
+                    attended=0;
                 }
-            } else {
-                for (int i = 0; i < vClass.subList.size(); i++) {
-                    vClass.subList.get(i).ctd = 0;
-                    vClass.subList.get(i).attString = String.valueOf(0) + "%";
+                else{
+                    ctd=Integer.parseInt(ctdList.get(i));
+                    attString = attList.get(i)+"%";
+                    attended=Integer.parseInt(attendedList.get(i));
                 }
+                vClass.subList.get(i).ctd=ctd;
+                vClass.subList.get(i).attString=attString;
+                vClass.subList.get(i).classAttended=attended;
             }
             for (List<subject> i : vClass.timeTable) {
                 for (int count = 0; count < i.size(); count++) {
@@ -588,6 +718,7 @@ public class workSpace extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             courseAdapter.update(vClass.subList);
+            pb_syncing.setVisibility(View.GONE);
             refreshing=false;
         }
     } //REARRANGE THE INFORMATION SCRAPPED FORM THE WEBPAGE
@@ -603,17 +734,15 @@ public class workSpace extends AppCompatActivity {
                     toNotifyService.putExtra("fromClass","scheduleNotification");
                     Calendar calendar = Calendar.getInstance();
                     int startHour,startMin,AMPM;
-                    startHour=Integer.parseInt(sub.startTime.substring(0, 2));
-                    startMin=Integer.parseInt(sub.startTime.substring(3, 5));
-                    String meridian = sub.startTime.substring(6);
+                    String time=formattedTime(sub);
+                    startHour=Integer.parseInt(time.substring(0, 2));
+                    startMin=Integer.parseInt(time.substring(3, 5));
 
-                    if (meridian.equals("AM")) AMPM = 0;
-                    else AMPM = 1;
-
-                    calendar.set(Calendar.HOUR,startHour);
+                    calendar.setLenient(false);
+                    calendar.set(Calendar.HOUR_OF_DAY,startHour);
                     calendar.set(Calendar.MINUTE,startMin);
-                    calendar.set(Calendar.AM_PM,AMPM);
                     calendar.set(Calendar.DAY_OF_WEEK,day);
+                    calendar.set(Calendar.SECOND,0);
 
                     Notification_Holder newNotification =  new Notification_Holder(calendar,sub.title,sub.room,"Upcoming class in 5 minutes");
                     toNotifyService.putExtra("notificationContent",(new Gson()).toJson(newNotification));
@@ -641,6 +770,10 @@ public class workSpace extends AppCompatActivity {
         put(context,isLoggedIn,true);//editor.putBoolean("isLoggedIn",true);
         updateWidget();
     } //WRITE ACADEMIC CONTENT TO SHARED PREFERENCES
+
+    void updateWidget(){
+        (new widgetServiceReceiver()).onReceive(context,(new Intent(context,widgetServiceReceiver.class)));
+    }
 
     String formattedTime(subject sub){
         String rawTime= sub.startTime;
@@ -715,6 +848,7 @@ public class workSpace extends AppCompatActivity {
             }
         });
     }
+
     void delPrefs(){
         put(context,allSub,null);//editor.putString("allSub",jsonBuilder.toJson(vClass.subList));
         put(context,schedule,null);//editor.putString("schedule",jsonBuilder.toJson(vClass.timeTable));
@@ -724,6 +858,7 @@ public class workSpace extends AppCompatActivity {
 
     void setToolbars() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.workspacetoptoolbar);
+        pb_syncing=(ProgressBar)toolbar.findViewById(R.id.pb_syncing);
         toolbar.inflateMenu(R.menu.menu_workspace_top);
         TextView title = (TextView)toolbar.findViewById(R.id.workSpace_title);
         title.setTypeface(vClass.fredoka);
@@ -740,10 +875,7 @@ public class workSpace extends AppCompatActivity {
                         startActivity(i);
                         break;
                     case R.id.action_logout:
-                        delPrefs();
-                        startActivity(new Intent(workSpace.this, scrapper.class));
-                        overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
-                        finish();
+                        confirmLogout();
                         break;
                     case R.id.action_more_settings:
                         startActivity(new Intent(workSpace.this,settings.class));
@@ -762,6 +894,34 @@ public class workSpace extends AppCompatActivity {
             }
         });
     }  //SET THE TOOLBARS FOR THE WORKSPACE CLASS
+
+    void confirmLogout(){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //Yes button clicked
+                        delPrefs();
+                        startActivity(new Intent(workSpace.this, scrapper.class));
+                        overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
+                        finish();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        //CANCEL THE DIALOG BOX
+                        break;
+                }
+            }
+        };
+
+        builder.setMessage("Doing this will delete all cached data!\n\nAre you sure?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener);
+        AlertDialog confirmLogoutDialog = builder.create();
+        confirmLogoutDialog.show();
+    }
 
 
 
@@ -802,6 +962,7 @@ public class workSpace extends AppCompatActivity {
                         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                             Intent showSubjectIntent = new Intent(context, showSubject.class);
                             showSubjectIntent.putExtra("position", position);
+                            workSpace.currentShowing=position;
                             startActivity(showSubjectIntent);
                         }
                     });
@@ -1462,5 +1623,11 @@ public class workSpace extends AppCompatActivity {
                 return false;
             }
         });
+    }
+    void getDimensions(){
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        vClass.width=dm.widthPixels;
+        vClass.height=dm.heightPixels;
     }
 }

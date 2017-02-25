@@ -43,7 +43,7 @@
         android:layout_below="@+id/title"
         android:layout_marginTop="15dp"
         android:hint="Enter Note"
-        android:maxLines="9"/>
+        android:maxLines="5"/>
 
         <Switch
             android:text=" Set Reminder"

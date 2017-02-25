@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
+
+import java.util.Calendar;
 
 /**
  * Created by Sparsha Saha on 12/7/2016.
@@ -34,6 +37,8 @@ public class Notification_Creator {
                 .setSmallIcon(R.drawable.logo)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.drawable.notification_logo))
                 .setTicker(ticker);
+        Calendar c=Calendar.getInstance();
+        Log.d("noti",title+c.get(Calendar.DAY_OF_WEEK)+" "+c.get(Calendar.HOUR_OF_DAY)+" "+c.get(Calendar.MINUTE));
         Intent newIntent=new Intent(context,scrapper.class);
         pintent= PendingIntent.getActivity(context, (int) System.currentTimeMillis(),newIntent,PendingIntent.FLAG_UPDATE_CURRENT);
         notibuilder.setContentIntent(pintent);
@@ -43,7 +48,7 @@ public class Notification_Creator {
 
         Vibrator vib=(Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
         if(vib.hasVibrator()) {
-            vib.vibrate(1200);
+            vib.vibrate(1000);
         }
     }
 }

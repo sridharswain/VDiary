@@ -115,15 +115,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:padding="14dp">
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="80dp"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="30dp"
-            android:id="@+id/tv_newAtt"
-            android:textColor="@android:color/white"
-            android:text="100.0%"
-            android:textSize="22sp"/>
+
         <NumberPicker
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
@@ -132,6 +124,28 @@
             android:id="@+id/leave_picker"
             android:theme="@style/AppTheme.Picker"
             android:layout_marginTop="16dp"/>
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_alignTop="@id/leave_picker"
+            android:layout_marginStart="35dp"
+            android:id="@+id/tv_newAtt"
+            android:textColor="@android:color/white"
+            android:text="100.0%"
+            android:textSize="22sp"
+            android:layout_marginTop="65dp"
+            android:textAlignment="center"/>
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="10/11"
+            android:textColor="@android:color/white"
+            android:textSize="19sp"
+            android:id="@+id/classRatio"
+            android:layout_below="@id/tv_newAtt"
+            android:layout_alignStart="@id/tv_newAtt"
+            android:layout_alignEnd="@id/tv_newAtt"
+            android:textAlignment="center"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -151,6 +165,14 @@
             android:layout_alignStart="@id/leave_picker"
             android:layout_alignEnd="@id/leave_picker"
             android:textAlignment="center"/>
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/tv_lastUpdated"
+            android:layout_below="@id/leave_picker"
+            android:textColor="@android:color/white"
+            android:textSize="10dp" />
+
 
     </RelativeLayout>
 </LinearLayout>

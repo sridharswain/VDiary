@@ -35,6 +35,14 @@
                 android:textColor="@android:color/white"
                 android:id="@+id/workSpace_title"
                 />
+            <ProgressBar
+                android:layout_height="30dp"
+                android:layout_width="30dp"
+                android:indeterminate="true"
+                android:visibility="gone"
+                android:layout_gravity="end"
+                android:id="@+id/pb_syncing"
+                android:theme="@style/AppTheme.WhiteAccent" />
 
         </android.support.v7.widget.Toolbar>
 

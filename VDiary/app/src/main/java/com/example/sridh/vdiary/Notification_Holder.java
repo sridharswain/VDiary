@@ -13,20 +13,23 @@ import java.util.List;
  */
 
 public class Notification_Holder {
-    Calendar cal;
     String title;
     String content;
     String ticker;
     int id;
+    int dayofweek;
+    int hourOfDay;
+    int minute;
+    Calendar cal;
     //long mills;
-
-    public Notification_Holder(Calendar i,String title,String content,String ticker)
-    {
-        cal=i;
+    public Notification_Holder(Calendar i,String title,String content,String ticker ){
         this.title=title;
         this.content=content;
         this.ticker=ticker;
-        //mills=cal.getTimeInMillis();
+        cal=i;
+        dayofweek= cal.get(Calendar.DAY_OF_WEEK);
+        hourOfDay=cal.get(Calendar.HOUR_OF_DAY);
+        minute=cal.get(Calendar.MINUTE);
     }
 
     public static String convert_to_jason(List<Notification_Holder> lis)
@@ -41,7 +44,7 @@ public class Notification_Holder {
     {
         Type type=new TypeToken<List<Notification_Holder>>(){}.getType();
         Gson json=new Gson();
-        List<Notification_Holder> list=new ArrayList<>();
+        List<Notification_Holder> list;
         list=json.fromJson(f,type);
         return list;
     }

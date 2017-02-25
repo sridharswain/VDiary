@@ -3,6 +3,12 @@ package com.example.sridh.vdiary;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
+import java.util.Set;
+
 /**
  * Created by sid on 2/13/17.
  */
@@ -57,5 +63,11 @@ public class prefs {
     }
     static int get(Context context,String name,int defaultValue){
         return getPrefsInstance(context).getInt(name,defaultValue);
+    }
+
+    static subject getSubject(Context context,String id){
+        String subJson= get(context,id,null);
+        if(subJson==null) return null;
+        else return (new Gson()).fromJson(subJson,new TypeToken<subject>(){}.getType());
     }
 }

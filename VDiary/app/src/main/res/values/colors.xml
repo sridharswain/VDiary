@@ -3,7 +3,7 @@
     <color name="colorPrimary">#F44336</color>
     <color name="colorPrimaryDark">#d32f2f</color>
     <color name="colorPrimaryLight">#FFCDD2</color>
-    <color name="colorAccent">#448AFF</color>
+    <color name="colorAccent">#FFFFFF</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="colorWhite">#FFFFFF</color>
@@ -18,7 +18,7 @@
     <color name="cyan_azure">#4f7cac</color>
     <color name="heildberg_red">#a20021</color>
     <color name="bazzled_blue">#2e5077</color>
-    <color name="opac_transparent">#3e000000</color>
+    <color name="opac_transparent">#aa000000</color>
     <color name="boston_red">#d00000</color>
 
     <!--Pallete Colours-->

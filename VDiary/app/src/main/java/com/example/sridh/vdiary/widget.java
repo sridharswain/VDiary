@@ -6,9 +6,12 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 
 import java.util.Calendar;
+
+import static com.example.sridh.vdiary.prefs.isWidgetEnabled;
+import static com.example.sridh.vdiary.prefs.put;
+
 /**
  * Implementation of App Widget functionality. Sid
  */
@@ -24,9 +27,7 @@ public class widget extends AppWidgetProvider {
     public void onEnabled(Context context) {
         super.onEnabled(context);
         // Enter relevant functionality for when the first widget is created
-        SharedPreferences.Editor widgetPrefsEditor=context.getSharedPreferences("widgetPrefs",Context.MODE_PRIVATE).edit();
-        widgetPrefsEditor.putBoolean("isEnabled",true);
-        widgetPrefsEditor.apply();
+        put(context,isWidgetEnabled,true);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent toWidgetService = new Intent(context,widgetServiceReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,toWidgetService,0);
@@ -40,9 +41,7 @@ public class widget extends AppWidgetProvider {
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
         super.onDisabled(context);
-        SharedPreferences.Editor widgetPrefsEditor=context.getSharedPreferences("widgetPrefs",Context.MODE_PRIVATE).edit();
-        widgetPrefsEditor.putBoolean("isEnabled",false);
-        widgetPrefsEditor.commit();
+        put(context,isWidgetEnabled,false);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent toWidgetService = new Intent(context,widgetServiceReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,toWidgetService,0);

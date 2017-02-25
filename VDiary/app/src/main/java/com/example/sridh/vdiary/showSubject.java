@@ -20,14 +20,13 @@ import java.util.List;
 
 public class showSubject extends AppCompatActivity {
     subject clicked;
-    final int min = -50;
-    final int max = 50;
     Context context;
     int att, noofdays;
     NumberPicker leave;
 
-    TextView mon, tue, wed, thu, fri, newAtt;
+    TextView mon, tue, wed, thu, fri, newAtt,classRatio;
     Typeface nunito_bold, nunito_reg;
+    int toMul=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +35,7 @@ public class showSubject extends AppCompatActivity {
         int position = getIntent().getIntExtra("position", 0);
         clicked = vClass.subList.get(position);
         show(clicked); //Initialize the popup activity to show the contents of the subject
+        if (clicked.type.equals("ELA") || clicked.type.equals("LO")) toMul=2;
         new Async_search(position).execute();
     }
 
@@ -50,6 +50,14 @@ public class showSubject extends AppCompatActivity {
         teacher.setTypeface(nunito_reg);
         teacher.setText(sub.teacher);
         newAtt = (TextView) findViewById(R.id.tv_newAtt);
+        TextView lastUpdated= (TextView)findViewById(R.id.tv_lastUpdated);
+        workSpace.currentShowSubjectTextView=lastUpdated;
+        lastUpdated.setTypeface(nunito_reg);
+        if(!clicked.lastUpdated.equals("")) lastUpdated.setText("Last Uploaded: "+clicked.lastUpdated);
+        else lastUpdated.setText("Last Uploaded: Fetching");
+        classRatio= (TextView)findViewById(R.id.classRatio);
+        classRatio.setTypeface(nunito_reg);
+        classRatio.setText(clicked.classAttended+"/"+clicked.ctd);
         String attString = clicked.attString;
         att = Integer.parseInt(attString.substring(0, attString.length() - 1));
         noofdays = clicked.ctd;
@@ -146,15 +154,20 @@ public class showSubject extends AppCompatActivity {
             double newAttendance = 0.0;
             int leave = next;
             leave = leave - 50;
-            double class_att = att * noofdays / 100.0;
+            double class_att = clicked.classAttended;
             if (leave < 0) {
                 leave = leave * -1;
-                double att_final2 = (class_att + leave) / (noofdays + leave) * 100.0;
-                newAttendance = ((int) (att_final2));
-            } else if ((noofdays + leave) >= 0) {
-                class_att = att * noofdays / 100.0;
-                double att_final = (class_att / (noofdays + leave)) * 100.0;
-                newAttendance = ((int) (att_final));
+                double classAttended=class_att + toMul*leave;
+                double totalClasses=noofdays + toMul*leave;
+                double att_final2 = (classAttended / totalClasses) * 100.0;
+                classRatio.setText((int)(classAttended)+"/"+(int)(totalClasses));
+                newAttendance = (Math.ceil(att_final2));
+            }
+            else if ((noofdays + leave) >= 0) {
+                double totalClasses=(noofdays + toMul*leave);
+                double att_final = (class_att / totalClasses) * 100.0;
+                classRatio.setText((int)(class_att)+"/"+(int)(totalClasses));
+                newAttendance = (Math.ceil(att_final));
             }
             newAtt.setText(newAttendance + "%");
         }
