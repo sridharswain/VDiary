@@ -1,7 +1,6 @@
 package com.example.sridh.vdiary;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -38,10 +37,7 @@ public class schedule extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    PendingIntent p_intent;
     Intent intent;
-    AlarmManager alarm;
-    public static int i=0;
     Typeface fredoka;
 
     @Override

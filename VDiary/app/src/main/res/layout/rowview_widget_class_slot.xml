@@ -14,7 +14,7 @@
         android:width="25dp"
         android:textAlignment="center"
         android:gravity="center_vertical"
-        android:background="@color/windows_color"
+        android:background="@drawable/widget_background_type"
         android:textColor="@android:color/white"
         android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"

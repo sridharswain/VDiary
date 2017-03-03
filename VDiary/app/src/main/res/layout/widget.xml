@@ -2,7 +2,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/opac_transparent"
-    android:padding="@dimen/widget_margin"
+    android:paddingEnd="@dimen/widget_margin"
+    android:paddingBottom="@dimen/widget_margin"
+    android:paddingTop="@dimen/widget_margin"
     android:id="@+id/widget_parent_layout">
 
     <ListView

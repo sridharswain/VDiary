@@ -23,10 +23,11 @@ public class showSubject extends AppCompatActivity {
     Context context;
     int att, noofdays;
     NumberPicker leave;
-
     TextView mon, tue, wed, thu, fri, newAtt,classRatio;
     Typeface nunito_bold, nunito_reg;
-    int toMul=1;
+
+
+    int toMul=1; // 1 if THEORY ELSE 2
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,9 @@ public class showSubject extends AppCompatActivity {
         TextView teacher = ((TextView) findViewById(R.id.subject_Teacher));
         teacher.setTypeface(nunito_reg);
         teacher.setText(sub.teacher);
+        TextView slot= (TextView)findViewById(R.id.subject_slot);
+        slot.setTypeface(nunito_reg);
+        slot.setText(sub.slot);
         newAtt = (TextView) findViewById(R.id.tv_newAtt);
         TextView lastUpdated= (TextView)findViewById(R.id.tv_lastUpdated);
         workSpace.currentShowSubjectTextView=lastUpdated;
@@ -79,9 +83,7 @@ public class showSubject extends AppCompatActivity {
         final numberPickerValueChangeHandler leaveScrollHandler = new numberPickerValueChangeHandler();
         leave.setOnValueChangedListener(leaveScrollHandler);
         leave.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-    }
-
-
+    }  //SETS THE LAYOUT OF THE SUBJECT TO BE SHOWN
 
     class Async_search extends AsyncTask<Void, Void, Void> {
         int position;
@@ -146,7 +148,7 @@ public class showSubject extends AppCompatActivity {
             }
             super.onPostExecute(aVoid);
         }
-    }
+    }  // SEARCHES THE TIMETABLE FOR THE OCCURENCE OF THE SUBJECT IN A WEEK
 
     class numberPickerValueChangeHandler implements NumberPicker.OnValueChangeListener{
         @Override
@@ -171,7 +173,7 @@ public class showSubject extends AppCompatActivity {
             }
             newAtt.setText(newAttendance + "%");
         }
-    }
+    }  //HANDLES THE ON VALUE CHANGE ON THE NUMBER PICKER TO CHANGE ATTENDENCE
 
     String[] numArray(){
         String[] array= new String[101];
@@ -179,5 +181,5 @@ public class showSubject extends AppCompatActivity {
             array[50-i]=Integer.toString(i);
         }
         return array;
-    }
+    }  //RETURNN THE ARRAY OF NUMBERS TO SHOWN IN THE NUMBER PICKER
 }

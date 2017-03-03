@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
+
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -26,17 +28,35 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context ctxt, Intent intent) {
         context=ctxt;
-        getFromFirebase(context);
+        attachFirebaseListener(context);
+        requestToDatabase(context);
+    }
+    void requestToDatabase(Context context){
+        //REQUEST TO DATABASE
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        String teacherJson = get(context,toUpdate,null);//teacherPrefs.getString("toUpdate",null);
+        if(teacherJson!=null){
+            List<Cabin_Details> cabin_detailsList = (new Gson()).fromJson(teacherJson,new TypeToken<List<Cabin_Details>>(){}.getType());
+            if (cabin_detailsList.size() > 0) {
+                for (int i=0;i<cabin_detailsList.size();i++) {
+                    try {
+                        Cabin_Details editedTeacher= cabin_detailsList.get(i);
+                        String name= editedTeacher.name.replace(".","");
+                        database.child("custom").child(name).setValue(editedTeacher.cabin);
+                        cabin_detailsList.remove(editedTeacher);
+                    }
+                    catch (Exception e){
+                        Log.d("Request",e.getMessage());
+                        //break;
+                    }
+                }
+                put(context,toUpdate,(new Gson()).toJson(cabin_detailsList));
+            }
+        }
     }
 
-    void updateWidget(){
-        (new widgetServiceReceiver()).onReceive(context,(new Intent(context,widgetServiceReceiver.class)));
-    }
-
-    void getFromFirebase(final Context context) {
-        Firebase.setAndroidContext(context);
-        final Firebase database = new Firebase(vClass.FIREBASE_URL);
-        requestToDatabase(database, context);
+    public static void attachFirebaseListener(final Context context){
+        final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         database.child("dataVersion").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot rawDataVersion) {
@@ -44,9 +64,9 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 int mydataVersion = get(context, dataVersion, 0);
                 Log.d("myDataVersion", String.valueOf(mydataVersion));
                 int DataVersion = Integer.parseInt(rawDataVersion.getValue().toString());
-                if (DataVersion > mydataVersion) {
-                    Log.d("Fetching","Fetching from database");
+                if(DataVersion>mydataVersion){
                     put(context, dataVersion, DataVersion);
+                    Log.d("Fetching","Fetching from database");
                     database.child("teachers").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -64,7 +84,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                         }
 
                         @Override
-                        public void onCancelled(FirebaseError firebaseError) {
+                        public void onCancelled(DatabaseError databaseError) {
 
                         }
                     });
@@ -83,11 +103,11 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                             Gson serializer = new Gson();
                             String holidayJson = serializer.toJson(vClass.holidays);
                             put(context, holidays, holidayJson);//holidays.putString("holidays",holidayJson);
-                            updateWidget();
+                            updateWidget(context);
                         }
 
                         @Override
-                        public void onCancelled(FirebaseError firebaseError) {
+                        public void onCancelled(DatabaseError databaseError) {
 
                         }
                     });
@@ -95,28 +115,13 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-    }
-    void requestToDatabase(Firebase database,Context context){
-        //REQUEST TO DATABASE
-        String teacherJson = get(context,toUpdate,null);//teacherPrefs.getString("toUpdate",null);
-        if(teacherJson!=null){
-            List<Cabin_Details> cabin_detailsList = (new Gson()).fromJson(teacherJson,new TypeToken<List<Cabin_Details>>(){}.getType());
-            if (cabin_detailsList.size() > 0) {
-                for (Cabin_Details editedTeacher : cabin_detailsList) {
-                    try {
-                        database.child("custom").child(editedTeacher.name).setValue(editedTeacher.cabin);
-                        cabin_detailsList.remove(editedTeacher);
-                    }
-                    catch (Exception e){
-                        break;
-                    }
-                }
-                put(context,toUpdate,(new Gson()).toJson(cabin_detailsList));
-            }
-        }
-    }
+    }  //REQUEST TO DATABASE FOR CHANGE IN TEACHERS
+
+    static void updateWidget(Context context){
+        (new widgetServiceReceiver()).onReceive(context,(new Intent(context,widgetServiceReceiver.class)));
+    }  //UPDATE THE WIDGET TO SHOW TODAYS SCHEDULE
 }

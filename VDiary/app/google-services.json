@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "386440359842",
+    "firebase_url": "https://vdiary-a25b2.firebaseio.com",
+    "project_id": "vdiary-a25b2",
+    "storage_bucket": "vdiary-a25b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:386440359842:android:14d13ef3b6d01480",
+        "android_client_info": {
+          "package_name": "com.fourthstatelabs.zchedule"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "386440359842-8fh9seg0mvg00prmsgo9s0cdeh7okg53.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fourthstatelabs.zchedule",
+            "certificate_hash": "d4d97e573f8213dd3854af88aa635a1b01381898"
+          }
+        },
+        {
+          "client_id": "386440359842-lh5spcob8ianb8ok3jrm80lau89p9ohk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARwss_DwVl920wGR18JvT7IvNqLtL4nYw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "386440359842-lh5spcob8ianb8ok3jrm80lau89p9ohk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

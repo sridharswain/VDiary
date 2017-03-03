@@ -47,7 +47,7 @@ class listAdapter_teachers extends BaseAdapter// LIST ADAPTER FOR CABIN VIEW
 
     public class Holder
     {
-        public TextView name,cabin,others;
+        public TextView name,cabin;
     }
 
     @Override
@@ -57,15 +57,12 @@ class listAdapter_teachers extends BaseAdapter// LIST ADAPTER FOR CABIN VIEW
         //Initializing
         holder.name=(TextView)view.findViewById(R.id.newname);
         holder.cabin=(TextView)view.findViewById(R.id.newcabin);
-        holder.others=(TextView)view.findViewById(R.id.newOthers);
 
         holder.name.setTypeface(vClass.nunito_bold);
         holder.cabin.setTypeface(vClass.nunito_reg);
-        holder.others.setTypeface(vClass.nunito_reg);
         //Setting Data
         holder.name.setText(cab.get(position).name);
         holder.cabin.setText(cab.get(position).cabin);
-        holder.others.setText(cab.get(position).others);
         (view.findViewById(R.id.del_teacher)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

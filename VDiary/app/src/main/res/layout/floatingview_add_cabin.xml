@@ -41,17 +41,5 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="7dp"
         android:maxLines="3"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/alert_cabin_comment"
-        android:hint="Comment..."
-        android:layout_below="@id/alert_cabin_cabinAddress"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="7dp"
-        android:maxLines="5"/>
         </RelativeLayout>
 </RelativeLayout>

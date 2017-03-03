@@ -92,12 +92,12 @@
         <activity
             android:name=".settings"
             android:screenOrientation="portrait"
-            android:theme="@style/MyAppBar"></activity>
+            android:theme="@style/MyAppBar"/>
 
         <receiver
             android:name=".widgetServiceReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true"/>
     </application>
 
 </manifest>

@@ -13,12 +13,14 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.WorkSource;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -56,6 +58,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -147,6 +150,7 @@ public class workSpace extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOffscreenPageLimit(2);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -157,7 +161,7 @@ public class workSpace extends AppCompatActivity {
             initWebViews();
         }
         else{
-            getlastDayUpdated();
+            getlastDayUpdated(1);
         }
     }
 
@@ -187,23 +191,43 @@ public class workSpace extends AppCompatActivity {
         return false;
     } //READ ACADEMIC CONTENT FROM SHARED PREFERENCE
 
-    void getlastDayUpdated(){
-        for (int i = 1; i < rowsInAtt; i++) {
+    void getlastDayUpdated(final int index){
+        if(index>=rowsInAtt) return;
+        else{
+            loadedAttView.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows['" + index + "'].cells[10].innerHTML"), new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String s) {
+                    String form= "<html><body><form method='POST' action='https://academicscc.vit.ac.in/student/attn_report_details.asp'>"+s.substring(1,s.length()-1).replace("\\u003C","<").replace("\\\"","").replace("\\u003E",">")+"</form></body></html>";
+                    WebView lastUpdateWebView = new WebView(workSpace.this);
+                    lastUpdateWebView.getSettings().setJavaScriptEnabled(true);
+                    lastUpdateWebView.getSettings().setDomStorageEnabled(true);
+                    lastUpdateWebView.setWebViewClient(new lastUpdatedWebClient(index));
+                    Log.d("form",form);
+                    lastUpdateWebView.loadDataWithBaseURL(null, form, "text/html", "utf-8", null);
+                    //lastUpdateWebView.loadData(form, "text/html; charset=utf-8",null);
+                }
+            });
+        }
+        //Log.d("rowsInAtt",rowsInAtt+"");
+        /*for (int i = 1; i < rowsInAtt; i++) {
             final int j = i;
             loadedAttView.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows['" + j + "'].cells[10].innerHTML"), new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String s) {
-                    String form= "<html><body><form method='POST' action='https://academicscc.vit.ac.in/student/attn_report_details.asp'>"+s.substring(1,s.length()-1).replaceAll("u003C","<").replace("\\\"","")+"</form></body></html>";
-                    WebView lastUpdateWebView= new WebView(context);
+                    String form= "<html><body><form method='POST' action='https://academicscc.vit.ac.in/student/attn_report_details.asp'>"+s.substring(1,s.length()-1).replace("\\u003C","<").replace("\\\"","").replace("\\u003E",">")+"</form></body></html>";
+                    WebView lastUpdateWebView;
+                    if(j==1) lastUpdateWebView = (WebView)findViewById(R.id.webview);
+                    else lastUpdateWebView = new WebView(workSpace.this);
                     lastUpdateWebView.getSettings().setJavaScriptEnabled(true);
                     lastUpdateWebView.getSettings().setDomStorageEnabled(true);
                     lastUpdateWebView.setWebViewClient(new lastUpdatedWebClient(j));
+                    lastUpdateWebView.getSettings().setSupportMultipleWindows(true);
+                    Log.d("form",form);
                     lastUpdateWebView.loadDataWithBaseURL(null, form, "text/html", "utf-8", null);
                     //lastUpdateWebView.loadData(form, "text/html; charset=utf-8",null);
-                    Log.d("From Last Updated",form);
                 }
             });
-        }
+        }*/
     } //FETCHES THE LAST UPLOADED INFORMATION EVENTUALLY
 
     class lastUpdatedWebClient extends WebViewClient{
@@ -221,45 +245,48 @@ public class workSpace extends AppCompatActivity {
         @Override
         public void onPageFinished(final WebView view, String url) {
             super.onPageFinished(view, url);
-            Log.d("WebviewURL",view.getUrl());
+            Log.d("last Upload",index+"");
             if (!loaded){
+                loaded=true;
                 view.evaluateJavascript(getcmd("document.forms[0].submit()"), new ValueCallback<String>() {
                     @Override
                     public void onReceiveValue(String s) {
-                        loaded=true;
+                        //loaded=true;
                     }
                 });
             }
             else {
-                view.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows.length"), new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String s) {
-                        view.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows['" + (Integer.parseInt(s)-1) + "'].cells[1].innerText"), new ValueCallback<String>() {
-                            @Override
-                            public void onReceiveValue(String s) {
-                                vClass.subList.get(index-1).lastUpdated=trim(s);
-                                try {
-                                    if (currentShowing == index - 1) {
-                                        currentShowSubjectTextView.setText("Last Uploaded: " + vClass.subList.get(index - 1).lastUpdated);
+                if (!webNotConnected(view.getTitle())) {
+                    view.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows.length"), new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String s) {
+                            view.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows['" + (Integer.parseInt(s) - 1) + "'].cells[1].innerText"), new ValueCallback<String>() {
+                                @Override
+                                public void onReceiveValue(String s) {
+                                    vClass.subList.get(index - 1).lastUpdated = trim(s);
+                                    try {
+                                        if (currentShowing == index - 1) {
+                                            currentShowSubjectTextView.setText("Last Uploaded: " + vClass.subList.get(index - 1).lastUpdated);
+                                        }
+                                    } catch (Exception e) {
+                                        //DO NOTHING
                                     }
+                                    put(context, allSub, (new Gson()).toJson(vClass.subList));
+                                    Log.d("last Updated", s);
+                                    getlastDayUpdated(index+1);
                                 }
-                                catch (Exception e){
-                                    //DO NOTHING
-                                }
-                                put(context,allSub,(new Gson()).toJson(vClass.subList));
-                                Log.d("last Updated",s);
-                            }
-                        });
-                    }
-                });
+                            });
+                        }
+                    });
+                }
             }
         }
-    }
+    }  //WEBCLIENT FOR FETCHING THELAST UPLOADED DATE FOR EACH SUBJECT
 
     private void initWebViews(){
         pb_syncing.setVisibility(View.VISIBLE);
         loginWebView =new WebView(context);
-        scheduleWebView =new WebView(context);//new WebView(this);
+        scheduleWebView =new WebView(context);
         scheduleWebView.getSettings().setDomStorageEnabled(true);
         scheduleWebView.getSettings().setJavaScriptEnabled(true);
         loginWebView.getSettings().setDomStorageEnabled(true);
@@ -290,6 +317,7 @@ public class workSpace extends AppCompatActivity {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view,url);
+            Log.d("webviewTitle",loginWebView.getTitle());
             if(!loggedIn) {
                 if(!webNotConnected(loginWebView.getTitle()) && loginWebView.getUrl().equals("https://academicscc.vit.ac.in/student/stud_login.asp")) {
                     loginWebView.evaluateJavascript(getcmd("return document.getElementsByName(\"message\")[0].value"), new ValueCallback<String>() {
@@ -323,13 +351,14 @@ public class workSpace extends AppCompatActivity {
     }
 
     boolean webNotConnected(String webTitle) {
+        Log.d("WebviewURL",webTitle);
         if (webTitle.equals("") || webTitle.equals("Webpage not available") || webTitle.equals("Web page not available")) {
             refreshing=false;
             pb_syncing.setVisibility(View.GONE);
             return true;
         }
         return false;
-    }
+    }  //RETURN TRUE IF WEB IS NOT CONNECTED
 
     class waitForLogIn extends AsyncTask<Void,Void,Void> {
         @Override
@@ -344,9 +373,14 @@ public class workSpace extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            scheduleWebView.setWebViewClient(new scheduleClient());
-            scheduleWebView.loadUrl("https://academicscc.vit.ac.in/student/course_regular.asp?sem="+vClass.SEM);
-            super.onPostExecute(aVoid);
+            try {
+                scheduleWebView.setWebViewClient(new scheduleClient());
+                scheduleWebView.loadUrl("https://academicscc.vit.ac.in/student/course_regular.asp?sem=" + vClass.SEM);
+                super.onPostExecute(aVoid);
+            }
+            catch (Exception e){
+                //DO NOTHING
+            }
         }
     }  //CHECKS IF THE SERVERS HAS ACCEPTED THE LOGIN REQUESTED
 
@@ -417,6 +451,13 @@ public class workSpace extends AppCompatActivity {
                                                             sub.teacher = toTitleCase(rawTeacher.substring(0, rawTeacher.length() - 1));
                                                         }
                                                     });
+                                                    //SLOT
+                                                    scheduleWebView.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[7].innerText.toString()"), new ValueCallback<String>() {
+                                                        @Override
+                                                        public void onReceiveValue(String resultSlot) {
+                                                            sub.slot=trim(resultSlot);
+                                                        }
+                                                    });
                                                     //TYPE
                                                     scheduleWebView.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[1].rows[" + rowa + "].cells[3].innerText.toString()"), new ValueCallback<String>() {
                                                         @Override
@@ -462,7 +503,7 @@ public class workSpace extends AppCompatActivity {
                 getFromTable2(Integer.parseInt(s)-1);
             }
         });
-    }
+    }  //GETS THE INDEX OF THE SCHEDULE TABLE FROM THE WEBPAGE
 
     private void getFromTable2(final int index){
         scheduleWebView.evaluateJavascript(getcmd("document.getElementsByTagName('table')["+index+"].rows[0].deleteCell(7);"), new ValueCallback<String>() {
@@ -644,7 +685,7 @@ public class workSpace extends AppCompatActivity {
                     }
                     loadedAttView=attWebView;
                     rowsInAtt=rows;
-                    getlastDayUpdated();
+                    getlastDayUpdated(1);
                 }
             });
         }
@@ -720,6 +761,8 @@ public class workSpace extends AppCompatActivity {
             courseAdapter.update(vClass.subList);
             pb_syncing.setVisibility(View.GONE);
             refreshing=false;
+            vClass.isSyncedThisSession=true;
+            Toast.makeText(context,"Synced",Toast.LENGTH_SHORT).show();
         }
     } //REARRANGE THE INFORMATION SCRAPPED FORM THE WEBPAGE
 
@@ -765,15 +808,16 @@ public class workSpace extends AppCompatActivity {
     } //SEARCH SUBJECT IN SUBJECT LIST
 
     void writeToPrefs(){
-        put(context,allSub,jsonBuilder.toJson(vClass.subList));//editor.putString("allSub",jsonBuilder.toJson(vClass.subList));
-        put(context,schedule,jsonBuilder.toJson(vClass.timeTable));//editor.putString("schedule",jsonBuilder.toJson(vClass.timeTable));
-        put(context,isLoggedIn,true);//editor.putBoolean("isLoggedIn",true);
-        updateWidget();
+        if(get(context,isLoggedIn,false)) {
+            put(context, allSub, jsonBuilder.toJson(vClass.subList));//editor.putString("allSub",jsonBuilder.toJson(vClass.subList));
+            put(context, schedule, jsonBuilder.toJson(vClass.timeTable));//editor.putString("schedule",jsonBuilder.toJson(vClass.timeTable));
+            updateWidget();
+        }
     } //WRITE ACADEMIC CONTENT TO SHARED PREFERENCES
 
     void updateWidget(){
         (new widgetServiceReceiver()).onReceive(context,(new Intent(context,widgetServiceReceiver.class)));
-    }
+    }  // UPDATE THE CONTENTS OF WIDGET TO SHOW TODAYS SCHEDULE
 
     String formattedTime(subject sub){
         String rawTime= sub.startTime;
@@ -819,7 +863,7 @@ public class workSpace extends AppCompatActivity {
             new waitForLogIn().execute();
             return "0";
         }
-    }
+    }  //REMOVE THE QUOTES FROM THE RESULT SCRAPPED FORM THE WEBPAGE
 
     void setTabLayout(TabLayout tabLayout){
         final int[] unselectedDrawables= new int[]{R.drawable.notselected_course_book,R.drawable.notselected_teacher,R.drawable.notselected_tasks};
@@ -847,14 +891,14 @@ public class workSpace extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-    }
+    }  //CONTROLS THE IMAGES WHILE SWITCHING THE TABS
 
     void delPrefs(){
         put(context,allSub,null);//editor.putString("allSub",jsonBuilder.toJson(vClass.subList));
         put(context,schedule,null);//editor.putString("schedule",jsonBuilder.toJson(vClass.timeTable));
         put(context,isLoggedIn,false);//editor.putBoolean("isLoggedIn",true);
         updateWidget();
-    }
+    }  //DELETES THE PREFERENCES WHEN LOGOUT IS PRESSED
 
     void setToolbars() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.workspacetoptoolbar);
@@ -884,7 +928,7 @@ public class workSpace extends AppCompatActivity {
                         startActivity(new Intent(workSpace.this,About.class));
                         break;
                     case R.id.action_refresh:
-                        if(!refreshing){
+                        if(!refreshing && !vClass.isSyncedThisSession){
                             refreshing=true;
                             initWebViews();
                         }
@@ -903,24 +947,66 @@ public class workSpace extends AppCompatActivity {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
                         //Yes button clicked
+                        cancelNotifications(context);
                         delPrefs();
+                        try{
+                            loginWebView.stopLoading();
+                            attWebView.stopLoading();
+                            scheduleWebView.stopLoading();
+                            loadedAttView.stopLoading();
+                        }
+                        catch (Exception E){
+                            //DO NOTHING...
+                        }
                         startActivity(new Intent(workSpace.this, scrapper.class));
                         overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
                         finish();
-                        break;
-
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        //No button clicked
-                        //CANCEL THE DIALOG BOX
+                        try {
+                            this.finalize();
+                        } catch (Throwable throwable) {
+                            //throwable.printStackTrace();
+                        }
                         break;
                 }
             }
         };
 
-        builder.setMessage("Doing this will delete all cached data!\n\nAre you sure?").setPositiveButton("Yes", dialogClickListener)
+        builder.setMessage("Doing this will delete all data!\n\nAre you sure?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener);
         AlertDialog confirmLogoutDialog = builder.create();
         confirmLogoutDialog.show();
+    }  //ASK FOR CONFIRMATION TO LOGOUT
+
+    void cancelNotifications(Context context) {
+        int day=2;
+        int notificationCode=1;
+        for(List<subject> today: vClass.timeTable){
+            for (subject sub : today){
+                if(!sub.code.equals("")){
+                    AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                    Intent toNotifyService = new Intent(context,NotifyService.class);
+                    toNotifyService.putExtra("fromClass","scheduleNotification");
+                    Calendar calendar = GregorianCalendar.getInstance();
+                    int startHour,startMin;
+                    String time=formattedTime(sub);
+                    startHour=Integer.parseInt(time.substring(0, 2));
+                    startMin=Integer.parseInt(time.substring(3, 5));
+
+                    calendar.setLenient(false);
+                    calendar.set(GregorianCalendar.HOUR_OF_DAY,startHour);
+                    calendar.set(GregorianCalendar.MINUTE,startMin);
+                    calendar.set(GregorianCalendar.DAY_OF_WEEK,day);
+                    calendar.set(GregorianCalendar.SECOND,0);
+
+                    Notification_Holder newNotification =  new Notification_Holder(calendar,sub.title,sub.room,"Upcoming class in 5 minutes");
+                    toNotifyService.putExtra("notificationContent",(new Gson()).toJson(newNotification));
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context,notificationCode,toNotifyService,0);
+                    alarmManager.cancel(pendingIntent);
+                    notificationCode++;
+                }
+            }
+            day++;
+        }
     }
 
 
@@ -996,12 +1082,19 @@ public class workSpace extends AppCompatActivity {
                 case 2:
                     View rootViewNotes = inflater.inflate(R.layout.fragment_notes, container, false);
                     setOnTouchListener(rootViewNotes,getActivity());
-                    populateTaskGrid(rootViewNotes);
+                    taskGridLeft = (LinearLayout) rootViewNotes.findViewById(R.id.task_grid_view_left);
+                    int taskViewWidth = ((int) (vClass.width * 0.492));
+                    taskGridLeft.getLayoutParams().width = taskViewWidth;
+                    taskGridRight = (LinearLayout) rootViewNotes.findViewById(R.id.task_grid_view_right);
+                    taskGridRight.getLayoutParams().width = taskViewWidth;
+                    populateTaskGrid();
                     FloatingActionButton fb = (FloatingActionButton) rootViewNotes.findViewById(R.id.notes_add);
                     fb.setOnClickListener(new View.OnClickListener() { //Floating action button onclick listener
                         @Override
                         public void onClick(View v) {
                             final AlertDialog alert;
+                            Log.d("left",taskGridLeft.getMeasuredHeight()+"");
+                            Log.d("Right",taskGridRight.getMeasuredHeight()+"");
                             View root = getActivity().getLayoutInflater().inflate(R.layout.floatingview_add_todo, null);
                             final EditText title = (EditText) root.findViewById(R.id.title);
                             final EditText other = (EditText) root.findViewById(R.id.note);
@@ -1041,15 +1134,17 @@ public class workSpace extends AppCompatActivity {
                                             if(c!=null) {
                                                 n = new Notification_Holder(c, title.getText().toString(), other.getText().toString(),"You have a deadline to meet");
                                                 schedule_todo_notification(n);
+                                                c=null;
                                             }
                                             else
                                                 n = new Notification_Holder(Calendar.getInstance(), title.getText().toString(), other.getText().toString(),"You have a deadline to meet");
                                             vClass.notes.add(n);
-                                            updateTaskGrid(vClass.notes.size() - 1);
+                                            populateTaskGrid();
                                             Gson json = new Gson();
                                             String temporary = json.toJson(vClass.notes);
                                             put(context,todolist,temporary);//editor.putString("todolist", temporary);
                                             alert.cancel();
+                                            workSpace.hideSoftKeyboard(getActivity());
                                         } else
                                             Toast.makeText(getContext(), "Both title and note must contain some text", Toast.LENGTH_SHORT).show();
                                         return true;
@@ -1115,7 +1210,6 @@ public class workSpace extends AppCompatActivity {
             alert.show();
         }
 
-
         void showCabinAlertDialog(final listAdapter_teachers cabinListAdapter) {
             final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
             final View alertCabinView = getActivity().getLayoutInflater().inflate(R.layout.floatingview_add_cabin, null);
@@ -1136,7 +1230,6 @@ public class workSpace extends AppCompatActivity {
                     if(id==R.id.action_add_todo){
                         String name = ((TextView) alertCabinView.findViewById(R.id.alert_cabin_teacherName)).getText().toString();
                         String cabin = ((TextView) alertCabinView.findViewById(R.id.alert_cabin_cabinAddress)).getText().toString();
-                        String comment = ((TextView) alertCabinView.findViewById(R.id.alert_cabin_comment)).getText().toString();
                         if (name.trim().equals("") || cabin.trim().equals("")) {
                             Toast.makeText(context, "Invalid Data !", Toast.LENGTH_LONG).show();
                         }
@@ -1144,7 +1237,6 @@ public class workSpace extends AppCompatActivity {
                             for (int i = 0; i < vClass.cablist.size(); i++) {
                                 if (vClass.cablist.get(i).name.toLowerCase().equals(name.toLowerCase())) {
                                     vClass.cablist.get(i).cabin = cabin;
-                                    vClass.cablist.get(i).others = comment;
                                     writeCabListToPrefs();
                                     cabinListAdapter.updatecontent(vClass.cablist);
                                     alert.cancel();
@@ -1154,7 +1246,6 @@ public class workSpace extends AppCompatActivity {
                             Cabin_Details c = new Cabin_Details();
                             c.name = name;
                             c.cabin = cabin;
-                            c.others = comment;
                             vClass.cablist.add(c);
                             vClass.toBeUpdated.add(c);
                             listAdapter_searchTeacher.writeEditedToPrefs(context);
@@ -1169,7 +1260,6 @@ public class workSpace extends AppCompatActivity {
             });
             alert.show();
         }  //CREATE AND HANDLES THE ALERT DIALOG BOX TO ADD CABIN
-
 
         void setSearcher() {
             searchResult = new ArrayList<>();
@@ -1213,28 +1303,41 @@ public class workSpace extends AppCompatActivity {
 
         LinearLayout taskGridLeft, taskGridRight;
 
-        void populateTaskGrid(View root) {
-            taskGridLeft = (LinearLayout) root.findViewById(R.id.task_grid_view_left);
-            int taskViewWidth = ((int) (vClass.width * 0.492));
-            taskGridLeft.getLayoutParams().width = taskViewWidth;
-            taskGridRight = (LinearLayout) root.findViewById(R.id.task_grid_view_right);
-            taskGridRight.getLayoutParams().width = taskViewWidth;
-            if (vClass.notes.size() > 0) {
-                int i = 0;
-                taskGridLeft.removeAllViews();
-                taskGridRight.removeAllViews();
-                while (i < vClass.notes.size()) {
-                    View LeftView = getTaskView(i);
-                    setTaskOnClick(LeftView,i);
-                    taskGridLeft.addView(LeftView);
-                    i++;
-                    if (i < vClass.notes.size()) {
-                        View rightView = getTaskView(i);
-                        setTaskOnClick(rightView, i);
-                        taskGridRight.addView(rightView);
-                    }
-                    i++;
+        void applyGrid(final int i){
+            if(i>=vClass.notes.size()) return;
+            else{
+                int leftHeight=taskGridLeft.getMeasuredHeight();
+                int rightHeight =taskGridRight.getMeasuredHeight();
+                View viewToAdd=getTaskView(i);
+                setTaskOnClick(viewToAdd,i);
+                if(leftHeight<=rightHeight){
+                    taskGridLeft.addView(viewToAdd);
                 }
+                else{
+                    taskGridRight.addView(viewToAdd);
+                }
+                viewToAdd.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        applyGrid(i+1);
+                    }
+                });
+            }
+        }
+
+        void populateTaskGrid() {
+            taskGridLeft.removeAllViews();
+            taskGridRight.removeAllViews();
+            if(vClass.notes.size()>0) {
+                View viewToAdd = getTaskView(0);
+                setTaskOnClick(viewToAdd, 0);
+                taskGridLeft.addView(viewToAdd);
+                viewToAdd.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        applyGrid(1);
+                    }
+                });
             }
         }
         AlertDialog expanded;
@@ -1269,12 +1372,8 @@ public class workSpace extends AppCompatActivity {
             (taskView.findViewById(R.id.task_delete)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (index % 2 != 0) {
-                        taskGridRight.removeViewAt((index/2));
-                    } else {
-                        taskGridLeft.removeViewAt(index/2);
-                    }
                     delTask(cTask);
+                    populateTaskGrid();
                 }
             });
 
@@ -1322,28 +1421,14 @@ public class workSpace extends AppCompatActivity {
                                     if(c!=null) {
                                         n = new Notification_Holder(c, title.getText().toString(), other.getText().toString(),"You have a deadline to meet");
                                         schedule_todo_notification(n);
+                                        c=null;
                                     }
                                     else
                                         n = new Notification_Holder(Calendar.getInstance(), title.getText().toString(), other.getText().toString(),"You have a deadline to meet");
                                     updateTask(n,index);
-                                    Gson json = new Gson();
-                                    String temporary = json.toJson(vClass.notes);
-                                    put(context,todolist,temporary);//editor.putString("todolist", temporary);
-                                    if (index % 2 != 0) {
-                                        int i=taskGridRight.indexOfChild(taskView);
-                                        taskGridRight.removeViewAt(i);
-                                        View view = getTaskView(index);
-                                        setTaskOnClick(view,index);
-                                        taskGridRight.addView(view,i);
-                                    } else {
-                                        int i =taskGridLeft.indexOfChild(taskView);
-                                        taskGridLeft.removeView(taskView);
-                                        View view = getTaskView(index);
-                                        setTaskOnClick(view,index);
-                                        taskGridLeft.addView(view,i);
-                                    }
-                                    workSpace.hideSoftKeyboard(getActivity());
+                                    populateTaskGrid();
                                     alert.cancel();
+                                    workSpace.hideSoftKeyboard(getActivity());
                                 } else
                                     Toast.makeText(getContext(), "Both title and note must contain some text", Toast.LENGTH_SHORT).show();
                                 return true;
@@ -1530,15 +1615,6 @@ public class workSpace extends AppCompatActivity {
             put(context,todolist,Notification_Holder.convert_to_jason(vClass.notes));//editor.putString("todolist", Notification_Holder.convert_to_jason(vClass.notes));
         }
 
-        void updateTaskGrid(int index) {
-            View view = getTaskView(index);
-            setTaskOnClick(view,index);
-            if ((index) % 2 == 0) {
-                taskGridLeft.addView(view);
-            } else {
-                taskGridRight.addView(view);
-            }
-        } //UPDATE THE TASK GRID WHEN NEW TASK IS ADDED
     }
 
     /**
@@ -1590,7 +1666,7 @@ public class workSpace extends AppCompatActivity {
             inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
         }
         catch (Exception e){ /*KEYBOARD HIDE FAILED*/ }
-    }
+    }  //HIDES THE KEYBOARD
 
     public static void setOnTouchListener(View view, final Activity activity) {
         if (!(view instanceof EditText)) {
@@ -1611,7 +1687,7 @@ public class workSpace extends AppCompatActivity {
                 setOnTouchListener(innerView,activity);
             }
         }
-    }
+    }  //SET THE TOUCH TO HIDE THE KEYBOARD
 
     public static void setOnViewTouchListener(View view,final Activity activity){
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -1624,10 +1700,11 @@ public class workSpace extends AppCompatActivity {
             }
         });
     }
+
     void getDimensions(){
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         vClass.width=dm.widthPixels;
         vClass.height=dm.heightPixels;
-    }
+    }  //GET THE DIMENSIONS OF THE DEVICE
 }

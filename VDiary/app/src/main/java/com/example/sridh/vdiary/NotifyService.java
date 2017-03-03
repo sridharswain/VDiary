@@ -38,7 +38,7 @@ public class NotifyService extends BroadcastReceiver {
                 }.getType());
                 Calendar notiCalendar = notificationHolder.cal;
                 notiCalendar.setLenient(false);
-                Log.d("notification",notificationHolder.title+" "+notiCalendar.toString()+" "+notiCalendar.get(Calendar.DAY_OF_MONTH)+" "+notiCalendar.get(Calendar.DAY_OF_WEEK)+" "+notiCalendar.get(Calendar.HOUR_OF_DAY)+" "+notiCalendar.get(Calendar.MINUTE));
+                Log.d("notification",notificationHolder.title);
                 if ((notificationHolder.dayofweek == cal.get(Calendar.DAY_OF_WEEK) && notificationHolder.hourOfDay >= cal.get(Calendar.HOUR_OF_DAY))) {
                     Notification_Creator notifcreator = new Notification_Creator(notificationHolder.title, notificationHolder.content, notificationHolder.ticker, context);
                     notifcreator.create_notification();
@@ -59,10 +59,9 @@ public class NotifyService extends BroadcastReceiver {
             }
         }
         return false;
-    }
+    }  //RETURN TRUE IF TODAY IS A HOLIDAY
 
     boolean isNotificationOn(Context context){
         return get(context,showNotification,true);
     }
-
 }

@@ -2,6 +2,7 @@ package com.example.sridh.vdiary;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProviderInfo;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -33,6 +34,7 @@ public class widgetServiceReceiver extends BroadcastReceiver {
 
     void updateWidget(AppWidgetManager appWidgetManager,Context context,int[] appWidgetIds){
         for (int appWidgetId : appWidgetIds) {
+            appWidgetManager.getAppWidgetInfo(appWidgetId).resizeMode= AppWidgetProviderInfo.RESIZE_HORIZONTAL;
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
             Intent launchActivity = new Intent(context, splashScreen.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, launchActivity, 0);
@@ -63,6 +65,7 @@ public class widgetServiceReceiver extends BroadcastReceiver {
                 views.setTextViewText(R.id.widget_status, "Login to Zchedule to view today's schedule");
             }
             appWidgetManager.updateAppWidget(appWidgetId, views);
+
         }
     }
 

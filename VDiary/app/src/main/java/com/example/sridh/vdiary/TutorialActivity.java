@@ -36,7 +36,7 @@ public class TutorialActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        vClass.getFonts(getApplicationContext());
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }// Making notification bar transparent
@@ -171,8 +171,8 @@ public class TutorialActivity extends AppCompatActivity {
                     break;
             }
             Glide.with(getApplicationContext()).load(image).into(iv_tutorial);
-            ((TextView)view.findViewById(R.id.tv_tutorial_head)).setTypeface(oswald);
-            ((TextView)view.findViewById(R.id.tv_tutorial_comment)).setTypeface(chewy);
+            ((TextView)view.findViewById(R.id.tv_tutorial_head)).setTypeface(vClass.nunito_bold);
+            ((TextView)view.findViewById(R.id.tv_tutorial_comment)).setTypeface(vClass.nunito_reg);
             container.addView(view);
 
             return view;
