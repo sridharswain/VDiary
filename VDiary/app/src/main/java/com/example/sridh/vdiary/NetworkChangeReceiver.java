@@ -82,7 +82,6 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                             String teacherJsonTest = (new Gson()).toJson(vClass.teachers);
                             put(context, teachers, teacherJsonTest);
                         }
-
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
 

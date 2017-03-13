@@ -1,20 +1,12 @@
 package com.example.sridh.vdiary;
-
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.NumberPicker;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +45,6 @@ public class showSubject extends AppCompatActivity {
         TextView slot= (TextView)findViewById(R.id.subject_slot);
         slot.setTypeface(nunito_reg);
         slot.setText(sub.slot);
-        newAtt = (TextView) findViewById(R.id.tv_newAtt);
         TextView lastUpdated= (TextView)findViewById(R.id.tv_lastUpdated);
         workSpace.currentShowSubjectTextView=lastUpdated;
         lastUpdated.setTypeface(nunito_reg);
@@ -65,8 +56,11 @@ public class showSubject extends AppCompatActivity {
         String attString = clicked.attString;
         att = Integer.parseInt(attString.substring(0, attString.length() - 1));
         noofdays = clicked.ctd;
+
+        newAtt = (TextView) findViewById(R.id.tv_newAtt);
         newAtt.setText(attString);
         newAtt.setTypeface(nunito_reg);
+
         leave = (NumberPicker) findViewById(R.id.leave_picker);
         final String[] intArray = numArray();
         leave.setMaxValue(100);
@@ -74,12 +68,6 @@ public class showSubject extends AppCompatActivity {
         leave.setValue(50);
         leave.setWrapSelectorWheel(false);
         leave.setDisplayedValues(intArray);
-        /*leave.setFormatter(new NumberPicker.Formatter() {
-            @Override
-            public String format(int index) {
-                return intArray[index];
-            }
-        });*/
         final numberPickerValueChangeHandler leaveScrollHandler = new numberPickerValueChangeHandler();
         leave.setOnValueChangedListener(leaveScrollHandler);
         leave.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);

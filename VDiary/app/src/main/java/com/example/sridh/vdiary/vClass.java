@@ -85,7 +85,7 @@ public class vClass {
 
     //PARAMETERS FOR CHANGING THE LINKS
     public static String SEM = "WS";
-    public static String VERSION= "1.20";
+    public static String VERSION= "1.21";
 
     public static boolean isSyncedThisSession=false;
 

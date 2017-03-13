@@ -13,14 +13,14 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.WorkSource;
+
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
+
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -97,6 +97,7 @@ public class workSpace extends AppCompatActivity {
     WebView loginWebView, attWebView, scheduleWebView;
 
     static WebView loadedAttView;
+    WebView luFetchView;
     static int rowsInAtt;
     boolean loggedIn=false;
     boolean isLoaded = true;
@@ -156,11 +157,15 @@ public class workSpace extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
         setTabLayout(tabLayout);
         vClass.setStatusBar(getWindow(), getApplicationContext(),R.color.colorPrimaryDark);
+        luFetchView = new WebView(this);
+        luFetchView.getSettings().setJavaScriptEnabled(true);
+        luFetchView.getSettings().setDomStorageEnabled(true);
         if(!refreshedByScrapper){
             refreshing=true;
             initWebViews();
         }
         else{
+            pb_syncing.setVisibility(View.VISIBLE);
             getlastDayUpdated(1);
         }
     }
@@ -192,42 +197,23 @@ public class workSpace extends AppCompatActivity {
     } //READ ACADEMIC CONTENT FROM SHARED PREFERENCE
 
     void getlastDayUpdated(final int index){
-        if(index>=rowsInAtt) return;
+        if(index>=rowsInAtt) {
+            pb_syncing.setVisibility(View.GONE);
+            Toast.makeText(context,"Synced",Toast.LENGTH_SHORT).show();
+            return;
+        }
         else{
             loadedAttView.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows['" + index + "'].cells[10].innerHTML"), new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String s) {
                     String form= "<html><body><form method='POST' action='https://academicscc.vit.ac.in/student/attn_report_details.asp'>"+s.substring(1,s.length()-1).replace("\\u003C","<").replace("\\\"","").replace("\\u003E",">")+"</form></body></html>";
-                    WebView lastUpdateWebView = new WebView(workSpace.this);
-                    lastUpdateWebView.getSettings().setJavaScriptEnabled(true);
-                    lastUpdateWebView.getSettings().setDomStorageEnabled(true);
-                    lastUpdateWebView.setWebViewClient(new lastUpdatedWebClient(index));
+                    luFetchView.setWebViewClient(new lastUpdatedWebClient(index));
                     Log.d("form",form);
-                    lastUpdateWebView.loadDataWithBaseURL(null, form, "text/html", "utf-8", null);
+                    luFetchView.loadDataWithBaseURL(null, form, "text/html", "utf-8", null);
                     //lastUpdateWebView.loadData(form, "text/html; charset=utf-8",null);
                 }
             });
         }
-        //Log.d("rowsInAtt",rowsInAtt+"");
-        /*for (int i = 1; i < rowsInAtt; i++) {
-            final int j = i;
-            loadedAttView.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows['" + j + "'].cells[10].innerHTML"), new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String s) {
-                    String form= "<html><body><form method='POST' action='https://academicscc.vit.ac.in/student/attn_report_details.asp'>"+s.substring(1,s.length()-1).replace("\\u003C","<").replace("\\\"","").replace("\\u003E",">")+"</form></body></html>";
-                    WebView lastUpdateWebView;
-                    if(j==1) lastUpdateWebView = (WebView)findViewById(R.id.webview);
-                    else lastUpdateWebView = new WebView(workSpace.this);
-                    lastUpdateWebView.getSettings().setJavaScriptEnabled(true);
-                    lastUpdateWebView.getSettings().setDomStorageEnabled(true);
-                    lastUpdateWebView.setWebViewClient(new lastUpdatedWebClient(j));
-                    lastUpdateWebView.getSettings().setSupportMultipleWindows(true);
-                    Log.d("form",form);
-                    lastUpdateWebView.loadDataWithBaseURL(null, form, "text/html", "utf-8", null);
-                    //lastUpdateWebView.loadData(form, "text/html; charset=utf-8",null);
-                }
-            });
-        }*/
     } //FETCHES THE LAST UPLOADED INFORMATION EVENTUALLY
 
     class lastUpdatedWebClient extends WebViewClient{
@@ -245,7 +231,6 @@ public class workSpace extends AppCompatActivity {
         @Override
         public void onPageFinished(final WebView view, String url) {
             super.onPageFinished(view, url);
-            Log.d("last Upload",index+"");
             if (!loaded){
                 loaded=true;
                 view.evaluateJavascript(getcmd("document.forms[0].submit()"), new ValueCallback<String>() {
@@ -348,7 +333,7 @@ public class workSpace extends AppCompatActivity {
                 }
             }
         }
-    }
+    }  //HANDLES PAGE FINISHED OF THE LOGIN PAGE
 
     boolean webNotConnected(String webTitle) {
         Log.d("WebviewURL",webTitle);
@@ -759,10 +744,8 @@ public class workSpace extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             courseAdapter.update(vClass.subList);
-            pb_syncing.setVisibility(View.GONE);
             refreshing=false;
             vClass.isSyncedThisSession=true;
-            Toast.makeText(context,"Synced",Toast.LENGTH_SHORT).show();
         }
     } //REARRANGE THE INFORMATION SCRAPPED FORM THE WEBPAGE
 
@@ -1007,7 +990,7 @@ public class workSpace extends AppCompatActivity {
             }
             day++;
         }
-    }
+    } //CANCEL ALL THE NOTIFICATION OF THE SUBJECTS
 
 
 
@@ -1093,8 +1076,6 @@ public class workSpace extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             final AlertDialog alert;
-                            Log.d("left",taskGridLeft.getMeasuredHeight()+"");
-                            Log.d("Right",taskGridRight.getMeasuredHeight()+"");
                             View root = getActivity().getLayoutInflater().inflate(R.layout.floatingview_add_todo, null);
                             final EditText title = (EditText) root.findViewById(R.id.title);
                             final EditText other = (EditText) root.findViewById(R.id.note);
