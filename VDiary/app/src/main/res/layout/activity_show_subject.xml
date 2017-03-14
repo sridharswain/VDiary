@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_show_subject"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     tools:context="com.example.sridh.vdiary.showSubject"
     android:clipChildren="false"
@@ -133,7 +134,7 @@
         <NumberPicker
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginEnd="70dp"
             android:id="@+id/leave_picker"
             android:theme="@style/AppTheme.Picker"
@@ -142,7 +143,8 @@
             android:layout_height="wrap_content"
             android:layout_width="80dp"
             android:layout_alignTop="@id/leave_picker"
-            android:layout_marginStart="35dp"
+            android:layout_marginEnd="40dp"
+            android:layout_toStartOf="@id/leave_picker"
             android:id="@+id/tv_newAtt"
             android:textColor="@android:color/white"
             android:text="100.0%"
@@ -186,6 +188,29 @@
             android:layout_below="@id/leave_picker"
             android:textColor="@android:color/white"
             android:textSize="10dp" />
+        <FrameLayout
+            android:layout_toEndOf="@id/leave_picker"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:id="@+id/jumpTo">
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:backgroundTint="@color/colorPrimaryDark"
+                android:background="@android:color/transparent"
+                app:elevation="0dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Jump"
+                android:elevation="13dp"
+                android:textColor="@android:color/white"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </FrameLayout>
 
 
     </RelativeLayout>

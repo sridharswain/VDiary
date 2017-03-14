@@ -4,6 +4,8 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -17,6 +19,8 @@ public class showSubject extends AppCompatActivity {
     NumberPicker leave;
     TextView mon, tue, wed, thu, fri, newAtt,classRatio;
     Typeface nunito_bold, nunito_reg;
+
+    double class_att,tempClassAtt,tempTotalClass;
 
 
     int toMul=1; // 1 if THEORY ELSE 2
@@ -33,6 +37,10 @@ public class showSubject extends AppCompatActivity {
     }
 
     void show(subject sub) {
+        class_att = clicked.classAttended;
+        tempClassAtt=class_att;
+        tempTotalClass=clicked.ctd;
+
         nunito_reg = Typeface.createFromAsset(getAssets(), "fonts/Nunito-Regular.ttf");
         nunito_bold = Typeface.createFromAsset(getAssets(), "fonts/Nunito-Bold.ttf");
         getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -71,6 +79,16 @@ public class showSubject extends AppCompatActivity {
         final numberPickerValueChangeHandler leaveScrollHandler = new numberPickerValueChangeHandler();
         leave.setOnValueChangedListener(leaveScrollHandler);
         leave.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+
+        FrameLayout jump=(FrameLayout)findViewById(R.id.jumpTo);
+        jump.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                leave.setValue(50);
+                class_att=tempClassAtt;
+                noofdays=(int)tempTotalClass;
+            }
+        });
     }  //SETS THE LAYOUT OF THE SUBJECT TO BE SHOWN
 
     class Async_search extends AsyncTask<Void, Void, Void> {
@@ -144,19 +162,23 @@ public class showSubject extends AppCompatActivity {
             double newAttendance = 0.0;
             int leave = next;
             leave = leave - 50;
-            double class_att = clicked.classAttended;
+
             if (leave < 0) {
                 leave = leave * -1;
                 double classAttended=class_att + toMul*leave;
                 double totalClasses=noofdays + toMul*leave;
                 double att_final2 = (classAttended / totalClasses) * 100.0;
                 classRatio.setText((int)(classAttended)+"/"+(int)(totalClasses));
+                tempClassAtt=classAttended;
+                tempTotalClass=totalClasses;
                 newAttendance = (Math.ceil(att_final2));
             }
             else if ((noofdays + leave) >= 0) {
                 double totalClasses=(noofdays + toMul*leave);
                 double att_final = (class_att / totalClasses) * 100.0;
                 classRatio.setText((int)(class_att)+"/"+(int)(totalClasses));
+                tempClassAtt=class_att;
+                tempTotalClass=totalClasses;
                 newAttendance = (Math.ceil(att_final));
             }
             newAtt.setText(newAttendance + "%");
