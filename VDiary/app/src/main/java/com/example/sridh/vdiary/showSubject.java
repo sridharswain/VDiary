@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+<<<<<<< HEAD
 
 import android.view.Gravity;
 import android.view.View;
@@ -14,6 +15,10 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+=======
+import android.view.View;
+import android.widget.FrameLayout;
+>>>>>>> 4e2524eda4dcbd5f3b8243fbad5f7d76ac2504bd
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
@@ -43,6 +48,8 @@ public class showSubject extends AppCompatActivity {
 
     double class_att,tempClassAtt,tempTotalClass;
 
+    double class_att,tempClassAtt,tempTotalClass;
+
 
     int toMul=1; // 1 if THEORY ELSE 2
 
@@ -60,10 +67,16 @@ public class showSubject extends AppCompatActivity {
 
     void show(subject sub) {
         class_att = clicked.classAttended;
+<<<<<<< HEAD
         attTrack = clicked.attTrack;
         tempClassAtt=class_att;
         tempTotalClass=clicked.ctd;
         getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+=======
+        tempClassAtt=class_att;
+        tempTotalClass=clicked.ctd;
+
+>>>>>>> 4e2524eda4dcbd5f3b8243fbad5f7d76ac2504bd
         nunito_reg = Typeface.createFromAsset(getAssets(), "fonts/Nunito-Regular.ttf");
         nunito_bold = Typeface.createFromAsset(getAssets(), "fonts/Nunito-Bold.ttf");
         TextView Title = ((TextView) findViewById(R.id.subject_Title));
@@ -102,16 +115,24 @@ public class showSubject extends AppCompatActivity {
         leave.setOnValueChangedListener(leaveScrollHandler);
         leave.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
+<<<<<<< HEAD
         Button jump=(Button)findViewById(R.id.jumpTo);
         jump.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 lastPicked=0;
+=======
+        FrameLayout jump=(FrameLayout)findViewById(R.id.jumpTo);
+        jump.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+>>>>>>> 4e2524eda4dcbd5f3b8243fbad5f7d76ac2504bd
                 leave.setValue(50);
                 class_att=tempClassAtt;
                 noofdays=(int)tempTotalClass;
             }
         });
+<<<<<<< HEAD
         jump.setTypeface(vClass.nunito_reg);
 
         attTracker = (LinearLayout)findViewById(R.id.attTrackView);
@@ -120,6 +141,8 @@ public class showSubject extends AppCompatActivity {
         hsvScrollFull();
 
 
+=======
+>>>>>>> 4e2524eda4dcbd5f3b8243fbad5f7d76ac2504bd
     }  //SETS THE LAYOUT OF THE SUBJECT TO BE SHOWN
 
     class Async_search extends AsyncTask<Void, Void, Void> {
@@ -192,7 +215,11 @@ public class showSubject extends AppCompatActivity {
             double newAttendance = 0.0;
             int leave = next;
             leave = leave - 50;
+<<<<<<< HEAD
             boolean nextIsPresent = true;
+=======
+
+>>>>>>> 4e2524eda4dcbd5f3b8243fbad5f7d76ac2504bd
             if (leave < 0) {
                 //GOING TOWARDS POSITIVE OF THE PICKER
                 leave = leave * -1;
@@ -200,18 +227,30 @@ public class showSubject extends AppCompatActivity {
                 double classAttended = class_att + toMul * leave;
                 double totalClasses = noofdays + toMul * leave;
                 double att_final2 = (classAttended / totalClasses) * 100.0;
+<<<<<<< HEAD
                 classRatio.setText((int) (classAttended) + "/" + (int) (totalClasses));
                 tempClassAtt = classAttended;
                 tempTotalClass = totalClasses;
+=======
+                classRatio.setText((int)(classAttended)+"/"+(int)(totalClasses));
+                tempClassAtt=classAttended;
+                tempTotalClass=totalClasses;
+>>>>>>> 4e2524eda4dcbd5f3b8243fbad5f7d76ac2504bd
                 newAttendance = (Math.ceil(att_final2));
             } else if ((noofdays + leave) >= 0) {
                 //GOING TOWARDS NEGATIVE OF THE PICKER
                 nextIsPresent = false;
                 double totalClasses = (noofdays + toMul * leave);
                 double att_final = (class_att / totalClasses) * 100.0;
+<<<<<<< HEAD
                 classRatio.setText((int) (class_att) + "/" + (int) (totalClasses));
                 tempClassAtt = class_att;
                 tempTotalClass = totalClasses;
+=======
+                classRatio.setText((int)(class_att)+"/"+(int)(totalClasses));
+                tempClassAtt=class_att;
+                tempTotalClass=totalClasses;
+>>>>>>> 4e2524eda4dcbd5f3b8243fbad5f7d76ac2504bd
                 newAttendance = (Math.ceil(att_final));
             }
             try {

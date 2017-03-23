@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_show_subject"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -114,9 +115,45 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
+<<<<<<< HEAD
 
             <RelativeLayout
                 android:layout_width="match_parent"
+=======
+        <NumberPicker
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="70dp"
+            android:id="@+id/leave_picker"
+            android:theme="@style/AppTheme.Picker"
+            android:layout_marginTop="16dp"/>
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_alignTop="@id/leave_picker"
+            android:layout_marginEnd="40dp"
+            android:layout_toStartOf="@id/leave_picker"
+            android:id="@+id/tv_newAtt"
+            android:textColor="@android:color/white"
+            android:text="100.0%"
+            android:textSize="22sp"
+            android:layout_marginTop="65dp"
+            android:textAlignment="center"/>
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="10/11"
+            android:textColor="@android:color/white"
+            android:textSize="19sp"
+            android:id="@+id/classRatio"
+            android:layout_below="@id/tv_newAtt"
+            android:layout_alignStart="@id/tv_newAtt"
+            android:layout_alignEnd="@id/tv_newAtt"
+            android:textAlignment="center"/>
+        <TextView
+                android:layout_width="wrap_content"
+>>>>>>> 4e2524eda4dcbd5f3b8243fbad5f7d76ac2504bd
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 android:padding="14dp"
@@ -202,6 +239,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:id="@+id/rv_title"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp">
@@ -214,6 +252,46 @@
                 android:textSize="23sp"
                 android:layout_alignParentStart="true"
                 android:textColor="@android:color/white"/>
+=======
+            android:text="Bunk"
+            android:textColor="@android:color/white"
+            android:id="@+id/tv_bunk"
+            android:layout_below="@id/leave_picker"
+            android:layout_alignStart="@id/leave_picker"
+            android:layout_alignEnd="@id/leave_picker"
+            android:textAlignment="center"/>
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/tv_lastUpdated"
+            android:layout_below="@id/leave_picker"
+            android:textColor="@android:color/white"
+            android:textSize="10dp" />
+        <FrameLayout
+            android:layout_toEndOf="@id/leave_picker"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:id="@+id/jumpTo">
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:backgroundTint="@color/colorPrimaryDark"
+                android:background="@android:color/transparent"
+                app:elevation="0dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Jump"
+                android:elevation="13dp"
+                android:textColor="@android:color/white"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </FrameLayout>
+
+>>>>>>> 4e2524eda4dcbd5f3b8243fbad5f7d76ac2504bd
 
             <TextView
                 android:text="Teacher"
