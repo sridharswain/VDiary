@@ -1,13 +1,199 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_show_subject"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     tools:context="com.example.sridh.vdiary.showSubject"
     android:clipChildren="false"
     android:orientation="vertical"
     android:background="@color/colorPrimary">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/show_subject_toolbar">
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical">
+<RelativeLayout
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:padding="14dp"
+    android:background="@color/colorPrimary">
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/subject_slot"
+        android:textColor="@android:color/white"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"/>
+    <TextView
+        android:layout_width="45dp"
+        android:textAlignment="center"
+        android:layout_height="30dp"
+        android:text="Wed"
+        android:id="@+id/tv_wed"
+        android:layout_below="@id/subject_slot"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/opac_transparent"/>
+    <TextView
+        android:layout_width="45dp"
+        android:textAlignment="center"
+        android:layout_height="30dp"
+        android:text="Tue"
+        android:layout_below="@id/subject_slot"
+        android:layout_toStartOf="@id/tv_wed"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:layout_marginEnd="20dp"
+        android:textColor="@color/opac_transparent"
+        android:id="@+id/tv_tue"/>
+
+    <TextView
+        android:layout_width="45dp"
+        android:textAlignment="center"
+        android:layout_height="30dp"
+        android:text="Mon"
+        android:layout_below="@id/subject_slot"
+        android:layout_marginTop="20dp"
+        android:layout_toStartOf="@id/tv_wed"
+        android:layout_marginEnd="80dp"
+        android:id="@+id/tv_mon"
+        android:textSize="20sp"
+        android:textColor="@color/opac_transparent"/>
+
+
+    <TextView
+        android:layout_width="45dp"
+        android:textAlignment="center"
+        android:layout_height="30dp"
+        android:text="Thu"
+        android:layout_below="@id/subject_slot"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@id/tv_wed"
+        android:layout_marginStart="20dp"
+        android:textSize="20sp"
+        android:id="@+id/tv_thu"
+        android:textColor="@color/opac_transparent"/>
+
+    <TextView
+        android:layout_width="45dp"
+        android:textAlignment="center"
+        android:layout_height="30dp"
+        android:text="Fri"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:layout_below="@id/subject_slot"
+        android:layout_toEndOf="@id/tv_wed"
+        android:layout_marginStart="80dp"
+        android:id="@+id/tv_fri"
+        android:textColor="@color/opac_transparent"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_height="2dp"
+        android:layout_width="match_parent"
+        android:background="@color/descent_orange" />
+            <HorizontalScrollView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:id="@+id/hsv_show_subject"
+                android:minHeight="80dp">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/attTrackView"
+                    android:orientation="horizontal"
+                    android:showDividers="middle"
+                    android:divider="@drawable/att_tracker_divider"
+                    android:padding="15dp">
+                </LinearLayout>
+            </HorizontalScrollView>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:padding="14dp"
+                android:id="@+id/attLayout">
+
+                <NumberPicker
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/leave_picker"
+                    android:theme="@style/AppTheme.Picker"
+                    android:layout_marginTop="16dp"/>
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="80dp"
+                    android:layout_alignTop="@id/leave_picker"
+                    android:layout_marginEnd="40dp"
+                    android:layout_toStartOf="@id/leave_picker"
+                    android:id="@+id/tv_newAtt"
+                    android:textColor="@android:color/white"
+                    android:text="100.0%"
+                    android:textSize="22sp"
+                    android:layout_marginTop="65dp"
+                    android:textAlignment="center"/>
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="10/11"
+                    android:textColor="@android:color/white"
+                    android:textSize="19sp"
+                    android:id="@+id/classRatio"
+                    android:layout_below="@id/tv_newAtt"
+                    android:layout_alignStart="@id/tv_newAtt"
+                    android:layout_alignEnd="@id/tv_newAtt"
+                    android:textAlignment="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Attend"
+                    android:textColor="@android:color/white"
+                    android:layout_alignStart="@id/leave_picker"
+                    android:layout_alignEnd="@id/leave_picker"
+                    android:textAlignment="center"
+                    android:id="@+id/tv_attend" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bunk"
+                    android:textColor="@android:color/white"
+                    android:id="@+id/tv_bunk"
+                    android:layout_below="@id/leave_picker"
+                    android:layout_alignStart="@id/leave_picker"
+                    android:layout_alignEnd="@id/leave_picker"
+                    android:textAlignment="center"/>
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_lastUpdated"
+                    android:layout_below="@id/leave_picker"
+                    android:textColor="@android:color/white"
+                    android:textSize="10dp" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/leave_picker"
+                        android:textSize="12dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="35dp"
+                        android:id="@+id/jumpTo"
+                        android:background="@drawable/soft_corner_button_dark"
+                        android:textColor="@android:color/white"
+                        android:text="Apply\nChanges"/>
+
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
     <android.support.v7.widget.Toolbar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,152 +227,5 @@
                 android:layout_marginStart="10dp"
                 android:textColor="@android:color/white"/>
         </RelativeLayout>
-        </android.support.v7.widget.Toolbar>
-<RelativeLayout
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    android:padding="14dp"
-    android:background="@color/colorPrimary">
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/subject_slot"
-        android:textColor="@android:color/white"
-        android:layout_centerHorizontal="true"
-        android:textSize="20sp"/>
-    <TextView
-        android:layout_width="45dp"
-        android:textAlignment="center"
-        android:layout_height="30dp"
-        android:text="Tue"
-        android:layout_below="@id/subject_slot"
-        android:layout_marginTop="20dp"
-        android:textSize="20sp"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/opac_transparent"
-        android:id="@+id/tv_tue"/>
-
-    <TextView
-        android:layout_width="45dp"
-        android:textAlignment="center"
-        android:layout_height="30dp"
-        android:text="Mon"
-        android:layout_below="@id/subject_slot"
-        android:layout_marginTop="20dp"
-        android:layout_toStartOf="@id/tv_tue"
-        android:layout_marginEnd="85dp"
-        android:id="@+id/tv_mon"
-        android:textSize="20sp"
-        android:textColor="@color/opac_transparent"/>
-
-
-
-    <TextView
-        android:layout_width="45dp"
-        android:textAlignment="center"
-        android:layout_height="30dp"
-        android:text="Wed"
-        android:layout_marginTop="20dp"
-        android:textSize="20sp"
-        android:layout_below="@id/subject_slot"
-        android:layout_toEndOf="@id/tv_tue"
-        android:layout_marginStart="85dp"
-        android:id="@+id/tv_wed"
-        android:textColor="@color/opac_transparent"/>
-
-    <TextView
-        android:layout_width="45dp"
-        android:textAlignment="center"
-        android:layout_height="30dp"
-        android:text="Thu"
-        android:layout_below="@id/tv_mon"
-        android:layout_marginTop="20dp"
-        android:textSize="20sp"
-        android:layout_toStartOf="@id/tv_tue"
-        android:layout_marginEnd="20dp"
-        android:id="@+id/tv_thu"
-        android:textColor="@color/opac_transparent"/>
-
-    <TextView
-        android:layout_width="45dp"
-        android:textAlignment="center"
-        android:layout_height="30dp"
-        android:text="Fri"
-        android:layout_below="@id/tv_mon"
-        android:layout_marginTop="20dp"
-        android:textSize="20sp"
-        android:layout_toEndOf="@id/tv_tue"
-        android:layout_marginStart="20dp"
-        android:id="@+id/tv_fri"
-        android:textColor="@color/opac_transparent"/>
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_height="2dp"
-        android:layout_width="match_parent"
-        android:background="@color/descent_orange" />
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:padding="14dp">
-
-        <NumberPicker
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="70dp"
-            android:id="@+id/leave_picker"
-            android:theme="@style/AppTheme.Picker"
-            android:layout_marginTop="16dp"/>
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="80dp"
-            android:layout_alignTop="@id/leave_picker"
-            android:layout_marginStart="35dp"
-            android:id="@+id/tv_newAtt"
-            android:textColor="@android:color/white"
-            android:text="100.0%"
-            android:textSize="22sp"
-            android:layout_marginTop="65dp"
-            android:textAlignment="center"/>
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="10/11"
-            android:textColor="@android:color/white"
-            android:textSize="19sp"
-            android:id="@+id/classRatio"
-            android:layout_below="@id/tv_newAtt"
-            android:layout_alignStart="@id/tv_newAtt"
-            android:layout_alignEnd="@id/tv_newAtt"
-            android:textAlignment="center"/>
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Attend"
-                android:textColor="@android:color/white"
-                android:layout_alignStart="@id/leave_picker"
-                android:layout_alignEnd="@id/leave_picker"
-                android:textAlignment="center"
-                android:id="@+id/tv_attend" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Bunk"
-            android:textColor="@android:color/white"
-            android:id="@+id/tv_bunk"
-            android:layout_below="@id/leave_picker"
-            android:layout_alignStart="@id/leave_picker"
-            android:layout_alignEnd="@id/leave_picker"
-            android:textAlignment="center"/>
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:id="@+id/tv_lastUpdated"
-            android:layout_below="@id/leave_picker"
-            android:textColor="@android:color/white"
-            android:textSize="10dp" />
-
-
-    </RelativeLayout>
-</LinearLayout>
+    </android.support.v7.widget.Toolbar>
+</RelativeLayout>

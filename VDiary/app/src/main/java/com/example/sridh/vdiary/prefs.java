@@ -28,6 +28,7 @@ public class prefs {
     static String dataVersion="dataVersion";
     static String tipid="tipId";
     static String scheduleNotificationCount="notificationCount";
+    static String avgAttendance="avgAttendance";
 
     //SHARED PREFERENCES INSTANCE OF THE APP
     static SharedPreferences getPrefsInstance(Context context){

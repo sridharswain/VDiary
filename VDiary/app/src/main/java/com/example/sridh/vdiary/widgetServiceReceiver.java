@@ -69,7 +69,7 @@ public class widgetServiceReceiver extends BroadcastReceiver {
         }
     }
 
-    String readHolidayPrefs(Context context,Calendar calendar){
+    static String readHolidayPrefs(Context context,Calendar calendar){
         String holidayJson = get(context,holidays,null);
         if(holidayJson!=null){
             List<holiday> holidays= (new Gson()).fromJson(holidayJson,new TypeToken<List<holiday>>(){}.getType());

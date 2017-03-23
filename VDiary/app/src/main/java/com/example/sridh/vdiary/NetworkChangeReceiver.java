@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.util.Log;
 
 
+import com.firebase.client.Firebase;
+
+import com.firebase.client.Logger;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,6 +31,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context ctxt, Intent intent) {
         context=ctxt;
+        Firebase.getDefaultConfig().setLogLevel(Logger.Level.DEBUG);
         attachFirebaseListener(context);
         requestToDatabase(context);
     }
@@ -47,7 +51,6 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                     }
                     catch (Exception e){
                         Log.d("Request",e.getMessage());
-                        //break;
                     }
                 }
                 put(context,toUpdate,(new Gson()).toJson(cabin_detailsList));

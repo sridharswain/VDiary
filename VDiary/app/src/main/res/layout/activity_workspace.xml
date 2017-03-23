@@ -27,6 +27,9 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/transparent"
             android:paddingRight="14dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -42,7 +45,17 @@
                 android:visibility="gone"
                 android:layout_gravity="end"
                 android:id="@+id/pb_syncing"
+                android:layout_alignParentEnd="true"
                 android:theme="@style/AppTheme.WhiteAccent" />
+            <ImageButton
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/refresh"
+                android:background="@android:color/transparent"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/action_sync"
+                />
+            </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>
 

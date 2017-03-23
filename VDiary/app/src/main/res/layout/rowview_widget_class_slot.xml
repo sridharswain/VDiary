@@ -12,6 +12,7 @@
         android:id="@+id/widget_type"
         android:minHeight="40dp"
         android:width="25dp"
+        android:layout_marginStart="7dp"
         android:textAlignment="center"
         android:gravity="center_vertical"
         android:background="@drawable/widget_background_type"

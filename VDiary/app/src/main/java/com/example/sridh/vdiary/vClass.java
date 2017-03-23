@@ -30,6 +30,27 @@ class subject {
     public String type;
     public String slot="";
     public String lastUpdated="";
+    public List<subjectDay> attTrack;
+    public subject(){
+        attTrack= new ArrayList<>();
+    }
+    public static subject getNewInstance(subject newSubject){
+        subject sub = new subject();
+        sub.code=newSubject.code;
+        sub.title=newSubject.title;
+        sub.teacher=newSubject.teacher;
+        sub.attString=newSubject.attString;
+        sub.room=newSubject.room;
+        sub.ctd=newSubject.ctd;
+        sub.classAttended=newSubject.classAttended;
+        sub.startTime=newSubject.startTime;
+        sub.endTime=newSubject.endTime;
+        sub.type=newSubject.type;
+        sub.slot=newSubject.slot;
+        sub.lastUpdated=newSubject.lastUpdated;
+        sub.attTrack=new ArrayList<>(newSubject.attTrack);
+        return sub;
+    }
 }
 
 
@@ -85,7 +106,7 @@ public class vClass {
 
     //PARAMETERS FOR CHANGING THE LINKS
     public static String SEM = "WS";
-    public static String VERSION= "1.21";
+    public static String VERSION= "Release 1.0";
 
     public static boolean isSyncedThisSession=false;
 
@@ -844,6 +865,16 @@ class Cabin_Details
     public void setCabin(String cabin) {
         this.cabin = cabin;
     }
+}
+class subjectDay{
+    public String date;
+    public boolean isPresent;
+
+    public subjectDay(String date, boolean isPresent) {
+        this.date = date;
+        this.isPresent = isPresent;
+    }
+    public subjectDay(){}
 }
 
 

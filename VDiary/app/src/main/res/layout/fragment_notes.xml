@@ -7,6 +7,13 @@
     android:paddingTop="2dp"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true">
+    <TextView
+        android:id="@+id/ifNoteExists"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Tap '+' To Add Notes"
+        android:textSize="20dp"/>
 
     <ScrollView
         android:layout_width="match_parent"

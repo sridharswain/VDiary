@@ -13,7 +13,6 @@ import com.google.gson.reflect.TypeToken;
 import java.util.Calendar;
 import java.util.List;
 
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Sparsha Saha on 1/11/2017.

@@ -15,7 +15,7 @@ public class About extends AppCompatActivity {
         developers.setText("Developed By : Sparsha, Sridhar");
         developers.setTypeface(vClass.nunito_reg);
         TextView versionView=((TextView)findViewById(R.id.about_name_and_version));
-        versionView.setText("Zchedule Beta "+vClass.VERSION);
+        versionView.setText("Zchedule "+vClass.VERSION);
         versionView.setTypeface(vClass.nunito_reg);
         /*String thanks="";
         thanks = "Special Thanks to:\n";

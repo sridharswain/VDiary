@@ -80,7 +80,7 @@ public class scrapper extends AppCompatActivity {
     List<subject> courses = new ArrayList<>();
     List<List<subject>> scheduleList = new ArrayList<>();
 
-    String[] tips= new String[]{"Widget is better than having a screen shot in your gallery.","Switch notifications on, in settings menu to get notification about the next class.","Tap on the clock icon on the toolbar to view weekly schedule."};
+    public static String[] tips= new String[]{"Widget is better than having a screen shot in your gallery.","Switch notifications on, in settings menu to get notification about the next class.","Tap on the clock icon on the toolbar to view weekly schedule."};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -619,8 +619,9 @@ public class scrapper extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-                vClass.subList=courses;
-                vClass.timeTable=scheduleList;
+            float sum=0;
+            vClass.subList=courses;
+            vClass.timeTable=scheduleList;
             for (int i=0;i<courses.size();i++){
                 int ctd,attended;
                 String attString;
@@ -633,10 +634,18 @@ public class scrapper extends AppCompatActivity {
                     ctd=Integer.parseInt(ctdList.get(i));
                     attString = attList.get(i)+"%";
                     attended=Integer.parseInt(attendedList.get(i));
+                    sum+=Integer.parseInt(attList.get(i));
                 }
                 vClass.subList.get(i).ctd=ctd;
                 vClass.subList.get(i).attString=attString;
                 vClass.subList.get(i).classAttended=attended;
+            }
+            try{
+                sum=sum/vClass.subList.size();
+                put(context,avgAttendance,(int)(Math.ceil(sum)));
+            }
+            catch (Exception e){
+                //ATTENDANCE NOT YET UPLOADED
             }
                 for (List<subject> i : vClass.timeTable) {
                     for (int count = 0; count < i.size(); count++) {
@@ -655,20 +664,7 @@ public class scrapper extends AppCompatActivity {
                 }
                 writeToPrefs();
                 createNotification(context,vClass.timeTable);
-                Calendar calendar=Calendar.getInstance();
-                String hr,min;
-                if(calendar.get(Calendar.HOUR_OF_DAY)<10)
-                    hr="0"+calendar.get(Calendar.HOUR_OF_DAY);
-                else
-                    hr=calendar.get(Calendar.HOUR_OF_DAY)+"";
-
-                if(calendar.get(Calendar.MINUTE)<10)
-                    min="0"+calendar.get(Calendar.MINUTE);
-                else
-                    min=calendar.get(Calendar.MINUTE)+"";
-
-                String last_ref=calendar.get(Calendar.DATE)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ "  "+ hr+":"+min;
-                put(context,lastRefreshed,last_ref);//editor.putString("last_ref",last_ref);
+                put(context,lastRefreshed,(new Gson()).toJson(Calendar.getInstance()));//editor.putString("last_ref",last_ref);
             return null;
         }
 

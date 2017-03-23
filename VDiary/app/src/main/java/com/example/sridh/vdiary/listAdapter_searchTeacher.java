@@ -1,8 +1,6 @@
 package com.example.sridh.vdiary;
 
 import android.content.Context;
-import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +9,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.firebase.client.Firebase;
 import com.google.gson.Gson;
 import static com.example.sridh.vdiary.prefs.put;
 import static com.example.sridh.vdiary.prefs.toUpdate;

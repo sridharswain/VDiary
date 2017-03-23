@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/rl_pie">
+    <com.github.mikephil.charting.charts.PieChart
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/avgAtt"/>
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_toEndOf="@id/avgAtt"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:id="@+id/lastRefreshed"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"/>
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/rl_logout">
+        <ImageView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_logout"
+            android:id="@+id/iv_logout"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log Out"
+            android:textSize="20sp"
+            android:layout_toEndOf="@id/iv_logout"
+            android:layout_centerVertical="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginStart="7dp"
+            android:id="@+id/tv_logout"/>
+        </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_above="@id/rl_logout"
+        android:id="@+id/rl_about"
+        android:layout_marginBottom="10dp">
+        <ImageView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_about"
+            android:id="@+id/iv_about"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="About"
+            android:textSize="20sp"
+            android:layout_toEndOf="@id/iv_about"
+            android:layout_centerVertical="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginStart="7dp"
+            android:id="@+id/tv_about"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_above="@id/rl_about"
+        android:id="@+id/rl_setting"
+        android:layout_marginBottom="10dp">
+        <ImageView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_setting"
+            android:id="@+id/iv_setting"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:textSize="20sp"
+            android:layout_toEndOf="@id/iv_setting"
+            android:layout_centerVertical="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginStart="7dp"
+            android:id="@+id/tv_setting"/>
+    </RelativeLayout>
+
+</RelativeLayout>
