@@ -1,4 +1,6 @@
 # Zchedule
+
+<br><image align="center" src="https://github.com/Sid25081998/VDiary/blob/master/tit.png"><br>
 This project is basically an android application.
 The app is aimed at automating the Vit university's student login to get the attendance and class occurance for each student once they are logged in.
 Features such as faculty tracking and custom to-do are implemented.
