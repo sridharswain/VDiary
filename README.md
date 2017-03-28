@@ -15,4 +15,4 @@ All dependencies are defined in ```VDiary/app/build.gradle```. Import the projec
 ```
 ./gradlew assembleRelease
 ```
-The debug apk file will be placed in ```source-code/app/build/outputs/apk/ after you build the project for the first time.
+The debug apk file will be placed in ```VDiary/app/build/outputs/apk/ after you build the project for the first time.
