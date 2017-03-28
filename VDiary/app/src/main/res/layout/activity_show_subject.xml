@@ -10,237 +10,13 @@
     android:clipChildren="false"
     android:orientation="vertical"
     android:background="@color/colorPrimary">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/show_subject_toolbar">
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:orientation="vertical">
-<RelativeLayout
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    android:padding="14dp"
-    android:background="@color/colorPrimary">
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/subject_slot"
-        android:textColor="@android:color/white"
-        android:layout_centerHorizontal="true"
-        android:textSize="20sp"/>
-    <TextView
-        android:layout_width="45dp"
-        android:textAlignment="center"
-        android:layout_height="30dp"
-        android:text="Wed"
-        android:id="@+id/tv_wed"
-        android:layout_below="@id/subject_slot"
-        android:layout_marginTop="20dp"
-        android:textSize="20sp"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/opac_transparent"/>
-    <TextView
-        android:layout_width="45dp"
-        android:textAlignment="center"
-        android:layout_height="30dp"
-        android:text="Tue"
-        android:layout_below="@id/subject_slot"
-        android:layout_toStartOf="@id/tv_wed"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:textSize="20sp"
-        android:layout_marginEnd="20dp"
-        android:textColor="@color/opac_transparent"
-        android:id="@+id/tv_tue"/>
-
-    <TextView
-        android:layout_width="45dp"
-        android:textAlignment="center"
-        android:layout_height="30dp"
-        android:text="Mon"
-        android:layout_below="@id/subject_slot"
-        android:layout_marginTop="20dp"
-        android:layout_toStartOf="@id/tv_wed"
-        android:layout_marginEnd="80dp"
-        android:id="@+id/tv_mon"
-        android:textSize="20sp"
-        android:textColor="@color/opac_transparent"/>
-
-
-    <TextView
-        android:layout_width="45dp"
-        android:textAlignment="center"
-        android:layout_height="30dp"
-        android:text="Thu"
-        android:layout_below="@id/subject_slot"
-        android:layout_marginTop="20dp"
-        android:layout_toEndOf="@id/tv_wed"
-        android:layout_marginStart="20dp"
-        android:textSize="20sp"
-        android:id="@+id/tv_thu"
-        android:textColor="@color/opac_transparent"/>
-
-    <TextView
-        android:layout_width="45dp"
-        android:textAlignment="center"
-        android:layout_height="30dp"
-        android:text="Fri"
-        android:layout_marginTop="20dp"
-        android:textSize="20sp"
-        android:layout_below="@id/subject_slot"
-        android:layout_toEndOf="@id/tv_wed"
-        android:layout_marginStart="80dp"
-        android:id="@+id/tv_fri"
-        android:textColor="@color/opac_transparent"/>
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_height="2dp"
-        android:layout_width="match_parent"
-        android:background="@color/descent_orange" />
-            <HorizontalScrollView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:id="@+id/hsv_show_subject"
-                android:minHeight="80dp">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/attTrackView"
-                    android:orientation="horizontal"
-                    android:showDividers="middle"
-                    android:divider="@drawable/att_tracker_divider"
-                    android:padding="15dp">
-                </LinearLayout>
-            </HorizontalScrollView>
-
-<<<<<<< HEAD
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-=======
-        <NumberPicker
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginEnd="70dp"
-            android:id="@+id/leave_picker"
-            android:theme="@style/AppTheme.Picker"
-            android:layout_marginTop="16dp"/>
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="80dp"
-            android:layout_alignTop="@id/leave_picker"
-            android:layout_marginEnd="40dp"
-            android:layout_toStartOf="@id/leave_picker"
-            android:id="@+id/tv_newAtt"
-            android:textColor="@android:color/white"
-            android:text="100.0%"
-            android:textSize="22sp"
-            android:layout_marginTop="65dp"
-            android:textAlignment="center"/>
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="10/11"
-            android:textColor="@android:color/white"
-            android:textSize="19sp"
-            android:id="@+id/classRatio"
-            android:layout_below="@id/tv_newAtt"
-            android:layout_alignStart="@id/tv_newAtt"
-            android:layout_alignEnd="@id/tv_newAtt"
-            android:textAlignment="center"/>
-        <TextView
-                android:layout_width="wrap_content"
->>>>>>> 4e2524eda4dcbd5f3b8243fbad5f7d76ac2504bd
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:padding="14dp"
-                android:id="@+id/attLayout">
-
-                <NumberPicker
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:id="@+id/leave_picker"
-                    android:theme="@style/AppTheme.Picker"
-                    android:layout_marginTop="16dp"/>
-                <TextView
-                    android:layout_height="wrap_content"
-                    android:layout_width="80dp"
-                    android:layout_alignTop="@id/leave_picker"
-                    android:layout_marginEnd="40dp"
-                    android:layout_toStartOf="@id/leave_picker"
-                    android:id="@+id/tv_newAtt"
-                    android:textColor="@android:color/white"
-                    android:text="100.0%"
-                    android:textSize="22sp"
-                    android:layout_marginTop="65dp"
-                    android:textAlignment="center"/>
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="10/11"
-                    android:textColor="@android:color/white"
-                    android:textSize="19sp"
-                    android:id="@+id/classRatio"
-                    android:layout_below="@id/tv_newAtt"
-                    android:layout_alignStart="@id/tv_newAtt"
-                    android:layout_alignEnd="@id/tv_newAtt"
-                    android:textAlignment="center"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Attend"
-                    android:textColor="@android:color/white"
-                    android:layout_alignStart="@id/leave_picker"
-                    android:layout_alignEnd="@id/leave_picker"
-                    android:textAlignment="center"
-                    android:id="@+id/tv_attend" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Bunk"
-                    android:textColor="@android:color/white"
-                    android:id="@+id/tv_bunk"
-                    android:layout_below="@id/leave_picker"
-                    android:layout_alignStart="@id/leave_picker"
-                    android:layout_alignEnd="@id/leave_picker"
-                    android:textAlignment="center"/>
-                <TextView
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:id="@+id/tv_lastUpdated"
-                    android:layout_below="@id/leave_picker"
-                    android:textColor="@android:color/white"
-                    android:textSize="10dp" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toEndOf="@id/leave_picker"
-                        android:textSize="12dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="35dp"
-                        android:id="@+id/jumpTo"
-                        android:background="@drawable/soft_corner_button_dark"
-                        android:textColor="@android:color/white"
-                        android:text="Apply\nChanges"/>
-
-            </RelativeLayout>
-        </LinearLayout>
-    </ScrollView>
     <android.support.v7.widget.Toolbar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/show_subject_toolbar"
         android:background="@color/colorPrimaryDark"
-        android:id="@+id/show_subject_toolbar">
-        <RelativeLayout
+        android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <RelativeLayout android:id="@+id/rv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-<<<<<<< HEAD
-            android:id="@+id/rv_title"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp">
             <TextView
@@ -252,47 +28,6 @@
                 android:textSize="23sp"
                 android:layout_alignParentStart="true"
                 android:textColor="@android:color/white"/>
-=======
-            android:text="Bunk"
-            android:textColor="@android:color/white"
-            android:id="@+id/tv_bunk"
-            android:layout_below="@id/leave_picker"
-            android:layout_alignStart="@id/leave_picker"
-            android:layout_alignEnd="@id/leave_picker"
-            android:textAlignment="center"/>
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:id="@+id/tv_lastUpdated"
-            android:layout_below="@id/leave_picker"
-            android:textColor="@android:color/white"
-            android:textSize="10dp" />
-        <FrameLayout
-            android:layout_toEndOf="@id/leave_picker"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_centerVertical="true"
-            android:id="@+id/jumpTo">
-
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:backgroundTint="@color/colorPrimaryDark"
-                android:background="@android:color/transparent"
-                app:elevation="0dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Jump"
-                android:elevation="13dp"
-                android:textColor="@android:color/white"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-        </FrameLayout>
-
->>>>>>> 4e2524eda4dcbd5f3b8243fbad5f7d76ac2504bd
-
             <TextView
                 android:text="Teacher"
                 android:layout_width="match_parent"
@@ -306,4 +41,49 @@
                 android:textColor="@android:color/white"/>
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
+    <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/show_subject_toolbar">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+        <RelativeLayout
+            android:background="@color/colorPrimary"
+            android:padding="14dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <TextView android:textSize="20sp" android:textColor="@android:color/white" android:id="@+id/subject_slot" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerHorizontal="true" />
+            <TextView android:textSize="20sp" android:textColor="@color/opac_transparent" android:id="@+id/tv_wed" android:layout_width="45dp" android:layout_height="30dp" android:layout_marginTop="20dp" android:text="Wed" android:layout_below="@id/subject_slot" android:layout_centerHorizontal="true" android:textAlignment="4" />
+            <TextView android:textSize="20sp" android:textColor="@color/opac_transparent" android:id="@+id/tv_tue" android:layout_width="45dp" android:layout_height="30dp" android:layout_marginTop="20dp" android:text="Tue" android:layout_below="@id/subject_slot" android:textAlignment="4" android:layout_marginStart="20dp" android:layout_marginEnd="20dp" android:layout_toStartOf="@id/tv_wed" />
+            <TextView android:textSize="20sp" android:textColor="@color/opac_transparent" android:id="@+id/tv_mon" android:layout_width="45dp" android:layout_height="30dp" android:layout_marginTop="20dp" android:text="Mon" android:layout_below="@id/subject_slot" android:textAlignment="4" android:layout_marginEnd="80dp" android:layout_toStartOf="@id/tv_wed" />
+            <TextView android:textSize="20sp" android:textColor="@color/opac_transparent" android:id="@+id/tv_thu" android:layout_width="45dp" android:layout_height="30dp" android:layout_marginTop="20dp" android:text="Thu" android:layout_below="@id/subject_slot" android:textAlignment="4" android:layout_marginStart="20dp" android:layout_toEndOf="@id/tv_wed" />
+            <TextView android:textSize="20sp" android:textColor="@color/opac_transparent" android:id="@+id/tv_fri" android:layout_width="45dp" android:layout_height="30dp" android:layout_marginTop="20dp" android:text="Fri" android:layout_below="@id/subject_slot" android:textAlignment="4" android:layout_marginStart="80dp" android:layout_toEndOf="@id/tv_wed" />
+        </RelativeLayout>
+        <RelativeLayout android:background="@color/descent_orange" android:layout_width="match_parent" android:layout_height="2dp" />
+        <HorizontalScrollView android:id="@+id/hsv_show_subject" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="80dp">
+            <LinearLayout android:orientation="horizontal" android:id="@+id/attTrackView" android:padding="15dp" android:layout_width="wrap_content" android:layout_height="match_parent" android:divider="@drawable/att_tracker_divider" android:showDividers="middle" />
+        </HorizontalScrollView>
+        <RelativeLayout android:id="@+id/attLayout" android:background="@color/colorPrimary" android:padding="14dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <NumberPicker android:theme="@style/AppTheme.Picker" android:id="@+id/leave_picker" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:layout_centerHorizontal="true" />
+            <TextView android:textSize="22sp" android:textColor="@android:color/white" android:id="@+id/tv_newAtt" android:layout_width="80dp" android:layout_height="wrap_content" android:layout_marginTop="65dp" android:text="100.0%" android:layout_alignTop="@id/leave_picker" android:textAlignment="4" android:layout_marginEnd="40dp" android:layout_toStartOf="@id/leave_picker" />
+            <TextView android:textSize="19sp" android:textColor="@android:color/white" android:id="@+id/classRatio" android:layout_width="80dp" android:layout_height="wrap_content" android:text="10/11" android:layout_below="@id/tv_newAtt" android:textAlignment="4" android:layout_alignStart="@id/tv_newAtt" android:layout_alignEnd="@id/tv_newAtt" />
+            <TextView android:textColor="@android:color/white" android:id="@+id/tv_attend" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Attend" android:textAlignment="4" android:layout_alignStart="@id/leave_picker" android:layout_alignEnd="@id/leave_picker" />
+            <TextView android:textColor="@android:color/white" android:id="@+id/tv_bunk" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bunk" android:layout_below="@id/leave_picker" android:textAlignment="4" android:layout_alignStart="@id/leave_picker" android:layout_alignEnd="@id/leave_picker" />
+            <TextView android:textSize="10dp" android:textColor="@android:color/white" android:id="@+id/tv_lastUpdated" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/leave_picker" />
+            <Button
+                android:textSize="12dp"
+                android:textColor="@android:color/white"
+                android:id="@+id/jumpTo"
+                android:background="@drawable/soft_corner_button_dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Apply\nChanges"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="35dp"
+                android:layout_toEndOf="@id/leave_picker" />
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>
+
+
+
 </RelativeLayout>
