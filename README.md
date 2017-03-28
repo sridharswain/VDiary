@@ -1,13 +1,14 @@
 # Zchedule
 
 <p>
-<image height="350", width="200" src="https://github.com/Sid25081998/VDiary/blob/master/1.png">
-<image height="350", width="200" src="https://github.com/Sid25081998/VDiary/blob/master/2.png">
-<image height="350", width="200" src="https://github.com/Sid25081998/VDiary/blob/master/3.png">
-<image height="350", width="200" src="https://github.com/Sid25081998/VDiary/blob/master/4.png">
-<image height="350", width="200" src="https://github.com/Sid25081998/VDiary/blob/master/5.png">
-<image height="350", width="200" src="https://github.com/Sid25081998/VDiary/blob/master/6.png">
+<image height="460", width="260" src="https://github.com/Sid25081998/VDiary/blob/master/1.png">
+<image height="460", width="260" src="https://github.com/Sid25081998/VDiary/blob/master/2.png">
+<image height="460", width="260" src="https://github.com/Sid25081998/VDiary/blob/master/3.png">
+<image height="460", width="260" src="https://github.com/Sid25081998/VDiary/blob/master/4.png">
+<image height="460", width="260" src="https://github.com/Sid25081998/VDiary/blob/master/5.png">
+<image height="460", width="260" src="https://github.com/Sid25081998/VDiary/blob/master/6.png">
 <\p>
+<br>
 This project is basically an android application.
 The app is aimed at automating the Vit university's student login to get the attendance and class occurance for each student once they are logged in.
 Features such as faculty tracking and custom to-do are implemented.
