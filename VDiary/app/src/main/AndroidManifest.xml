@@ -10,18 +10,18 @@
 
     <application
         android:allowBackup="true"
+        android:debuggable="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/MyAppBar"
-        android:debuggable="true">
+        android:theme="@style/MyAppBar">
         <activity
             android:name=".scrapper"
+            android:clearTaskOnLaunch="true"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:clearTaskOnLaunch="true"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".schedule"
             android:screenOrientation="portrait"
@@ -30,7 +30,7 @@
             android:name=".workSpace"
             android:screenOrientation="portrait"
             android:theme="@style/MyAppBar.Workspace"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <receiver android:name=".widget">
             <intent-filter>
@@ -92,12 +92,14 @@
         <activity
             android:name=".settings"
             android:screenOrientation="portrait"
-            android:theme="@style/MyAppBar"/>
+            android:theme="@style/MyAppBar" />
 
         <receiver
             android:name=".widgetServiceReceiver"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
+
+        <activity android:name=".SelectCampus"></activity>
     </application>
 
 </manifest>

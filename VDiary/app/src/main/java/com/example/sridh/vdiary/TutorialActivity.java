@@ -2,7 +2,6 @@ package com.example.sridh.vdiary;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.view.PagerAdapter;
@@ -75,7 +74,7 @@ public class TutorialActivity extends AppCompatActivity {
                     // move to next screen
                     viewPager.setCurrentItem(current);
                 } else {
-                    launchScrapper();
+                    launchCampusSelector();
                 }
             }
         });
@@ -130,9 +129,9 @@ public class TutorialActivity extends AppCompatActivity {
         return viewPager.getCurrentItem() + i;
     }
 
-    void launchScrapper(){
+    void launchCampusSelector(){
         setIsFirstLaunch();
-        startActivity(new Intent(TutorialActivity.this,scrapper.class));
+        startActivity(new Intent(TutorialActivity.this,SelectCampus.class));
         overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
         finish();
     }

@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -76,6 +77,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.example.sridh.vdiary.prefs.*;
 import static com.example.sridh.vdiary.scrapper.getcmd;
 import static com.example.sridh.vdiary.scrapper.toTitleCase;
+import static com.example.sridh.vdiary.vClass.MY_CAMPUS;
 
 
 public class workSpace extends AppCompatActivity {
@@ -142,10 +144,11 @@ public class workSpace extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         View rootView = getLayoutInflater().inflate(R.layout.activity_workspace,null);
         setContentView(rootView);
         setOnTouchListener(rootView,workSpace.this);
-        context = this;
+        vClass.MY_CAMPUS= prefs.get(context,prefs.campusUrl,vClass.CHENNAI_URL);
         vClass.getFonts(context);
         getDimensions();
         id = get(context,notificationIdentifier,1000);
@@ -232,7 +235,7 @@ public class workSpace extends AppCompatActivity {
             loadedAttView.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows['" + index + "'].cells[10].innerHTML"), new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String s) {
-                    String form= "<html><body><form method='POST' action='https://academicscc.vit.ac.in/student/attn_report_details.asp'>"+s.substring(1,s.length()-1).replace("\\u003C","<").replace("\\\"","").replace("\\u003E",">")+"</form></body></html>";
+                    String form= "<html><body><form method='POST' action='"+MY_CAMPUS+"student/attn_report_details.asp'>"+s.substring(1,s.length()-1).replace("\\u003C","<").replace("\\\"","").replace("\\u003E",">")+"</form></body></html>";
                     luFetchView.setWebViewClient(new lastUpdatedWebClient(index));
                     luFetchView.loadDataWithBaseURL(null, form, "text/html", "utf-8", null);
                 }
@@ -248,7 +251,6 @@ public class workSpace extends AppCompatActivity {
         }
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            super.onReceivedSslError(view, handler, error);
             handler.proceed();
         }
 
@@ -346,7 +348,7 @@ public class workSpace extends AppCompatActivity {
         loginWebView.getSettings().setDomStorageEnabled(true);
         loginWebView.getSettings().setJavaScriptEnabled(true);
         loginWebView.setWebViewClient(new loginClient());
-        loginWebView.loadUrl("https://academicscc.vit.ac.in/student/stud_login.asp");
+        loginWebView.loadUrl(MY_CAMPUS+"student/stud_login.asp");
         attWebView = new WebView(context);
         attWebView.getSettings().setDomStorageEnabled(true);
         attWebView.getSettings().setJavaScriptEnabled(true);
@@ -359,7 +361,7 @@ public class workSpace extends AppCompatActivity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            if (url.equals("https://academicscc.vit.ac.in/student/home.asp")) {
+            if (url.equals(MY_CAMPUS+"student/home.asp")) {
                 loggedIn = true;
                 new waitForLogIn().execute();
                 loginWebView.stopLoading();
@@ -367,7 +369,7 @@ public class workSpace extends AppCompatActivity {
         }
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            super.onReceivedSslError(view,handler,error);
+
             handler.proceed();
         }
         @Override
@@ -375,12 +377,13 @@ public class workSpace extends AppCompatActivity {
             super.onPageFinished(view,url);
             Log.d("webviewTitle",loginWebView.getTitle());
             if(!loggedIn) {
-                if(!webNotConnected(loginWebView.getTitle()) && loginWebView.getUrl().equals("https://academicscc.vit.ac.in/student/stud_login.asp")) {
+                if(!webNotConnected(loginWebView.getTitle()) && loginWebView.getUrl().equals(MY_CAMPUS+"student/stud_login.asp")) {
                     loginWebView.evaluateJavascript(getcmd("return document.getElementsByName(\"message\")[0].value"), new ValueCallback<String>() {
                         @Override
                         public void onReceiveValue(String message) {
                             if (!message.equals("\"\"") && !message.equals("null")) {
                                 //Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context,"Sync Failed!\nLogin again",Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -432,7 +435,7 @@ public class workSpace extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             try {
                 scheduleWebView.setWebViewClient(new scheduleClient());
-                scheduleWebView.loadUrl("https://academicscc.vit.ac.in/student/course_regular.asp?sem=" + vClass.SEM);
+                scheduleWebView.loadUrl(MY_CAMPUS+"student/course_regular.asp?sem=" + vClass.SEM);
                 super.onPostExecute(aVoid);
             }
             catch (Exception e){
@@ -448,7 +451,7 @@ public class workSpace extends AppCompatActivity {
             Log.d("Status",url);
             courses.clear();
             scheduleList.clear();
-            if (scheduleWebView.getUrl().equals("https://academicscc.vit.ac.in/student/course_regular.asp?sem=" + vClass.SEM)) {
+            if (scheduleWebView.getUrl().equals(MY_CAMPUS+"student/course_regular.asp?sem=" + vClass.SEM)) {
                 getFromTable1();
                 calculateTable2();
             }
@@ -459,7 +462,7 @@ public class workSpace extends AppCompatActivity {
 
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            super.onReceivedSslError(view, handler, error);
+            
             handler.proceed();
         }
     } // WEBVIEWCLIENT TO GET THE SCHEDULE
@@ -652,7 +655,7 @@ public class workSpace extends AppCompatActivity {
                                                     });
                                                     if (row == 6 && cell == cols - 1) {
                                                         attWebView.setWebViewClient(new attendanceClient());
-                                                        attWebView.loadUrl("https://academicscc.vit.ac.in/student/attn_report.asp?sem=" + vClass.SEM);
+                                                        attWebView.loadUrl(MY_CAMPUS+"student/attn_report.asp?sem=" + vClass.SEM);
                                                     }
                                                 }
                                             });
@@ -671,7 +674,7 @@ public class workSpace extends AppCompatActivity {
     private class attendanceClient extends WebViewClient{
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            super.onReceivedSslError(view, handler, error);
+            
             handler.proceed();
         }
 
@@ -684,7 +687,7 @@ public class workSpace extends AppCompatActivity {
     } //WEBVIEWCLIENT TO GET ATTENDANCE
 
     private void getAttendance() {
-        if (attWebView.getUrl().equals("https://academicscc.vit.ac.in/student/attn_report.asp?sem="+vClass.SEM)) {
+        if (attWebView.getUrl().equals(MY_CAMPUS+"student/attn_report.asp?sem="+vClass.SEM)) {
             attWebView.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[2].cells[2].innerText"), new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String value) {
@@ -701,7 +704,7 @@ public class workSpace extends AppCompatActivity {
                                         @Override
                                         public void onReceiveValue(String value) {
                                             vClass.fat = trim(value);
-                                            attWebView.loadUrl("https://academicscc.vit.ac.in/student/attn_report.asp?sem="+vClass.SEM+"&fmdt=" + vClass.semStart + "&todt=" + vClass.fat);
+                                            attWebView.loadUrl(MY_CAMPUS+"student/attn_report.asp?sem="+vClass.SEM+"&fmdt=" + vClass.semStart + "&todt=" + vClass.fat);
                                         }
                                     });
                                 }
@@ -711,7 +714,7 @@ public class workSpace extends AppCompatActivity {
                 }
             });
         }
-        else if(attWebView.getUrl().toLowerCase().equals(("https://academicscc.vit.ac.in/student/attn_report.asp?sem="+vClass.SEM + "&fmdt=" + vClass.semStart + "&todt=" + vClass.fat).toLowerCase())){
+        else if(attWebView.getUrl().toLowerCase().equals((MY_CAMPUS+"student/attn_report.asp?sem="+vClass.SEM + "&fmdt=" + vClass.semStart + "&todt=" + vClass.fat).toLowerCase())){
             attWebView.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows.length"), new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String value) {
@@ -1009,7 +1012,7 @@ public class workSpace extends AppCompatActivity {
                         catch (Exception E){
                             //DO NOTHING...
                         }
-                        context.startActivity(new Intent(context, scrapper.class));
+                        context.startActivity(new Intent(context, SelectCampus.class));
                         activity.overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
                         activity.finish();
                         try {

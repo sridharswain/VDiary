@@ -111,7 +111,7 @@ class vClass {
 
     //PARAMETERS FOR CHANGING THE LINKS
     public static String SEM = "WS";
-    public static String VERSION= "Release 1.0";
+    public static String VERSION= "Release 1.2";
 
     public static boolean isSyncedThisSession=false;
 
@@ -124,6 +124,11 @@ class vClass {
         nunito_Extrabold=Typeface.createFromAsset(context.getAssets(),"fonts/Nunito-ExtraBold.ttf");
         nunito_reg = Typeface.createFromAsset(context.getAssets(), "fonts/Nunito-Regular.ttf");
     }
+
+    public static String CHENNAI_URL = "https://academicscc.vit.ac.in/";
+    public static String VELLORE_URL = "https://vtop.vit.ac.in/";
+
+    public static String MY_CAMPUS="";
 
     public static String autoCaptchaCommand="var keys = {\n" +
             "    \"0\": [\n" +

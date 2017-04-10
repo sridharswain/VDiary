@@ -10,9 +10,9 @@ import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -31,11 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.DataSnapshot;
 import com.google.gson.Gson;
 
 
@@ -47,8 +42,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static com.example.sridh.vdiary.prefs.*;
 
-import static com.example.sridh.vdiary.prefs.holidays;
-import static com.example.sridh.vdiary.prefs.teachers;
+import static com.example.sridh.vdiary.vClass.MY_CAMPUS;
 
 
 public class scrapper extends AppCompatActivity {
@@ -90,15 +84,9 @@ public class scrapper extends AppCompatActivity {
     }
 
     public void start() {
-        if(readFromPrefs(context)){
-            context.startActivity(new Intent(this, workSpace.class));
-            ((Activity)context).overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
-            finalise();
-        }
-        else{
-            setUp();
-            initWebViews();
-        }
+        setUp();
+        vClass.MY_CAMPUS= prefs.get(context,prefs.campusUrl,vClass.CHENNAI_URL);
+        initWebViews();
     } //STARTS THE PROCESSING OF SCRAPPING
 
     private class loginClient extends WebViewClient{
@@ -106,7 +94,7 @@ public class scrapper extends AppCompatActivity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            if(url.equals("https://academicscc.vit.ac.in/student/home.asp")){
+            if(url.equals(MY_CAMPUS+"student/home.asp")){
                 loggedIn=true;
                 new waitForLogIn().execute();
                 loginWebView.stopLoading();
@@ -117,7 +105,8 @@ public class scrapper extends AppCompatActivity {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view,url);
             if(!loggedIn) {
-                if(!webNotConnected(loginWebView.getTitle()) &&loginWebView.getUrl().equals("https://academicscc.vit.ac.in/student/stud_login.asp")) {
+                Log.d("Cke",view.getUrl());
+                if(!webNotConnected(loginWebView.getTitle()) &&loginWebView.getUrl().equals(MY_CAMPUS+"student/stud_login.asp")) {
                     loginWebView.evaluateJavascript(getcmd("return document.getElementsByName(\"message\")[0].value"), new ValueCallback<String>() {
                         @Override
                         public void onReceiveValue(String message) {
@@ -154,7 +143,7 @@ public class scrapper extends AppCompatActivity {
 
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            super.onReceivedSslError(view,handler,error);
+
             handler.proceed();
         }
 
@@ -175,7 +164,7 @@ public class scrapper extends AppCompatActivity {
             super.onPageFinished(view, url);
                 courses.clear();
                 scheduleList.clear();
-                if (!webNotConnected(scheduleWebView.getUrl()) && scheduleWebView.getUrl().equals("https://academicscc.vit.ac.in/student/course_regular.asp?sem=" + vClass.SEM)) {
+                if (!webNotConnected(scheduleWebView.getUrl()) && scheduleWebView.getUrl().equals(MY_CAMPUS+"student/course_regular.asp?sem=" + vClass.SEM)) {
                     getFormTable1();
                     calculateTable2();
                 }
@@ -230,7 +219,7 @@ public class scrapper extends AppCompatActivity {
 
     private void setUp(){
         setContentView(R.layout.activity_login);
-        vClass.setStatusBar(getWindow(),getApplicationContext(),R.color.taskbar_orange);
+        vClass.setStatusBar(getWindow(),context,R.color.taskbar_orange);
         vClass.getFonts(this);
         tip =(TextView)findViewById(R.id.status);
         tip.setTypeface(vClass.nunito_reg);
@@ -252,7 +241,7 @@ public class scrapper extends AppCompatActivity {
             public void onClick(View view) {
                 tip.setText(getTip());
                 loginWebView.setWebViewClient(new loginClient());
-                loginWebView.loadUrl("https://academicscc.vit.ac.in/student/stud_login.asp");
+                loginWebView.loadUrl(MY_CAMPUS+"student/stud_login.asp");
                 reload.setVisibility(View.INVISIBLE);
                 pb_loading.setVisibility(View.VISIBLE);
                 loggedIn = false;
@@ -263,7 +252,7 @@ public class scrapper extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loginWebView.loadUrl("https://academicscc.vit.ac.in/student/stud_login.asp");
+                loginWebView.loadUrl(MY_CAMPUS+"student/stud_login.asp");
                 hideSoftKeyboard(scrapper.this);
                 load(true);
                 if(cb.isChecked()) saveCreds();
@@ -527,7 +516,7 @@ public class scrapper extends AppCompatActivity {
                                                             });
                                                             if (row == 6 && cell == cols - 1) {
                                                                 attWebView.setWebViewClient(new attendanceClient());
-                                                                attWebView.loadUrl("https://academicscc.vit.ac.in/student/attn_report.asp?sem=" + vClass.SEM);
+                                                                attWebView.loadUrl(MY_CAMPUS+"student/attn_report.asp?sem=" + vClass.SEM);
                                                             }
                                                         }
                                                     });
@@ -544,7 +533,7 @@ public class scrapper extends AppCompatActivity {
     } // GET DATA FROM TIME TABLE
 
     private void getAttendance() {
-        if (attWebView.getUrl().equals("https://academicscc.vit.ac.in/student/attn_report.asp?sem="+vClass.SEM)) {
+        if (attWebView.getUrl().equals(MY_CAMPUS+"student/attn_report.asp?sem="+vClass.SEM)) {
             attWebView.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows[2].cells[2].innerText"), new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String value) {
@@ -561,7 +550,7 @@ public class scrapper extends AppCompatActivity {
                                         @Override
                                         public void onReceiveValue(String value) {
                                             vClass.fat = trim(value);
-                                            attWebView.loadUrl("https://academicscc.vit.ac.in/student/attn_report.asp?sem="+vClass.SEM+"&fmdt=" + vClass.semStart + "&todt=" + vClass.fat);
+                                            attWebView.loadUrl(MY_CAMPUS+"student/attn_report.asp?sem="+vClass.SEM+"&fmdt=" + vClass.semStart + "&todt=" + vClass.fat);
                                         }
                                     });
                                 }
@@ -571,7 +560,7 @@ public class scrapper extends AppCompatActivity {
                 }
             });
         }
-        else if(attWebView.getUrl().toLowerCase().equals(("https://academicscc.vit.ac.in/student/attn_report.asp?sem="+vClass.SEM + "&fmdt=" + vClass.semStart + "&todt=" + vClass.fat).toLowerCase())){
+        else if(attWebView.getUrl().toLowerCase().equals((MY_CAMPUS+"student/attn_report.asp?sem="+vClass.SEM + "&fmdt=" + vClass.semStart + "&todt=" + vClass.fat).toLowerCase())){
             attWebView.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows.length"), new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String value) {
@@ -732,7 +721,7 @@ public class scrapper extends AppCompatActivity {
         updateWidget();
     } //WRITE ACADEMIC CONTENT TO SHARED PREFERENCES
 
-    boolean readFromPrefs(Context context){
+    public static boolean readFromPrefs(Context context){
         String allSubJson = get(context,allSub,null); //academicPrefs.getString("allSub",null);
         String scheduleJson = get(context,schedule,null);//academicPrefs.getString("schedule",null);
         if(allSubJson!=null && scheduleJson!=null){
@@ -825,7 +814,7 @@ public class scrapper extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            scheduleWebView.loadUrl("https://academicscc.vit.ac.in/student/course_regular.asp?sem="+vClass.SEM);
+            scheduleWebView.loadUrl(MY_CAMPUS+"student/course_regular.asp?sem="+vClass.SEM);
             super.onPostExecute(aVoid);
         }
     }
