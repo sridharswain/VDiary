@@ -58,6 +58,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.util.ExceptionCatchingInputStream;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -126,6 +127,9 @@ public class workSpace extends AppCompatActivity {
 
     public static TextView currentShowSubjectTextView=null;
     public static int currentShowing = -1;
+
+    public static showSubject currentInView=null;
+
 
     @Override
     public void onBackPressed() {
@@ -268,16 +272,21 @@ public class workSpace extends AppCompatActivity {
                             view.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[2].rows['" + (Integer.parseInt(length) - 1) + "'].cells[1].innerText"), new ValueCallback<String>() {
                                 @Override
                                 public void onReceiveValue(String s) {
-                                    vClass.subList.get(index - 1).lastUpdated = trim(s);
                                     try {
-                                        if (currentShowing == index - 1) {
-                                            currentShowSubjectTextView.setText("Last Uploaded: " + vClass.subList.get(index - 1).lastUpdated);
+                                        vClass.subList.get(index - 1).lastUpdated = trim(s);
+                                        try {
+                                            if (currentShowing == index - 1) {
+                                                currentShowSubjectTextView.setText("Last Uploaded: " + vClass.subList.get(index - 1).lastUpdated);
+                                            }
+                                        } catch (Exception e) {
+                                            //DO NOTHING
                                         }
-                                    } catch (Exception e) {
-                                        //DO NOTHING
+                                        Log.d("last Updated", s);
+                                        getAllAttInf(2, view, vClass.subList.get(index - 1).attTrack, Integer.parseInt(length), index);
+                                    }catch (Exception e){
+                                        //USER LOGGEDOUT
+                                        return;
                                     }
-                                    Log.d("last Updated", s);
-                                    getAllAttInf(2,view,vClass.subList.get(index-1).attTrack,Integer.parseInt(length),index);
                                 }
                             });
                         }
@@ -290,14 +299,16 @@ public class workSpace extends AppCompatActivity {
     void getAllAttInf(final int index, final WebView webView, final List<subjectDay> attTrack, final int dayLength,final int x) {
         if (index == dayLength) {
             getlastDayUpdated(x+1);
-            try{
-                if(currentShowing!=-1){
-                    showSubject.getAttendanceTracker(getApplicationContext());
+            if(currentShowing==x-1){
+                try {
+                    currentInView.finish();
+                    Intent showSubjectIntent = new Intent(context, showSubject.class);
+                    showSubjectIntent.putExtra("position", currentShowing);
+                    startActivity(showSubjectIntent);
                 }
-            }
-            catch (Exception e){
-                Log.e("Err0r",e.getMessage());
-                //NO SUBJECT CLICKED
+                catch(Exception e){
+                    //SHOWSUBJECT NULL POINTER
+                }
             }
             put(context, allSub, (new Gson()).toJson(vClass.subList));
             return;
@@ -323,6 +334,11 @@ public class workSpace extends AppCompatActivity {
     private void initWebViews(){
         pb_syncing.setVisibility(View.VISIBLE);
         action_sync.setVisibility(View.GONE);
+        attList = new ArrayList<>();
+        ctdList = new ArrayList<>();
+        attendedList = new ArrayList<>();
+        courses = new ArrayList<>();
+        scheduleList = new ArrayList<>();
         loginWebView =new WebView(context);
         scheduleWebView =new WebView(context);
         scheduleWebView.getSettings().setDomStorageEnabled(true);
@@ -334,7 +350,9 @@ public class workSpace extends AppCompatActivity {
         attWebView = new WebView(context);
         attWebView.getSettings().setDomStorageEnabled(true);
         attWebView.getSettings().setJavaScriptEnabled(true);
+
     } //INITIALIZE THE WEBVIEWS AND LAST LOADING THE LOGIN PAGE
+
 
     private class loginClient extends WebViewClient {
 
@@ -431,7 +449,7 @@ public class workSpace extends AppCompatActivity {
             courses.clear();
             scheduleList.clear();
             if (scheduleWebView.getUrl().equals("https://academicscc.vit.ac.in/student/course_regular.asp?sem=" + vClass.SEM)) {
-                getFormTable1();
+                getFromTable1();
                 calculateTable2();
             }
             else if(loggedIn) {
@@ -446,7 +464,7 @@ public class workSpace extends AppCompatActivity {
         }
     } // WEBVIEWCLIENT TO GET THE SCHEDULE
 
-    private void getFormTable1(){
+    private void getFromTable1(){
         scheduleWebView.evaluateJavascript(getcmd("var rows=document.getElementsByTagName('table')[1].rows;var c;for(c=0;c<rows.length;c++){if(rows[c].cells.length==15){rows[c].deleteCell(0)}}"), new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
@@ -793,7 +811,12 @@ public class workSpace extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            courseAdapter.update(vClass.subList);
+            try {
+                courseAdapter.update(vClass.subList);
+            }
+            catch (Exception e){
+                //COURSE ADAPTER NIT YET READY
+            }
             refreshing=false;
             vClass.isSyncedThisSession=true;
         }
@@ -1075,9 +1098,9 @@ public class workSpace extends AppCompatActivity {
                     lview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            workSpace.currentShowing=position;
                             Intent showSubjectIntent = new Intent(context, showSubject.class);
                             showSubjectIntent.putExtra("position", position);
-                            workSpace.currentShowing=position;
                             startActivity(showSubjectIntent);
                         }
                     });

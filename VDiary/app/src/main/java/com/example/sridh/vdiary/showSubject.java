@@ -37,8 +37,8 @@ public class showSubject extends AppCompatActivity {
     Typeface nunito_bold, nunito_reg;
     HorizontalScrollView hsv;
 
-    static LinearLayout attTracker;
-    static List<subjectDay> attTrack;
+    LinearLayout attTracker;
+    List<subjectDay> attTrack;
     ArrayList<Integer> occurrence;
 
     double class_att,tempClassAtt,tempTotalClass;
@@ -57,6 +57,7 @@ public class showSubject extends AppCompatActivity {
         if (clicked.type.equals("ELA") || clicked.type.equals("LO")) toMul=2;
         new Async_search(position).execute();
         vClass.setStatusBar(getWindow(),getApplicationContext(),R.color.colorPrimaryDark);
+        workSpace.currentInView= this;
     }
 
     void show(subject sub) {
@@ -107,6 +108,7 @@ public class showSubject extends AppCompatActivity {
         jump.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                lastPicked=0;
                 leave.setValue(50);
                 class_att=tempClassAtt;
                 noofdays=(int)tempTotalClass;
@@ -254,7 +256,8 @@ public class showSubject extends AppCompatActivity {
         return array;
     }  //RETURN THE ARRAY OF NUMBERS TO SHOWN IN THE NUMBER PICKER
 
-    static void getAttendanceTracker(Context context){
+    void getAttendanceTracker(Context context){
+        attTracker.removeAllViews();
         for(int i=0;i<attTrack.size();i++){
             View point = getPresentState(attTrack.get(i),context,null);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);

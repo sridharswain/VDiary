@@ -80,7 +80,12 @@ class holiday{
         done_notdone=false;
     }
 }
-public class vClass {
+
+class assignment{
+
+}
+
+class vClass {
     public static List<subject> subList = new ArrayList<>();
     public static List<List<subject>> timeTable = new ArrayList<>();
     public static String semStart;
