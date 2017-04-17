@@ -74,7 +74,7 @@ public class TutorialActivity extends AppCompatActivity {
                     // move to next screen
                     viewPager.setCurrentItem(current);
                 } else {
-                    launchCampusSelector();
+                    toLogin();
                 }
             }
         });
@@ -129,9 +129,9 @@ public class TutorialActivity extends AppCompatActivity {
         return viewPager.getCurrentItem() + i;
     }
 
-    void launchCampusSelector(){
+    void toLogin(){
         setIsFirstLaunch();
-        startActivity(new Intent(TutorialActivity.this,SelectCampus.class));
+        startActivity(new Intent(TutorialActivity.this,scrapper.class));
         overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
         finish();
     }

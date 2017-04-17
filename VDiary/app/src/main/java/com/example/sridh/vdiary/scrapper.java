@@ -85,7 +85,6 @@ public class scrapper extends AppCompatActivity {
 
     public void start() {
         setUp();
-        vClass.MY_CAMPUS= prefs.get(context,prefs.campusUrl,vClass.CHENNAI_URL);
         initWebViews();
     } //STARTS THE PROCESSING OF SCRAPPING
 

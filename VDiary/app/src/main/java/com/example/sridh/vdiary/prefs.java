@@ -29,7 +29,6 @@ public class prefs {
     public static String tipid="tipId";
     public static String scheduleNotificationCount="notificationCount";
     public static String avgAttendance="avgAttendance";
-    public static String campusUrl = "campusUrl";
 
     //SHARED PREFERENCES INSTANCE OF THE APP
     public static SharedPreferences getPrefsInstance(Context context){

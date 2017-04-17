@@ -112,7 +112,7 @@ public class workSpace extends AppCompatActivity {
     static WebView loadedAttView;
     WebView luFetchView;
     static int rowsInAtt;
-    boolean loggedIn=false;
+    public static boolean loggedIn=false;
     boolean isLoaded = true;
     List<String> attList = new ArrayList<>();
     List<String> ctdList = new ArrayList<>();
@@ -132,6 +132,8 @@ public class workSpace extends AppCompatActivity {
 
     public static showSubject currentInView=null;
 
+    boolean isPasswordChanged=false;
+
 
     @Override
     public void onBackPressed() {
@@ -148,7 +150,6 @@ public class workSpace extends AppCompatActivity {
         View rootView = getLayoutInflater().inflate(R.layout.activity_workspace,null);
         setContentView(rootView);
         setOnTouchListener(rootView,workSpace.this);
-        vClass.MY_CAMPUS= prefs.get(context,prefs.campusUrl,vClass.CHENNAI_URL);
         vClass.getFonts(context);
         getDimensions();
         id = get(context,notificationIdentifier,1000);
@@ -225,11 +226,12 @@ public class workSpace extends AppCompatActivity {
 
     void getlastDayUpdated(final int index){
         if(index>=rowsInAtt) {
-            pb_syncing.setVisibility(View.GONE);
-            action_sync.setVisibility(View.VISIBLE);
-            Toast.makeText(context,"Synced",Toast.LENGTH_SHORT).show();
-            put(context, allSub, (new Gson()).toJson(vClass.subList));
-            return;
+            if(get(context,isLoggedIn,true)) {
+                pb_syncing.setVisibility(View.GONE);
+                action_sync.setVisibility(View.VISIBLE);
+                Toast.makeText(context, "Synced", Toast.LENGTH_SHORT).show();  //TODO
+                put(context, allSub, (new Gson()).toJson(vClass.subList));
+            }
         }
         else{
             loadedAttView.evaluateJavascript(getcmd("return document.getElementsByTagName('table')[4].rows['" + index + "'].cells[10].innerHTML"), new ValueCallback<String>() {
@@ -361,9 +363,19 @@ public class workSpace extends AppCompatActivity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            if (url.equals(MY_CAMPUS+"student/home.asp")) {
-                loggedIn = true;
-                new waitForLogIn().execute();
+            if(!isPasswordChanged) {
+                if (url.equals(MY_CAMPUS + "student/home.asp")) {
+                    loggedIn = true;
+                    new waitForLogIn().execute();
+                    Log.d("Logged In", "Logged IN");
+                    loginWebView.stopLoading();
+                }
+            }
+            else{
+                refreshing=false;
+                pb_syncing.setVisibility(View.GONE);
+                action_sync.setVisibility(View.VISIBLE);
+                Toast.makeText(context, "Password was Changed!\nLogin again", 5000).show();
                 loginWebView.stopLoading();
             }
         }
@@ -377,13 +389,15 @@ public class workSpace extends AppCompatActivity {
             super.onPageFinished(view,url);
             Log.d("webviewTitle",loginWebView.getTitle());
             if(!loggedIn) {
+                if(!isPasswordChanged){
                 if(!webNotConnected(loginWebView.getTitle()) && loginWebView.getUrl().equals(MY_CAMPUS+"student/stud_login.asp")) {
                     loginWebView.evaluateJavascript(getcmd("return document.getElementsByName(\"message\")[0].value"), new ValueCallback<String>() {
                         @Override
                         public void onReceiveValue(String message) {
                             if (!message.equals("\"\"") && !message.equals("null")) {
                                 //Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                                Toast.makeText(context,"Sync Failed!\nLogin again",Toast.LENGTH_LONG).show();
+                                isPasswordChanged = true;
+
                             }
                         }
                     });
@@ -391,11 +405,11 @@ public class workSpace extends AppCompatActivity {
                     loginWebView.evaluateJavascript(getcmd(vClass.autoCaptchaCommand), new ValueCallback<String>() {
                         @Override
                         public void onReceiveValue(String captchaString) {
-                            Log.d("Status","Captcha Added");
+                            Log.d("Status", "Captcha Added");
                             //setCaptcha(captchaString); //CAPTCHA ADDED
-                            String reg= get(context,regNo,null);
-                            String pass=get(context,password,null);
-                            String input="document.getElementsByName(\"regno\")[0].value=\""+reg+"\"; document.getElementsByName(\"passwd\")[0].value=\""+pass+"\"; document.forms[0].submit();";
+                            String reg = get(context, regNo, null);
+                            String pass = get(context, password, null);
+                            String input = "document.getElementsByName(\"regno\")[0].value=\"" + reg + "\"; document.getElementsByName(\"passwd\")[0].value=\"" + pass + "\"; document.forms[0].submit();";
                             loginWebView.evaluateJavascript(getcmd(input), new ValueCallback<String>() {
                                 @Override
                                 public void onReceiveValue(String value) {
@@ -404,6 +418,7 @@ public class workSpace extends AppCompatActivity {
                             });
                         }
                     });
+                }
                 }
             }
         }
@@ -1012,7 +1027,10 @@ public class workSpace extends AppCompatActivity {
                         catch (Exception E){
                             //DO NOTHING...
                         }
-                        context.startActivity(new Intent(context, SelectCampus.class));
+                        currentShowing=-1;
+                        currentInView=null;
+                        currentShowSubjectTextView=null;
+                        context.startActivity(new Intent(context, scrapper.class));
                         activity.overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
                         activity.finish();
                         try {

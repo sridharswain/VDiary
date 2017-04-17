@@ -128,7 +128,7 @@ class vClass {
     public static String CHENNAI_URL = "https://academicscc.vit.ac.in/";
     public static String VELLORE_URL = "https://vtop.vit.ac.in/";
 
-    public static String MY_CAMPUS="";
+    public static String MY_CAMPUS="https://academicscc.vit.ac.in/";
 
     public static String autoCaptchaCommand="var keys = {\n" +
             "    \"0\": [\n" +

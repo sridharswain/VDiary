@@ -1,5 +1,6 @@
 package com.example.sridh.vdiary;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +21,15 @@ public class splashScreen extends AppCompatActivity {
                     startActivity(new Intent(splashScreen.this,TutorialActivity.class));
                 }
                 else {
-                 startActivity(new Intent(splashScreen.this, SelectCampus.class));
-                 overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+                    if(scrapper.readFromPrefs(getApplicationContext())){
+                        startActivity(new Intent(splashScreen.this, workSpace.class));
+                        overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_up);
+                        finish();
+                    }
+                    else {
+                        startActivity(new Intent(splashScreen.this, scrapper.class));
+                        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+                    }
                 }
             }
         },500);
