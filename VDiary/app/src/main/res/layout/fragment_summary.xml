@@ -25,28 +25,7 @@
             android:textSize="15sp"/>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_above="@id/rl_setting"
-        android:id="@+id/rl_share"
-        android:layout_marginBottom="10dp">
-        <ImageView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/ic_share"
-            android:id="@+id/iv_share"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Share"
-            android:textSize="20sp"
-            android:layout_centerVertical="true"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_marginStart="7dp"
-            android:id="@+id/tv_share"
-            android:layout_toEndOf="@id/iv_share"/>
-    </RelativeLayout>
+
 
 
 
@@ -116,6 +95,29 @@
             android:textColor="@color/colorPrimaryDark"
             android:layout_marginStart="7dp"
             android:id="@+id/tv_setting"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_above="@id/rl_setting"
+        android:id="@+id/rl_share"
+        android:layout_marginBottom="10dp">
+        <ImageView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_share"
+            android:id="@+id/iv_share"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Share"
+            android:textSize="20sp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginStart="7dp"
+            android:id="@+id/tv_share"
+            android:layout_toEndOf="@id/iv_share"/>
     </RelativeLayout>
 
 </RelativeLayout>

@@ -229,7 +229,7 @@ public class workSpace extends AppCompatActivity {
             if(get(context,isLoggedIn,true)) {
                 pb_syncing.setVisibility(View.GONE);
                 action_sync.setVisibility(View.VISIBLE);
-                Toast.makeText(context, "Synced", Toast.LENGTH_SHORT).show();  //TODO
+                Toast.makeText(context, "Synced", Toast.LENGTH_SHORT).show();
                 put(context, allSub, (new Gson()).toJson(vClass.subList));
             }
         }
@@ -1310,6 +1310,15 @@ public class workSpace extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     //  TODO :: ADD THE WHATSAPP SHARING CODE HERE
+                    Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+                    whatsappIntent.setType("text/plain");
+                    whatsappIntent.setPackage("com.whatsapp");
+                    whatsappIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.fourthstatelabs.zchedule&hl=en");
+                    try {
+                        context.startActivity(whatsappIntent);
+                    } catch (android.content.ActivityNotFoundException ex) {
+                        Toast.makeText(context, "Whatsapp is not installed", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
