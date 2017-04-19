@@ -375,7 +375,7 @@ public class workSpace extends AppCompatActivity {
                 refreshing=false;
                 pb_syncing.setVisibility(View.GONE);
                 action_sync.setVisibility(View.VISIBLE);
-                Toast.makeText(context, "Password was Changed!\nLogin again", 5000).show();
+                Toast.makeText(context, "Password was Changed!\nLogin again", Toast.LENGTH_LONG).show();
                 loginWebView.stopLoading();
             }
         }
@@ -1302,6 +1302,17 @@ public class workSpace extends AppCompatActivity {
                     startActivity(new Intent(context,settings.class));
                 }
             });
+
+            RelativeLayout shareButt = (RelativeLayout)rootViewSummary.findViewById(R.id.rl_share);
+            TextView shareText = (TextView)rootViewSummary.findViewById(R.id.tv_share);
+            shareText.setTypeface(vClass.nunito_reg);
+            shareButt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //  TODO :: ADD THE WHATSAPP SHARING CODE HERE
+                }
+            });
+
             return rootViewSummary;
         }
         public void schedule_todo_notification(Notification_Holder n) {
