@@ -39,7 +39,7 @@ public class Notification_Creator {
                 .setTicker(ticker);
         Calendar c=Calendar.getInstance();
         Log.d("noti",title+c.get(Calendar.DAY_OF_WEEK)+" "+c.get(Calendar.HOUR_OF_DAY)+" "+c.get(Calendar.MINUTE));
-        Intent newIntent=new Intent(context,scrapper.class);
+        Intent newIntent=new Intent(context,splashScreen.class);
         pintent= PendingIntent.getActivity(context, (int) System.currentTimeMillis(),newIntent,PendingIntent.FLAG_UPDATE_CURRENT);
         notibuilder.setContentIntent(pintent);
         notibuilder.setAutoCancel(true);
@@ -48,7 +48,7 @@ public class Notification_Creator {
 
         Vibrator vib=(Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
         if(vib.hasVibrator()) {
-            vib.vibrate(1000);
+            vib.vibrate(600);
         }
     }
 }

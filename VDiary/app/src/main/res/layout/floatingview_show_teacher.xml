@@ -10,13 +10,22 @@
     android:background="@color/colorPrimaryDark"
     android:id="@+id/rv_show_teacher_top"
     android:padding="16dp">
+    <ImageButton
+        android:layout_alignParentEnd="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_close"
+        android:id="@+id/alert_close"/>
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:id="@+id/show_teacher_name"
         android:textColor="@android:color/white"
         android:textSize="20sp"
-        android:textStyle="normal|bold" />
+        android:textStyle="normal|bold"
+        android:layout_toStartOf="@id/alert_close"
+        android:layout_marginEnd="7dp"/>
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -26,6 +35,7 @@
         android:textSize="20sp"
         android:textStyle="normal"
         android:layout_marginTop="16dp"/>
+
     </RelativeLayout>
 
     <RelativeLayout

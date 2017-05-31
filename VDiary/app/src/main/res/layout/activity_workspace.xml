@@ -17,7 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:paddingTop="@dimen/appbar_padding_top"
-        android:theme="@style/MyAppBar"
         android:background="@drawable/background_toolbar"
         app:elevation="0dp">
 

@@ -1,6 +1,7 @@
 package com.example.sridh.vdiary;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
@@ -10,7 +11,9 @@ import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -81,8 +84,42 @@ class holiday{
     }
 }
 
-class assignment{
+class themeProperty{
+    public int colorPrimaryDark;
+    public int colorPrimary;
+    public int colorAccent;
+    public int theme;
 
+    //TODO GENERATE THE THEME COLORS AND ADD THEM HERE
+    public themeProperty(Theme theme){
+        switch (theme){
+            case blue:
+                colorPrimaryDark=R.color.colorPrimaryDarkBlue;
+                colorPrimary=R.color.colorPrimaryBlue;
+                colorAccent=R.color.colorAccentBlue;
+                this.theme=R.style.AppTheme_Blue;
+                break;
+            case teal:
+                colorPrimaryDark=R.color.colorPrimaryDarkTeal;
+                colorPrimary=R.color.colorPrimaryTeal;
+                colorAccent=R.color.colorAccentTeal;
+                this.theme=R.style.AppTheme_Teal;
+                break;
+            case red:
+                colorPrimaryDark=R.color.colorPrimaryDarkRed;
+                colorPrimary=R.color.colorPrimaryRed;
+                colorAccent=R.color.colorAccentRed;
+                this.theme=R.style.AppTheme;
+                break;
+        }
+    }
+}
+
+enum Theme{
+    teal,
+    red,
+    yellow,
+    blue,
 }
 
 class vClass {
@@ -125,6 +162,17 @@ class vClass {
         nunito_reg = Typeface.createFromAsset(context.getAssets(), "fonts/Nunito-Regular.ttf");
     }
 
+    public static Theme CurrentTheme;
+
+    public static Map<Theme,themeProperty> AppThemes= new HashMap<>();
+    static {
+        AppThemes.put(Theme.red,new themeProperty(Theme.red));
+        AppThemes.put(Theme.blue,new themeProperty(Theme.blue));
+        AppThemes.put(Theme.teal,new themeProperty(Theme.teal));
+    }
+    public static themeProperty getCurrentTheme(){
+        return AppThemes.get(CurrentTheme);
+    }
     public static String CHENNAI_URL = "https://academicscc.vit.ac.in/";
     public static String VELLORE_URL = "https://vtop.vit.ac.in/";
 

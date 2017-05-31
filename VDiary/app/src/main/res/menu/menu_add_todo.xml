@@ -8,4 +8,11 @@
         android:icon="@drawable/done"
         android:orderInCategory="200"
         android:id="@+id/action_add_todo"/>
+
+    <item
+        android:title="cancel_todo"
+        app:showAsAction="always"
+        android:orderInCategory="300"
+        android:id="@+id/action_cancel_todo"
+        android:icon="@drawable/ic_close"/>
 </menu>

@@ -88,4 +88,20 @@
             <item>@color/dot_dark_screen5</item>
             <item>@color/dot_dark_screen6</item>
         </array>
+
+    <!--BLUE THEME-->
+    <color name="colorPrimaryDarkBlue">#1976D2</color>
+    <color name="colorPrimaryBlue">#2196F3</color>
+    <color name="colorAccentBlue">#03A9F4</color>
+
+    <!--TEAL THEME-->
+    <color name="colorPrimaryDarkTeal">#00796B</color>
+    <color name="colorPrimaryTeal">#009688</color>
+    <color name="colorAccentTeal">#009688</color>
+
+    <!--RED THEME-->
+    <color name="colorPrimaryRed">#F44336</color>
+    <color name="colorPrimaryDarkRed">#d32f2f</color>
+    <color name="colorAccentRed">#e96756</color>
+
     </resources>

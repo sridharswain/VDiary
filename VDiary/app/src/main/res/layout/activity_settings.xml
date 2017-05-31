@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/settingsActivity"
     android:background="@android:color/white">
     <android.support.v7.widget.Toolbar
         android:layout_height="wrap_content"
@@ -40,7 +41,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Before 5 min notifies about room no. and course title of next class"
+            android:text="Notifies about room no. and course title of next class"
             android:maxWidth="300dp"/>
         </LinearLayout>
         <SurfaceView
@@ -73,5 +74,64 @@
             android:layout_width="match_parent"
             android:background="@color/colorPrimaryDark"/>
 
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="7dp"
+            android:paddingTop="7dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:id="@+id/themeSelectText"
+                android:text="App Theme"
+                android:textColor="@android:color/black" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Change the theme color of the app."
+                android:maxWidth="300dp"
+                />
+            <RelativeLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:paddingTop="5dp"
+                android:gravity="center">
+
+                    <!--TODO ADD THE CIRCLES FOR SELECTING THE THEMES-->
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/circle_red_nots"
+                    android:background="@android:color/transparent"
+                    android:id="@+id/theme_circle_red"
+                    android:onClick="onRedClick"/>
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:paddingStart="10dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/circle_blue_nots"
+                        android:background="@android:color/transparent"
+                        android:id="@+id/theme_circle_blue"
+                        android:onClick="onBlueClick"
+                        android:layout_toEndOf="@id/theme_circle_red"/>
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:paddingStart="10dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/circle_teal_nots"
+                        android:background="@android:color/transparent"
+                        android:id="@+id/theme_circle_teal"
+                        android:onClick="onTealClick"
+                        android:layout_toEndOf="@id/theme_circle_blue"/>
+            </RelativeLayout>
+            </LinearLayout>
+        <SurfaceView
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:background="@color/colorPrimaryDark"/>
         </LinearLayout>
     </RelativeLayout>

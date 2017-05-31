@@ -10,12 +10,12 @@
 
     <application
         android:allowBackup="true"
-        android:debuggable="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/MyAppBar">
+        android:theme="@style/MyAppBar"
+        android:debuggable="true">
         <activity
             android:name=".scrapper"
             android:clearTaskOnLaunch="true"
@@ -30,7 +30,13 @@
             android:name=".workSpace"
             android:screenOrientation="portrait"
             android:theme="@style/MyAppBar.Workspace"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
 
         <receiver android:name=".widget">
             <intent-filter>
@@ -63,11 +69,7 @@
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <receiver
@@ -92,7 +94,9 @@
         <activity
             android:name=".settings"
             android:screenOrientation="portrait"
-            android:theme="@style/MyAppBar" />
+            android:theme="@style/MyAppBar" >
+
+        </activity>
 
         <receiver
             android:name=".widgetServiceReceiver"

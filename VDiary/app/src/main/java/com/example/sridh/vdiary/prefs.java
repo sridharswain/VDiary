@@ -29,6 +29,7 @@ public class prefs {
     public static String tipid="tipId";
     public static String scheduleNotificationCount="notificationCount";
     public static String avgAttendance="avgAttendance";
+    public static String THEME ="theme";
 
     //SHARED PREFERENCES INSTANCE OF THE APP
     public static SharedPreferences getPrefsInstance(Context context){
@@ -68,5 +69,17 @@ public class prefs {
     }
     public static int get(Context context,String name,int defaultValue){
         return getPrefsInstance(context).getInt(name,defaultValue);
+    }
+
+    //THEME PREFERENCES  //TODO SHARED PREFERNCES FOR PUTTING AND GETTING THE THEME PRREFERENCES
+    public static void putTheme(Context context,Theme themeEnum){
+        SharedPreferences.Editor editor= getPrefEditor(context);
+        editor.putString(THEME,themeEnum.toString());
+        editor.apply();
+    }
+    public static Theme getTheme (Context context){
+        SharedPreferences prefsInstance =  getPrefsInstance(context);
+        String themeString=prefsInstance.getString(THEME,Theme.red.toString());
+        return Theme.valueOf(themeString);
     }
 }

@@ -79,6 +79,13 @@ public class listAdapter_searchTeacher extends BaseAdapter {
         cabin.setText(found.cabin);
         alertBuilder.setView(view);
         final AlertDialog alertDialog = alertBuilder.create();
+
+        (view.findViewById(R.id.alert_close)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.cancel();
+            }
+        });
         (view.findViewById(R.id.show_teacher_yes)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View Clickedview) {

@@ -14,6 +14,7 @@ import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -77,7 +78,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.example.sridh.vdiary.prefs.*;
 import static com.example.sridh.vdiary.scrapper.getcmd;
 import static com.example.sridh.vdiary.scrapper.toTitleCase;
+import static com.example.sridh.vdiary.vClass.CurrentTheme;
 import static com.example.sridh.vdiary.vClass.MY_CAMPUS;
+import static com.example.sridh.vdiary.vClass.getCurrentTheme;
 
 
 public class workSpace extends AppCompatActivity {
@@ -133,6 +136,7 @@ public class workSpace extends AppCompatActivity {
     public static showSubject currentInView=null;
 
     boolean isPasswordChanged=false;
+    themeProperty ThemeProperty ;
 
 
     @Override
@@ -147,13 +151,22 @@ public class workSpace extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+
+        CurrentTheme = prefs.getTheme(context); //GETTING THE THEME FROM THE SHARED PREFERENCES
+        ThemeProperty= getCurrentTheme();
+        setTheme(ThemeProperty.theme);
+
         View rootView = getLayoutInflater().inflate(R.layout.activity_workspace,null);
         setContentView(rootView);
         setOnTouchListener(rootView,workSpace.this);
         vClass.getFonts(context);
         getDimensions();
         id = get(context,notificationIdentifier,1000);
-        readFromPrefs(getApplicationContext());
+
+        readFromPrefs(getApplicationContext());  //set all the data to the environment variables
+
+
+
         String z = get(context,lastRefreshed,"");//s.getString("last_ref", "");
         if (!z.equals("")) {
             try {
@@ -183,7 +196,6 @@ public class workSpace extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         setTabLayout(tabLayout);
-        vClass.setStatusBar(getWindow(), getApplicationContext(),R.color.colorPrimaryDark);
         luFetchView = new WebView(this);
         luFetchView.getSettings().setJavaScriptEnabled(true);
         luFetchView.getSettings().setDomStorageEnabled(true);
@@ -196,6 +208,8 @@ public class workSpace extends AppCompatActivity {
             action_sync.setVisibility(View.GONE);
             getlastDayUpdated(1);
         }
+
+
     }
 
     boolean readFromPrefs(Context context){
@@ -253,6 +267,7 @@ public class workSpace extends AppCompatActivity {
         }
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            super.onReceivedSslError(view, handler, error);
             handler.proceed();
         }
 
@@ -381,7 +396,7 @@ public class workSpace extends AppCompatActivity {
         }
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-
+            super.onReceivedSslError(view, handler, error);
             handler.proceed();
         }
         @Override
@@ -477,7 +492,7 @@ public class workSpace extends AppCompatActivity {
 
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            
+            super.onReceivedSslError(view, handler, error);
             handler.proceed();
         }
     } // WEBVIEWCLIENT TO GET THE SCHEDULE
@@ -672,6 +687,7 @@ public class workSpace extends AppCompatActivity {
                                                         attWebView.setWebViewClient(new attendanceClient());
                                                         attWebView.loadUrl(MY_CAMPUS+"student/attn_report.asp?sem=" + vClass.SEM);
                                                     }
+
                                                 }
                                             });
                                         }
@@ -689,7 +705,7 @@ public class workSpace extends AppCompatActivity {
     private class attendanceClient extends WebViewClient{
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            
+            super.onReceivedSslError(view, handler, error);
             handler.proceed();
         }
 
@@ -821,6 +837,7 @@ public class workSpace extends AppCompatActivity {
                 }
             }
             writeToPrefs();
+            cancelNotifications(context);
             createNotification(context,vClass.timeTable);
             put(context,lastRefreshed,(new Gson()).toJson(Calendar.getInstance()));//editor.putString("last_ref",last_ref);
             return null;
@@ -940,6 +957,8 @@ public class workSpace extends AppCompatActivity {
     }  //REMOVE THE QUOTES FROM THE RESULT SCRAPPED FORM THE WEBPAGE
 
     void setTabLayout(TabLayout tabLayout){
+        GradientDrawable softShape = (GradientDrawable) tabLayout.getBackground();
+        softShape.setColor(getResources().getColor(ThemeProperty.colorPrimaryDark));
         final int[] unselectedDrawables= new int[]{R.drawable.notselected_course_book,R.drawable.notselected_teacher,R.drawable.notselected_tasks,R.drawable.notselected_summary};
         final int[] selectedDrawables = new int[]{R.drawable.selected_course_book,R.drawable.selected_teacher,R.drawable.selected_tasks,R.drawable.selected_summary};
         for(int i=1;i<4;i++){
@@ -975,6 +994,9 @@ public class workSpace extends AppCompatActivity {
     }  //DELETES THE PREFERENCES WHEN LOGOUT IS PRESSED
 
     void setToolbars() {
+        AppBarLayout appBarLayout = (AppBarLayout)findViewById(R.id.appbar);
+        GradientDrawable softShape = (GradientDrawable) appBarLayout.getBackground();
+        softShape.setColor(getResources().getColor(ThemeProperty.colorPrimaryDark));
         Toolbar toolbar = (Toolbar) findViewById(R.id.workspacetoptoolbar);
         pb_syncing=(ProgressBar)toolbar.findViewById(R.id.pb_syncing);
         action_sync=(ImageButton)toolbar.findViewById(R.id.action_sync);
@@ -988,6 +1010,7 @@ public class workSpace extends AppCompatActivity {
             }
         });
         toolbar.inflateMenu(R.menu.menu_workspace_top);
+        toolbar.setBackgroundColor(getResources().getColor(ThemeProperty.colorPrimaryDark));
         TextView title = (TextView)toolbar.findViewById(R.id.workSpace_title);
         title.setTypeface(vClass.fredoka);
         //setSupportActionBar(toolbar);
@@ -1222,6 +1245,9 @@ public class workSpace extends AppCompatActivity {
                                             Toast.makeText(getContext(), "Both title and note must contain some text", Toast.LENGTH_SHORT).show();
                                         return true;
                                     }
+                                    else if(id== R.id.action_cancel_todo){
+                                        alert.cancel(); //TODO TEST FOR THE CANCELLATION OF THE ALERT DIALOG
+                                    }
                                     return false;
                                 }
                             });
@@ -1252,7 +1278,7 @@ public class workSpace extends AppCompatActivity {
             labels.add("");
             labels.add("");
             PieDataSet dataSet = new PieDataSet(pieEntry,"");
-            dataSet.setColors(ColorTemplate.createColors(getResources(),new int[]{R.color.colorPrimaryDark,R.color.descent_orange}));
+            dataSet.setColors(ColorTemplate.createColors(getResources(),new int[]{R.color.colorPrimaryDark,R.color.descent_orange})); //TODO APPLY CHNAGES ACORDING TO THE THEME OF THE APP
             PieData data = new PieData(labels,dataSet);
             pie.setData(data);
             pie.setDescription("");
@@ -1309,7 +1335,6 @@ public class workSpace extends AppCompatActivity {
             shareButt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //  TODO :: ADD THE WHATSAPP SHARING CODE HERE
                     Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
                     whatsappIntent.setType("text/plain");
                     whatsappIntent.setPackage("com.whatsapp");

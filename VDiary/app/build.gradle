@@ -8,8 +8,8 @@ android {
         applicationId "com.fourthstatelabs.zchedule"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 23
-        versionName "Release 1.2"
+        versionCode 24
+        versionName "Cat 2 Release"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
