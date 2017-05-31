@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.media.Image;
 import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -136,7 +137,7 @@ public class workSpace extends AppCompatActivity {
     public static showSubject currentInView=null;
 
     boolean isPasswordChanged=false;
-    themeProperty ThemeProperty ;
+    static themeProperty ThemeProperty ;
 
 
     @Override
@@ -1278,7 +1279,7 @@ public class workSpace extends AppCompatActivity {
             labels.add("");
             labels.add("");
             PieDataSet dataSet = new PieDataSet(pieEntry,"");
-            dataSet.setColors(ColorTemplate.createColors(getResources(),new int[]{R.color.colorPrimaryDark,R.color.descent_orange})); //TODO APPLY CHNAGES ACORDING TO THE THEME OF THE APP
+            dataSet.setColors(ColorTemplate.createColors(getResources(),new int[]{ThemeProperty.colorPrimaryDark,ThemeProperty.colorPrimary})); //TODO APPLY CHNAGES ACORDING TO THE THEME OF THE APP
             PieData data = new PieData(labels,dataSet);
             pie.setData(data);
             pie.setDescription("");
@@ -1301,7 +1302,10 @@ public class workSpace extends AppCompatActivity {
 
             RelativeLayout logoutButt = (RelativeLayout)rootViewSummary.findViewById(R.id.rl_logout);
             TextView logoutText = (TextView)rootViewSummary.findViewById(R.id.tv_logout);
+            logoutText.setTextColor(getResources().getColor(ThemeProperty.colorPrimaryDark));
             logoutText.setTypeface(vClass.nunito_reg);
+            ImageView iv_logout =(ImageView)logoutButt.findViewById(R.id.iv_logout);
+            iv_logout.setImageDrawable(getResources().getDrawable(ThemeProperty.drawableResources[3]));
             logoutButt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -1311,7 +1315,10 @@ public class workSpace extends AppCompatActivity {
 
             RelativeLayout aboutButt = (RelativeLayout)rootViewSummary.findViewById(R.id.rl_about);
             TextView aboutText = (TextView)rootViewSummary.findViewById(R.id.tv_about);
+            aboutText.setTextColor(getResources().getColor(ThemeProperty.colorPrimaryDark));
             aboutText.setTypeface(vClass.nunito_reg);
+            ImageView iv_about =(ImageView)aboutButt.findViewById(R.id.iv_about);
+            iv_about.setImageDrawable(getResources().getDrawable(ThemeProperty.drawableResources[2]));
             aboutButt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -1321,7 +1328,10 @@ public class workSpace extends AppCompatActivity {
 
             RelativeLayout settingButt = (RelativeLayout)rootViewSummary.findViewById(R.id.rl_setting);
             TextView settingText = (TextView)rootViewSummary.findViewById(R.id.tv_setting);
+            settingText.setTextColor(getResources().getColor(ThemeProperty.colorPrimaryDark));
             settingText.setTypeface(vClass.nunito_reg);
+            ImageView iv_setting =(ImageView)settingButt.findViewById(R.id.iv_setting);
+            iv_setting.setImageDrawable(getResources().getDrawable(ThemeProperty.drawableResources[1]));
             settingButt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -1331,7 +1341,10 @@ public class workSpace extends AppCompatActivity {
 
             RelativeLayout shareButt = (RelativeLayout)rootViewSummary.findViewById(R.id.rl_share);
             TextView shareText = (TextView)rootViewSummary.findViewById(R.id.tv_share);
+            shareText.setTextColor(getResources().getColor(ThemeProperty.colorPrimaryDark));
             shareText.setTypeface(vClass.nunito_reg);
+            ImageView iv_share =(ImageView)shareButt.findViewById(R.id.iv_share);
+            iv_share.setImageDrawable(getResources().getDrawable(ThemeProperty.drawableResources[0]));
             shareButt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -1,15 +1,10 @@
 package com.example.sridh.vdiary;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -50,8 +45,7 @@ public class settings extends AppCompatActivity {
         selectedCircle.setImageDrawable(getResources().getDrawable(circleSId[CircleIndex]));
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_settings);
         toolbar.setBackgroundColor(getResources().getColor(getCurrentTheme().colorPrimaryDark));
-        /*initLayout(); //TODO UNCOMMENT THIS REGION
-        vClass.setStatusBar(getWindow(),context,R.color.colorPrimaryDark);*/
+        initLayout(); //TODO UNCOMMENT THIS REGION
     }
 
     void initLayout(){
@@ -93,7 +87,6 @@ public class settings extends AppCompatActivity {
 
     void handleThemeCircleSelection(Theme clickedTheme){
         if(CurrentTheme!=clickedTheme){   //CHECK IF THE CIRCLE SELECTED NOT THE SAME
-
             selectedCircle.setImageDrawable(getResources().getDrawable(circleNotsId[CircleIndex]));  //CHANGE THE IMAGE OF THE OLDER CIRCLE TO NOT SELECTED
             CircleIndex = getIdOf(clickedTheme);  //GET THE INDEX OF NEW CIRCLE
             selectedCircle = (ImageButton)findViewById(circleIDs[CircleIndex]);  //GET THE View OF THE IMAGEBUTTON
@@ -101,7 +94,7 @@ public class settings extends AppCompatActivity {
 
             CurrentTheme=clickedTheme;
             putTheme(context,clickedTheme);
-            Toast.makeText(getApplicationContext(),"Restart App to apply changes",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Restart App to apply changes",Toast.LENGTH_SHORT).show();
         }
     }
 

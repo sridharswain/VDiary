@@ -3,6 +3,7 @@ package com.example.sridh.vdiary;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.graphics.Typeface;
 
 import java.util.List;
 
+import static com.example.sridh.vdiary.vClass.getCurrentTheme;
+
 /**
  * Created by Sparsha Saha on 9/11/2016.
  */
@@ -20,6 +23,7 @@ public class listAdapter_courses extends BaseAdapter {
     Context context;
     public static View rowview;
     public static LayoutInflater inflater=null;
+    themeProperty ThemeProperty;
 
     //Constructor
     listAdapter_courses(Context t, List<subject> l)
@@ -27,6 +31,7 @@ public class listAdapter_courses extends BaseAdapter {
         context=t;
         list=l;
         inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ThemeProperty= getCurrentTheme();
     }
 
 
@@ -71,6 +76,8 @@ public class listAdapter_courses extends BaseAdapter {
         holder.teachername.setTypeface(vClass.nunito_reg);
         holder.attendance.setTypeface(vClass.nunito_reg);
         holder.type.setTypeface(vClass.nunito_reg);
+        GradientDrawable shoftShape = (GradientDrawable)holder.type.getBackground();
+        shoftShape.setColor(context.getResources().getColor(ThemeProperty.colorAccent));
         //set items
         holder.subname.setText(sub.title);
         holder.teachername.setText(sub.teacher);

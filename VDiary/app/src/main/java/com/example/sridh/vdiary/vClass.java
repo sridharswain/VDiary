@@ -28,12 +28,12 @@ class subject {
     public String room;
     public int ctd;
     public int classAttended;
-    public String startTime;
-    public String endTime;
-    public String type;
+    public String startTime="";
+    public String endTime="";
+    public String type="";
     public String slot="";
     public String lastUpdated="";
-    public List<subjectDay> attTrack;
+    public List<subjectDay> attTrack= new ArrayList<>();
     public subject(){
         attTrack= new ArrayList<>();
     }
@@ -89,6 +89,7 @@ class themeProperty{
     public int colorPrimary;
     public int colorAccent;
     public int theme;
+    public int[] drawableResources;
 
     //TODO GENERATE THE THEME COLORS AND ADD THEM HERE
     public themeProperty(Theme theme){
@@ -98,19 +99,23 @@ class themeProperty{
                 colorPrimary=R.color.colorPrimaryBlue;
                 colorAccent=R.color.colorAccentBlue;
                 this.theme=R.style.AppTheme_Blue;
+                drawableResources = new int[]{R.drawable.ic_share_blue,R.drawable.ic_setting_blue,R.drawable.ic_about_blue,R.drawable.ic_logout_blue};
                 break;
             case teal:
                 colorPrimaryDark=R.color.colorPrimaryDarkTeal;
                 colorPrimary=R.color.colorPrimaryTeal;
                 colorAccent=R.color.colorAccentTeal;
                 this.theme=R.style.AppTheme_Teal;
+                drawableResources = new int[]{R.drawable.ic_share_teal,R.drawable.ic_setting_teal,R.drawable.ic_about_teal,R.drawable.ic_logout_teal};
                 break;
             case red:
                 colorPrimaryDark=R.color.colorPrimaryDarkRed;
                 colorPrimary=R.color.colorPrimaryRed;
                 colorAccent=R.color.colorAccentRed;
                 this.theme=R.style.AppTheme;
+                drawableResources = new int[]{R.drawable.ic_share,R.drawable.ic_setting,R.drawable.ic_about,R.drawable.ic_logout};
                 break;
+            //TODO ADD MORE THEMES
         }
     }
 }
